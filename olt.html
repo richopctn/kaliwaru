@@ -35,22 +35,8 @@
             background-color: #f4f7fa;
             color: #1e293b;
         }
-        /* Styling khusus agar gambar logo yang memiliki latar checkerboard di pinggir tetap terlihat rapi & terbingkai elegan */
-        .logo-wrapper {
-            position: relative;
+        body.locked {
             overflow: hidden;
-            border-radius: 0.75rem;
-            background: #ffffff;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .logo-crop {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center 36%;
-            transform: scale(1.48) translateY(8%); /* Memperbesar & menggeser ke bawah agar teks PT di bagian bawah terpotong rapi */
         }
         .tab-active {
             background-color: #0d3b66;
@@ -67,476 +53,583 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased">
+<body class="min-h-screen flex flex-col antialiased locked">
 
-    <!-- HEADER PROFESIONAL DENGAN LOGO KALIWARU.NET -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <!-- Area Logo Perusahaan -->
-                <div class="flex items-center gap-4">
-                    <div class="logo-wrapper w-52 sm:w-60 h-14 sm:h-16 border border-slate-200 shadow-sm bg-white">
-                        <img 
-                            src="Gemini_Generated_Image_tvrso9tvrso9tvrs.jpg" 
-                            alt="Logo kaliwaru.net" 
-                            class="logo-crop"
-                            onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='flex';"
-                        >
-                        <!-- Fallback SVG apabila gambar gagal dimuat -->
-                        <div id="fallback-logo" class="hidden items-center justify-center px-3 py-1">
-                            <div class="flex items-center font-extrabold text-2xl tracking-tight">
-                                <span class="text-[#0d3b66]">kaliwaru</span><span class="text-[#29b6f6]">.net</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden lg:block h-10 w-px bg-slate-200"></div>
-                    <div class="hidden lg:block">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-light text-brand-navy">
-                            <i class="fa-solid fa-network-wired text-brand-cyan"></i> FTTH Network Engineering Tool
-                        </span>
-                        <h1 class="text-base font-bold text-slate-800 mt-1">Kalkulator Rasio OLT & Optical Power Budget</h1>
-                    </div>
+    <!-- LAYAR KUNCI PASSWORD SAAT MEMBUKA HALAMAN -->
+    <div id="password-gate" class="fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl">
+            <div class="flex items-center justify-between mb-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#0d3b66] to-[#165692] text-white font-extrabold text-base tracking-tight shadow-sm">
+                    <i class="fa-solid fa-wifi text-[#29b6f6]"></i>
+                    <span>kaliwaru<span class="text-[#29b6f6]">.net</span></span>
                 </div>
-
-                <!-- Navigasi Tab Utama -->
-                <nav class="flex flex-wrap items-center justify-center gap-2 bg-slate-100 p-1.5 rounded-xl w-full md:w-auto">
-                    <button onclick="switchTab('calculator')" id="btn-tab-calculator" class="tab-active flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-calculator"></i>
-                        <span>Hitung Link Budget</span>
-                    </button>
-                    <button onclick="switchTab('cascade')" id="btn-tab-cascade" class="tab-inactive flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-diagram-project"></i>
-                        <span>Simulasi Estafet ODP</span>
-                    </button>
-                    <button onclick="switchTab('reference')" id="btn-tab-reference" class="tab-inactive flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-table-list"></i>
-                        <span>Tabel Redaman</span>
-                    </button>
-                </nav>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
+                    <i class="fa-solid fa-lock"></i> Terkunci
+                </span>
             </div>
-        </div>
-    </header>
 
-    <!-- KONTEN UTAMA -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <h2 class="text-lg font-bold text-slate-800">Akses Kalkulator OLT</h2>
+            <p class="text-xs text-slate-500 mt-1 mb-4">
+                Masukkan password teknisi untuk membuka halaman kalkulator rasio OLT &amp; link budget FTTH.
+            </p>
 
-        <!-- =================================================================== -->
-        <!-- TAB 1: KALKULATOR REDAMAN & RASIO OLT (SINGLE PATH LINK BUDGET)    -->
-        <!-- =================================================================== -->
-        <section id="tab-calculator" class="space-y-6">
-            
-            <!-- Banner Informasi Singkat -->
-            <div class="bg-gradient-to-r from-[#0d3b66] to-[#165692] rounded-2xl p-5 sm:p-6 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <form onsubmit="unlockPage(event)" class="space-y-3">
                 <div>
-                    <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-wave-square text-[#29b6f6]"></i>
-                        Perhitungan Redaman Jalur Optik (OLT ke ONT/ONU)
-                    </h2>
-                    <p class="text-xs sm:text-sm text-sky-100 mt-1">
-                        Simulasikan redaman kabel fiber, sambungan, konektor, dan kombinasi splitter rasio (unbalanced) maupun splitter rata (even) secara bertingkat.
-                    </p>
+                    <label for="gate-password-input" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                        Password Akses
+                    </label>
+                    <input
+                        type="password"
+                        id="gate-password-input"
+                        inputmode="numeric"
+                        autocomplete="current-password"
+                        placeholder="Masukkan password"
+                        required
+                        class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]"
+                    >
                 </div>
-                <div class="flex items-center gap-2 self-end sm:self-center">
-                    <button onclick="resetCalculator()" class="px-3.5 py-2 bg-white/15 hover:bg-white/25 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 backdrop-blur-sm">
-                        <i class="fa-solid fa-rotate-left"></i> Reset Default
-                    </button>
-                    <button onclick="copySummary()" class="px-3.5 py-2 bg-[#29b6f6] hover:bg-sky-400 text-[#082644] rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
-                        <i class="fa-regular fa-copy"></i> Salin Laporan
-                    </button>
-                </div>
-            </div>
+                <p id="gate-error-msg" class="text-xs font-semibold text-rose-600 min-h-[18px]"></p>
+                <button
+                    type="submit"
+                    class="w-full py-2.5 px-4 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow"
+                >
+                    <i class="fa-solid fa-unlock-keyhole text-[#29b6f6]"></i>
+                    <span>Buka Kalkulator</span>
+                </button>
+            </form>
+        </div>
+    </div>
 
-            <!-- Grid Utama: Kiri (Input Parameter) & Kanan (Hasil & Visualisasi) -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                
-                <!-- KOLOM KIRI: PARAMETER INPUT (7 Kolom di Desktop) -->
-                <div class="lg:col-span-7 space-y-6">
-                    
-                    <!-- Card 1: Sumber Optik OLT (Tx Power) -->
-                    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">1</span>
-                                Daya Pancar SFP OLT (Tx Power)
-                            </h3>
-                            <span class="text-xs font-medium text-slate-400">GPON / EPON / XGS-PON</span>
+    <!-- KONTEN HALAMAN UTAMA (TERSEMBUNYI SEBELUM PASSWORD VALID) -->
+    <div id="protected-content" class="hidden min-h-screen flex flex-col">
+
+        <!-- HEADER PROFESIONAL DENGAN BRAND TEKS & IKON KALIWARU.NET -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <!-- Area Brand Teks & Ikon Perusahaan -->
+                    <div class="flex items-center gap-4">
+                        <div class="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#0d3b66] to-[#165692] text-white shadow-sm border border-[#082644]/20">
+                            <div class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center text-[#29b6f6] text-lg shrink-0">
+                                <i class="fa-solid fa-tower-broadcast"></i>
+                            </div>
+                            <div class="leading-none">
+                                <div class="text-xl sm:text-2xl font-extrabold tracking-tight flex items-center">
+                                    <span>kaliwaru</span><span class="text-[#29b6f6]">.net</span>
+                                </div>
+                                <div class="text-[10px] font-semibold tracking-wider uppercase text-sky-200 mt-1">
+                                    Fiber &amp; WiFi Pacitan
+                                </div>
+                            </div>
                         </div>
+                        <div class="hidden lg:block h-10 w-px bg-slate-200"></div>
+                        <div class="hidden lg:block">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-light text-brand-navy">
+                                <i class="fa-solid fa-network-wired text-brand-cyan"></i> FTTH Network Engineering Tool
+                            </span>
+                            <h1 class="text-base font-bold text-slate-800 mt-1">Kalkulator Rasio OLT &amp; Optical Power Budget</h1>
+                        </div>
+                    </div>
 
-                        <!-- Preset Cepat Modul SFP -->
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-                            <button type="button" onclick="setSfpPower(3.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
-                                <div class="text-xs font-bold text-slate-700">SFP Class B+</div>
-                                <div class="text-xs text-[#0d3b66] font-semibold">+3.0 dBm</div>
+                    <!-- Navigasi Tab Utama + Tombol Kunci -->
+                    <div class="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+                        <nav class="flex flex-wrap items-center justify-center gap-2 bg-slate-100 p-1.5 rounded-xl flex-grow md:flex-grow-0">
+                            <button onclick="switchTab('calculator')" id="btn-tab-calculator" class="tab-active flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-calculator"></i>
+                                <span>Hitung Link Budget</span>
                             </button>
-                            <button type="button" onclick="setSfpPower(5.0, this)" class="sfp-preset px-3 py-2 rounded-xl border-2 border-[#0d3b66] bg-brand-light/40 text-left transition">
-                                <div class="text-xs font-bold text-[#0d3b66]">SFP Class C+</div>
-                                <div class="text-xs text-[#0d3b66] font-semibold">+5.0 dBm</div>
+                            <button onclick="switchTab('cascade')" id="btn-tab-cascade" class="tab-inactive flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-diagram-project"></i>
+                                <span>Simulasi Estafet ODP</span>
                             </button>
-                            <button type="button" onclick="setSfpPower(7.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
-                                <div class="text-xs font-bold text-slate-700">SFP Class C++</div>
-                                <div class="text-xs text-[#0d3b66] font-semibold">+7.0 dBm</div>
+                            <button onclick="switchTab('reference')" id="btn-tab-reference" class="tab-inactive flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-table-list"></i>
+                                <span>Tabel Redaman</span>
                             </button>
-                            <button type="button" onclick="setSfpPower(9.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
-                                <div class="text-xs font-bold text-slate-700">SFP C+++ / High</div>
-                                <div class="text-xs text-[#0d3b66] font-semibold">+9.0 dBm</div>
-                            </button>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Daya Tx OLT Manual (dBm)</label>
-                                <div class="relative">
-                                    <input type="number" id="txPower" value="5.0" step="0.1" min="-10" max="20" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-[#0d3b66] focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    <span class="absolute right-3.5 top-2.5 text-xs font-bold text-slate-400">dBm</span>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Panjang Gelombang (Wavelength)</label>
-                                <select id="wavelength" onchange="updateWavelengthLoss()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    <option value="0.35">1310 nm Upstream (0.35 dB/km)</option>
-                                    <option value="0.25" selected>1490 nm Downstream (0.25 dB/km)</option>
-                                    <option value="0.20">1550 nm Video/RF (0.20 dB/km)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2: Parameter Infrastruktur Kabel, Splicing & Konektor -->
-                    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">2</span>
-                                Redaman Kabel Fiber, Splicing & Konektor
-                            </h3>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Panjang Kabel -->
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Total Panjang Kabel (km)</label>
-                                <div class="relative">
-                                    <input type="number" id="cableLength" value="3.5" step="0.1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    <span class="absolute right-3.5 top-2.5 text-xs font-semibold text-slate-400">km</span>
-                                </div>
-                            </div>
-                            <!-- Redaman Kabel per km -->
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Redaman Kabel (dB/km)</label>
-                                <div class="relative">
-                                    <input type="number" id="cableLossPerKm" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    <span class="absolute right-3.5 top-2.5 text-xs font-semibold text-slate-400">dB/km</span>
-                                </div>
-                            </div>
-                            <!-- Jumlah Splicing -->
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jumlah Sambungan / Splicing (0.1 dB/titik)</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="number" id="spliceCount" value="4" step="1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    <input type="number" id="spliceLossEach" value="0.10" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per splice (dB)" class="w-24 px-2.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                </div>
-                            </div>
-                            <!-- Jumlah Konektor -->
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jumlah Konektor / Adapter (0.25 dB/titik)</label>
-                                <div class="flex items-center gap-2">
-                                    <input type="number" id="connectorCount" value="4" step="1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    <input type="number" id="connectorLossEach" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per konektor (dB)" class="w-24 px-2.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Safety Margin -->
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <div>
-                                <label class="text-xs font-semibold text-slate-600">Margin Cadangan / Bending Loss (Safety Margin)</label>
-                                <p class="text-[11px] text-slate-400">Cadangan untuk tekukan kabel (macro-bending) & penuaan fiber (standar 1.0 - 2.0 dB)</p>
-                            </div>
-                            <div class="relative w-full sm:w-36">
-                                <input type="number" id="safetyMargin" value="1.5" step="0.1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                <span class="absolute right-3 top-2 text-xs font-semibold text-slate-400">dB</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Konfigurasi Splitter Bertingkat (ODC / ODP / Rasio) -->
-                    <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                            <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">3</span>
-                                Konfigurasi Splitter Bertingkat (Rasio / Even)
-                            </h3>
-                            <button type="button" onclick="addSplitterStage()" class="px-3 py-1.5 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                                <i class="fa-solid fa-plus"></i> Tambah Stage Splitter
-                            </button>
-                        </div>
-
-                        <p class="text-xs text-slate-500 mb-4">
-                            Pilih jenis splitter di tiap tahap (Stage 1 ODC, Stage 2 ODP, dst). Untuk <strong>Splitter Rasio (Unbalanced)</strong>, pilih port keluaran yang diukur (misal cabang tap 10% atau terusannya 90%).
-                        </p>
-
-                        <!-- Daftar Stage Splitter Dinamis -->
-                        <div id="splitter-stages-container" class="space-y-3">
-                            <!-- Di-render melalui JavaScript -->
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- KOLOM KANAN: HASIL ANALISIS & VISUALISASI ALUR SINYAL (5 Kolom di Desktop) -->
-                <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-                    
-                    <!-- Card Hasil Utama (Rx Power & Status Indikator) -->
-                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md">
-                        <div class="bg-slate-900 px-5 py-4 text-white flex items-center justify-between">
-                            <div>
-                                <span class="text-[11px] uppercase tracking-wider text-sky-400 font-bold">Estimasi Daya Terima ONT</span>
-                                <h3 class="text-sm font-semibold text-slate-200">Optical Power Meter (OPM) Simulasi</h3>
-                            </div>
-                            <i class="fa-solid fa-gauge-high text-2xl text-[#29b6f6]"></i>
-                        </div>
-
-                        <div class="p-6">
-                            <!-- Angka Besar Rx Power -->
-                            <div class="text-center py-4 px-3 rounded-2xl bg-slate-50 border border-slate-200/80 mb-5">
-                                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Daya Terima di ONT / ONU (Rx)</div>
-                                <div id="result-rx-power" class="text-4xl sm:text-5xl font-extrabold text-[#0d3b66] tracking-tight">
-                                    -19.63 <span class="text-xl font-bold text-slate-500">dBm</span>
-                                </div>
-                                
-                                <!-- Badge Status Sinyal -->
-                                <div id="result-status-badge" class="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    <span>OPTIMAL / SANGAT BAGUS</span>
-                                </div>
-                                <p id="result-status-desc" class="text-xs text-slate-600 mt-2.5 max-w-sm mx-auto">
-                                    Redaman berada di rentang ideal (-15 s/d -24 dBm). Koneksi stabil dan memiliki margin aman untuk jangka panjang.
-                                </p>
-                            </div>
-
-                            <!-- Visualisasi Bar Meter Sinyal -->
-                            <div class="mb-6">
-                                <div class="flex justify-between text-[11px] font-bold text-slate-500 mb-1.5">
-                                    <span>LOS (&lt;-28)</span>
-                                    <span>Warning (-25)</span>
-                                    <span class="text-emerald-600">Ideal (-18)</span>
-                                    <span>Overload (&gt;-8)</span>
-                                </div>
-                                <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden relative flex">
-                                    <div class="w-1/4 bg-rose-500 h-full" title="Kritis / LOS (< -27 dBm)"></div>
-                                    <div class="w-1/4 bg-amber-400 h-full" title="Toleransi / Warning (-24 s/d -27 dBm)"></div>
-                                    <div class="w-2/5 bg-emerald-500 h-full" title="Optimal (-12 s/d -24 dBm)"></div>
-                                    <div class="w-[10%] bg-purple-500 h-full" title="Overload (> -8 dBm)"></div>
-                                    <!-- Penanda Jarum -->
-                                    <div id="signal-gauge-marker" class="absolute top-0 bottom-0 w-1.5 bg-slate-900 ring-2 ring-white transition-all duration-300" style="left: 65%;"></div>
-                                </div>
-                            </div>
-
-                            <!-- Rincian Perhitungan Redaman (Breakdown) -->
-                            <div class="space-y-2.5 text-xs sm:text-sm border-t border-slate-100 pt-4">
-                                <div class="flex justify-between items-center text-slate-600">
-                                    <span>Daya Awal (Tx OLT)</span>
-                                    <span id="breakdown-tx" class="font-bold text-[#0d3b66]">+5.00 dBm</span>
-                                </div>
-                                <div class="flex justify-between items-center text-slate-600">
-                                    <span>Redaman Kabel (<span id="breakdown-km">3.5</span> km)</span>
-                                    <span id="breakdown-cable" class="font-semibold text-rose-600">-0.88 dB</span>
-                                </div>
-                                <div class="flex justify-between items-center text-slate-600">
-                                    <span>Redaman Splicing & Konektor</span>
-                                    <span id="breakdown-passive" class="font-semibold text-rose-600">-1.40 dB</span>
-                                </div>
-                                <div class="flex justify-between items-center text-slate-600">
-                                    <span>Total Redaman Splitter</span>
-                                    <span id="breakdown-splitter" class="font-semibold text-rose-600">-20.85 dB</span>
-                                </div>
-                                <div class="flex justify-between items-center text-slate-600">
-                                    <span>Safety Margin (Cadangan)</span>
-                                    <span id="breakdown-margin" class="font-semibold text-rose-600">-1.50 dB</span>
-                                </div>
-                                <div class="flex justify-between items-center pt-2.5 border-t border-dashed border-slate-300 font-bold text-slate-800">
-                                    <span>Total Redaman Jalur (Total Loss)</span>
-                                    <span id="breakdown-total-loss" class="text-rose-700">24.63 dB</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card Visualisasi Diagram Alur Sinyal Bertahap -->
-                    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-                        <h4 class="text-sm font-bold text-[#0d3b66] mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-route text-[#29b6f6]"></i>
-                            Diagram Alur Distribusi Daya Optik
-                        </h4>
-                        <div id="visual-flow-diagram" class="space-y-2">
-                            <!-- Di-render otomatis oleh JavaScript -->
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-
-        <!-- =================================================================== -->
-        <!-- TAB 2: SIMULASI RANTAI RASIO (CASCADE / ESTAFET ODP)                -->
-        <!-- =================================================================== -->
-        <section id="tab-cascade" class="hidden space-y-6">
-            <div class="bg-gradient-to-r from-[#0d3b66] to-[#165692] rounded-2xl p-5 sm:p-6 text-white shadow-md">
-                <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-diagram-project text-[#29b6f6]"></i>
-                    Simulasi Jalur Estafet ODP (Unbalanced Cascade / Topologi Bus FTTH)
-                </h2>
-                <p class="text-xs sm:text-sm text-sky-100 mt-1">
-                    Rancang jalur distribusi estafet dari OLT melewati beberapa titik tiang ODP secara berurutan menggunakan Splitter Rasio (misal: 10:90, 20:80, 30:70) yang digabung dengan Splitter ODP lokal (1:4 atau 1:8).
-                </p>
-            </div>
-
-            <!-- Parameter Global Estafet -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Daya Tx OLT Awal (dBm)</label>
-                        <select id="cascade-tx" onchange="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-[#0d3b66]">
-                            <option value="3.0">SFP Class B+ (+3.0 dBm)</option>
-                            <option value="5.0" selected>SFP Class C+ (+5.0 dBm)</option>
-                            <option value="7.0">SFP Class C++ (+7.0 dBm)</option>
-                            <option value="9.0">SFP Class C+++ (+9.0 dBm)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jarak OLT ke ODP-1 (km)</label>
-                        <input type="number" id="cascade-init-dist" value="1.5" step="0.1" min="0" oninput="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Redaman Kabel (dB/km)</label>
-                        <input type="number" id="cascade-cable-loss" value="0.25" step="0.01" min="0" oninput="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold">
-                    </div>
-                    <div>
-                        <button type="button" onclick="addCascadeNode()" class="w-full px-4 py-2.5 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow">
-                            <i class="fa-solid fa-plus-circle"></i> Tambah Titik ODP Estafet
+                        </nav>
+                        <button
+                            type="button"
+                            onclick="lockCalculator()"
+                            title="Kunci halaman kembali"
+                            class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-700 text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Kunci</span>
                         </button>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <!-- Tabel / Kartu Hasil Estafet per Titik ODP -->
-            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
-                    <h3 class="text-sm font-bold text-[#0d3b66]">Susunan Rantai ODP & Estimasi Redaman Setiap Cabang</h3>
-                    <span class="text-xs text-slate-500">*Sudah termasuk estimasi redaman splice/konektor 0.35 dB per titik ODP</span>
-                </div>
+        <!-- KONTEN UTAMA -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+            <!-- =================================================================== -->
+            <!-- TAB 1: KALKULATOR REDAMAN & RASIO OLT (SINGLE PATH LINK BUDGET)    -->
+            <!-- =================================================================== -->
+            <section id="tab-calculator" class="space-y-6">
                 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
-                                <th class="py-3.5 px-4 font-bold">Titik ODP</th>
-                                <th class="py-3.5 px-4 font-bold">Jarak Segmen (km)</th>
-                                <th class="py-3.5 px-4 font-bold">Splitter Rasio (Tap : Terusan)</th>
-                                <th class="py-3.5 px-4 font-bold">Splitter Distribusi ODP</th>
-                                <th class="py-3.5 px-4 font-bold">Sinyal Masuk ODP</th>
-                                <th class="py-3.5 px-4 font-bold">Daya Terima ONT (Rx)</th>
-                                <th class="py-3.5 px-4 font-bold">Status</th>
-                                <th class="py-3.5 px-4 text-center font-bold">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cascade-table-body" class="divide-y divide-slate-200 text-sm">
-                            <!-- Di-render otomatis melalui JavaScript -->
-                        </tbody>
-                    </table>
+                <!-- Banner Informasi Singkat -->
+                <div class="bg-gradient-to-r from-[#0d3b66] to-[#165692] rounded-2xl p-5 sm:p-6 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-wave-square text-[#29b6f6]"></i>
+                            Perhitungan Redaman Jalur Optik (OLT ke ONT/ONU)
+                        </h2>
+                        <p class="text-xs sm:text-sm text-sky-100 mt-1">
+                            Simulasikan redaman kabel fiber, sambungan, konektor, dan kombinasi splitter rasio (unbalanced) maupun splitter rata (even) secara bertingkat.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-2 self-end sm:self-center">
+                        <button onclick="resetCalculator()" class="px-3.5 py-2 bg-white/15 hover:bg-white/25 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 backdrop-blur-sm">
+                            <i class="fa-solid fa-rotate-left"></i> Reset Default
+                        </button>
+                        <button onclick="copySummary()" class="px-3.5 py-2 bg-[#29b6f6] hover:bg-sky-400 text-[#082644] rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
+                            <i class="fa-regular fa-copy"></i> Salin Laporan
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </section>
 
+                <!-- Grid Utama: Kiri (Input Parameter) & Kanan (Hasil & Visualisasi) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    <!-- KOLOM KIRI: PARAMETER INPUT (7 Kolom di Desktop) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Card 1: Sumber Optik OLT (Tx Power) -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">1</span>
+                                    Daya Pancar SFP OLT (Tx Power)
+                                </h3>
+                                <span class="text-xs font-medium text-slate-400">GPON / EPON / XGS-PON</span>
+                            </div>
 
-        <!-- =================================================================== -->
-        <!-- TAB 3: TABEL REFERENSI STANDAR REDAMAN SPLITTER                     -->
-        <!-- =================================================================== -->
-        <section id="tab-reference" class="hidden space-y-6">
-            <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                <h2 class="text-lg font-bold text-[#0d3b66] mb-1">Tabel Referensi Standar Redaman Optik FTTH (PLC & FBT Splitter)</h2>
-                <p class="text-xs text-slate-500 mb-6">Acuan standar industri ITU-T G.984 untuk perencanaan jaringan FTTH kaliwaru.net.</p>
+                            <!-- Preset Cepat Modul SFP -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                                <button type="button" onclick="setSfpPower(3.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
+                                    <div class="text-xs font-bold text-slate-700">SFP Class B+</div>
+                                    <div class="text-xs text-[#0d3b66] font-semibold">+3.0 dBm</div>
+                                </button>
+                                <button type="button" onclick="setSfpPower(5.0, this)" class="sfp-preset px-3 py-2 rounded-xl border-2 border-[#0d3b66] bg-brand-light/40 text-left transition">
+                                    <div class="text-xs font-bold text-[#0d3b66]">SFP Class C+</div>
+                                    <div class="text-xs text-[#0d3b66] font-semibold">+5.0 dBm</div>
+                                </button>
+                                <button type="button" onclick="setSfpPower(7.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
+                                    <div class="text-xs font-bold text-slate-700">SFP Class C++</div>
+                                    <div class="text-xs text-[#0d3b66] font-semibold">+7.0 dBm</div>
+                                </button>
+                                <button type="button" onclick="setSfpPower(9.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
+                                    <div class="text-xs font-bold text-slate-700">SFP C+++ / High</div>
+                                    <div class="text-xs text-[#0d3b66] font-semibold">+9.0 dBm</div>
+                                </button>
+                            </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Tabel 1: Even / Balanced Splitter -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden">
-                        <div class="bg-[#0d3b66] text-white px-4 py-3 font-bold text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-code-branch text-[#29b6f6]"></i>
-                            1. Splitter Rata (Even / Balanced PLC Splitter)
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Daya Tx OLT Manual (dBm)</label>
+                                    <div class="relative">
+                                        <input type="number" id="txPower" value="5.0" step="0.1" min="-10" max="20" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-[#0d3b66] focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                        <span class="absolute right-3.5 top-2.5 text-xs font-bold text-slate-400">dBm</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Panjang Gelombang (Wavelength)</label>
+                                    <select id="wavelength" onchange="updateWavelengthLoss()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                        <option value="0.35">1310 nm Upstream (0.35 dB/km)</option>
+                                        <option value="0.25" selected>1490 nm Downstream (0.25 dB/km)</option>
+                                        <option value="0.20">1550 nm Video/RF (0.20 dB/km)</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
-                                <tr>
-                                    <th class="py-3 px-4">Rasio Splitter</th>
-                                    <th class="py-3 px-4">Jumlah Port</th>
-                                    <th class="py-3 px-4">Redaman Maksimal (Insertion Loss)</th>
+
+                        <!-- Card 2: Parameter Infrastruktur Kabel, Splicing & Konektor -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">2</span>
+                                    Redaman Kabel Fiber, Splicing &amp; Konektor
+                                </h3>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Panjang Kabel -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Total Panjang Kabel (km)</label>
+                                    <div class="relative">
+                                        <input type="number" id="cableLength" value="3.5" step="0.1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                        <span class="absolute right-3.5 top-2.5 text-xs font-semibold text-slate-400">km</span>
+                                    </div>
+                                </div>
+                                <!-- Redaman Kabel per km -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Redaman Kabel (dB/km)</label>
+                                    <div class="relative">
+                                        <input type="number" id="cableLossPerKm" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                        <span class="absolute right-3.5 top-2.5 text-xs font-semibold text-slate-400">dB/km</span>
+                                    </div>
+                                </div>
+                                <!-- Jumlah Splicing -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jumlah Sambungan / Splicing (0.1 dB/titik)</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="spliceCount" value="4" step="1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                        <input type="number" id="spliceLossEach" value="0.10" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per splice (dB)" class="w-24 px-2.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                    </div>
+                                </div>
+                                <!-- Jumlah Konektor -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jumlah Konektor / Adapter (0.25 dB/titik)</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="connectorCount" value="4" step="1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                        <input type="number" id="connectorLossEach" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per konektor (dB)" class="w-24 px-2.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Safety Margin -->
+                            <div class="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div>
+                                    <label class="text-xs font-semibold text-slate-600">Margin Cadangan / Bending Loss (Safety Margin)</label>
+                                    <p class="text-[11px] text-slate-400">Cadangan untuk tekukan kabel (macro-bending) &amp; penuaan fiber (standar 1.0 - 2.0 dB)</p>
+                                </div>
+                                <div class="relative w-full sm:w-36">
+                                    <input type="number" id="safetyMargin" value="1.5" step="0.1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
+                                    <span class="absolute right-3 top-2 text-xs font-semibold text-slate-400">dB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Konfigurasi Splitter Bertingkat (ODC / ODP / Rasio) -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                                <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">3</span>
+                                    Konfigurasi Splitter Bertingkat (Rasio / Even)
+                                </h3>
+                                <button type="button" onclick="addSplitterStage()" class="px-3 py-1.5 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+                                    <i class="fa-solid fa-plus"></i> Tambah Stage Splitter
+                                </button>
+                            </div>
+
+                            <p class="text-xs text-slate-500 mb-4">
+                                Pilih jenis splitter di tiap tahap (Stage 1 ODC, Stage 2 ODP, dst). Untuk <strong>Splitter Rasio (Unbalanced)</strong>, pilih port keluaran yang diukur (misal cabang tap 10% atau terusannya 90%).
+                            </p>
+
+                            <!-- Daftar Stage Splitter Dinamis -->
+                            <div id="splitter-stages-container" class="space-y-3">
+                                <!-- Di-render melalui JavaScript -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- KOLOM KANAN: HASIL ANALISIS & VISUALISASI ALUR SINYAL (5 Kolom di Desktop) -->
+                    <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+                        
+                        <!-- Card Hasil Utama (Rx Power & Status Indikator) -->
+                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md">
+                            <div class="bg-slate-900 px-5 py-4 text-white flex items-center justify-between">
+                                <div>
+                                    <span class="text-[11px] uppercase tracking-wider text-sky-400 font-bold">Estimasi Daya Terima ONT</span>
+                                    <h3 class="text-sm font-semibold text-slate-200">Optical Power Meter (OPM) Simulasi</h3>
+                                </div>
+                                <i class="fa-solid fa-gauge-high text-2xl text-[#29b6f6]"></i>
+                            </div>
+
+                            <div class="p-6">
+                                <!-- Angka Besar Rx Power -->
+                                <div class="text-center py-4 px-3 rounded-2xl bg-slate-50 border border-slate-200/80 mb-5">
+                                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Daya Terima di ONT / ONU (Rx)</div>
+                                    <div id="result-rx-power" class="text-4xl sm:text-5xl font-extrabold text-[#0d3b66] tracking-tight">
+                                        -19.63 <span class="text-xl font-bold text-slate-500">dBm</span>
+                                    </div>
+                                    
+                                    <!-- Badge Status Sinyal -->
+                                    <div id="result-status-badge" class="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        <span>OPTIMAL / SANGAT BAGUS</span>
+                                    </div>
+                                    <p id="result-status-desc" class="text-xs text-slate-600 mt-2.5 max-w-sm mx-auto">
+                                        Redaman berada di rentang ideal (-15 s/d -24 dBm). Koneksi stabil dan memiliki margin aman untuk jangka panjang.
+                                    </p>
+                                </div>
+
+                                <!-- Visualisasi Bar Meter Sinyal -->
+                                <div class="mb-6">
+                                    <div class="flex justify-between text-[11px] font-bold text-slate-500 mb-1.5">
+                                        <span>LOS (&lt;-28)</span>
+                                        <span>Warning (-25)</span>
+                                        <span class="text-emerald-600">Ideal (-18)</span>
+                                        <span>Overload (&gt;-8)</span>
+                                    </div>
+                                    <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden relative flex">
+                                        <div class="w-1/4 bg-rose-500 h-full" title="Kritis / LOS (< -27 dBm)"></div>
+                                        <div class="w-1/4 bg-amber-400 h-full" title="Toleransi / Warning (-24 s/d -27 dBm)"></div>
+                                        <div class="w-2/5 bg-emerald-500 h-full" title="Optimal (-12 s/d -24 dBm)"></div>
+                                        <div class="w-[10%] bg-purple-500 h-full" title="Overload (> -8 dBm)"></div>
+                                        <!-- Penanda Jarum -->
+                                        <div id="signal-gauge-marker" class="absolute top-0 bottom-0 w-1.5 bg-slate-900 ring-2 ring-white transition-all duration-300" style="left: 65%;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Rincian Perhitungan Redaman (Breakdown) -->
+                                <div class="space-y-2.5 text-xs sm:text-sm border-t border-slate-100 pt-4">
+                                    <div class="flex justify-between items-center text-slate-600">
+                                        <span>Daya Awal (Tx OLT)</span>
+                                        <span id="breakdown-tx" class="font-bold text-[#0d3b66]">+5.00 dBm</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-slate-600">
+                                        <span>Redaman Kabel (<span id="breakdown-km">3.5</span> km)</span>
+                                        <span id="breakdown-cable" class="font-semibold text-rose-600">-0.88 dB</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-slate-600">
+                                        <span>Redaman Splicing &amp; Konektor</span>
+                                        <span id="breakdown-passive" class="font-semibold text-rose-600">-1.40 dB</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-slate-600">
+                                        <span>Total Redaman Splitter</span>
+                                        <span id="breakdown-splitter" class="font-semibold text-rose-600">-20.85 dB</span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-slate-600">
+                                        <span>Safety Margin (Cadangan)</span>
+                                        <span id="breakdown-margin" class="font-semibold text-rose-600">-1.50 dB</span>
+                                    </div>
+                                    <div class="flex justify-between items-center pt-2.5 border-t border-dashed border-slate-300 font-bold text-slate-800">
+                                        <span>Total Redaman Jalur (Total Loss)</span>
+                                        <span id="breakdown-total-loss" class="text-rose-700">24.63 dB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Visualisasi Diagram Alur Sinyal Bertahap -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                            <h4 class="text-sm font-bold text-[#0d3b66] mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-route text-[#29b6f6]"></i>
+                                Diagram Alur Distribusi Daya Optik
+                            </h4>
+                            <div id="visual-flow-diagram" class="space-y-2">
+                                <!-- Di-render otomatis oleh JavaScript -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- =================================================================== -->
+            <!-- TAB 2: SIMULASI RANTAI RASIO (CASCADE / ESTAFET ODP)                -->
+            <!-- =================================================================== -->
+            <section id="tab-cascade" class="hidden space-y-6">
+                <div class="bg-gradient-to-r from-[#0d3b66] to-[#165692] rounded-2xl p-5 sm:p-6 text-white shadow-md">
+                    <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-diagram-project text-[#29b6f6]"></i>
+                        Simulasi Jalur Estafet ODP (Unbalanced Cascade / Topologi Bus FTTH)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-sky-100 mt-1">
+                        Rancang jalur distribusi estafet dari OLT melewati beberapa titik tiang ODP secara berurutan menggunakan Splitter Rasio (misal: 10:90, 20:80, 30:70) yang digabung dengan Splitter ODP lokal (1:4 atau 1:8).
+                    </p>
+                </div>
+
+                <!-- Parameter Global Estafet -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Daya Tx OLT Awal (dBm)</label>
+                            <select id="cascade-tx" onchange="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-[#0d3b66]">
+                                <option value="3.0">SFP Class B+ (+3.0 dBm)</option>
+                                <option value="5.0" selected>SFP Class C+ (+5.0 dBm)</option>
+                                <option value="7.0">SFP Class C++ (+7.0 dBm)</option>
+                                <option value="9.0">SFP Class C+++ (+9.0 dBm)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jarak OLT ke ODP-1 (km)</label>
+                            <input type="number" id="cascade-init-dist" value="1.5" step="0.1" min="0" oninput="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Redaman Kabel (dB/km)</label>
+                            <input type="number" id="cascade-cable-loss" value="0.25" step="0.01" min="0" oninput="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold">
+                        </div>
+                        <div>
+                            <button type="button" onclick="addCascadeNode()" class="w-full px-4 py-2.5 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow">
+                                <i class="fa-solid fa-plus-circle"></i> Tambah Titik ODP Estafet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel / Kartu Hasil Estafet per Titik ODP -->
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                        <h3 class="text-sm font-bold text-[#0d3b66]">Susunan Rantai ODP &amp; Estimasi Redaman Setiap Cabang</h3>
+                        <span class="text-xs text-slate-500">*Sudah termasuk estimasi redaman splice/konektor 0.35 dB per titik ODP</span>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                                    <th class="py-3.5 px-4 font-bold">Titik ODP</th>
+                                    <th class="py-3.5 px-4 font-bold">Jarak Segmen (km)</th>
+                                    <th class="py-3.5 px-4 font-bold">Splitter Rasio (Tap : Terusan)</th>
+                                    <th class="py-3.5 px-4 font-bold">Splitter Distribusi ODP</th>
+                                    <th class="py-3.5 px-4 font-bold">Sinyal Masuk ODP</th>
+                                    <th class="py-3.5 px-4 font-bold">Daya Terima ONT (Rx)</th>
+                                    <th class="py-3.5 px-4 font-bold">Status</th>
+                                    <th class="py-3.5 px-4 text-center font-bold">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-200">
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 2</td><td class="py-2.5 px-4">2 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">3.7 dB (3.5 - 4.0 dB)</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 4</td><td class="py-2.5 px-4">4 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">7.3 dB (7.0 - 7.5 dB)</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 8</td><td class="py-2.5 px-4">8 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">10.5 dB (10.2 - 10.8 dB)</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 16</td><td class="py-2.5 px-4">16 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">13.7 dB (13.5 - 14.0 dB)</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 32</td><td class="py-2.5 px-4">32 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">17.1 dB (16.8 - 17.5 dB)</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 64</td><td class="py-2.5 px-4">64 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">20.5 dB (20.2 - 21.0 dB)</td></tr>
+                            <tbody id="cascade-table-body" class="divide-y divide-slate-200 text-sm">
+                                <!-- Di-render otomatis melalui JavaScript -->
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Tabel 2: Unbalanced / Asymmetric Ratio Splitter -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden">
-                        <div class="bg-[#0d3b66] text-white px-4 py-3 font-bold text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-sliders text-[#29b6f6]"></i>
-                            2. Splitter Rasio Tidak Rata (Unbalanced / FBT Coupler)
+
+            <!-- =================================================================== -->
+            <!-- TAB 3: TABEL REFERENSI STANDAR REDAMAN SPLITTER                     -->
+            <!-- =================================================================== -->
+            <section id="tab-reference" class="hidden space-y-6">
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                    <h2 class="text-lg font-bold text-[#0d3b66] mb-1">Tabel Referensi Standar Redaman Optik FTTH (PLC &amp; FBT Splitter)</h2>
+                    <p class="text-xs text-slate-500 mb-6">Acuan standar industri ITU-T G.984 untuk perencanaan jaringan FTTH kaliwaru.net.</p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Tabel 1: Even / Balanced Splitter -->
+                        <div class="border border-slate-200 rounded-xl overflow-hidden">
+                            <div class="bg-[#0d3b66] text-white px-4 py-3 font-bold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-code-branch text-[#29b6f6]"></i>
+                                1. Splitter Rata (Even / Balanced PLC Splitter)
+                            </div>
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                    <tr>
+                                        <th class="py-3 px-4">Rasio Splitter</th>
+                                        <th class="py-3 px-4">Jumlah Port</th>
+                                        <th class="py-3 px-4">Redaman Maksimal (Insertion Loss)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 2</td><td class="py-2.5 px-4">2 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">3.7 dB (3.5 - 4.0 dB)</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 4</td><td class="py-2.5 px-4">4 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">7.3 dB (7.0 - 7.5 dB)</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 8</td><td class="py-2.5 px-4">8 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">10.5 dB (10.2 - 10.8 dB)</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 16</td><td class="py-2.5 px-4">16 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">13.7 dB (13.5 - 14.0 dB)</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 32</td><td class="py-2.5 px-4">32 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">17.1 dB (16.8 - 17.5 dB)</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 64</td><td class="py-2.5 px-4">64 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">20.5 dB (20.2 - 21.0 dB)</td></tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
-                                <tr>
-                                    <th class="py-3 px-4">Rasio (Tap : Terusan)</th>
-                                    <th class="py-3 px-4">Loss Cabang (Tap)</th>
-                                    <th class="py-3 px-4">Loss Terusan (Pass-through)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-200">
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">5 : 95</td><td class="py-2.5 px-4 font-semibold text-rose-600">13.7 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.4 dB</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">10 : 90</td><td class="py-2.5 px-4 font-semibold text-rose-600">10.5 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.6 dB</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">15 : 85</td><td class="py-2.5 px-4 font-semibold text-rose-600">8.7 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.9 dB</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">20 : 80</td><td class="py-2.5 px-4 font-semibold text-rose-600">7.3 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.2 dB</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">25 : 75</td><td class="py-2.5 px-4 font-semibold text-rose-600">6.4 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.5 dB</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">30 : 70</td><td class="py-2.5 px-4 font-semibold text-rose-600">5.6 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.8 dB</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">40 : 60</td><td class="py-2.5 px-4 font-semibold text-rose-600">4.3 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">2.5 dB</td></tr>
-                                <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">50 : 50</td><td class="py-2.5 px-4 font-semibold text-rose-600">3.5 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">3.5 dB</td></tr>
-                            </tbody>
-                        </table>
+
+                        <!-- Tabel 2: Unbalanced / Asymmetric Ratio Splitter -->
+                        <div class="border border-slate-200 rounded-xl overflow-hidden">
+                            <div class="bg-[#0d3b66] text-white px-4 py-3 font-bold text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-[#29b6f6]"></i>
+                                2. Splitter Rasio Tidak Rata (Unbalanced / FBT Coupler)
+                            </div>
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                    <tr>
+                                        <th class="py-3 px-4">Rasio (Tap : Terusan)</th>
+                                        <th class="py-3 px-4">Loss Cabang (Tap)</th>
+                                        <th class="py-3 px-4">Loss Terusan (Pass-through)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">5 : 95</td><td class="py-2.5 px-4 font-semibold text-rose-600">13.7 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.4 dB</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">10 : 90</td><td class="py-2.5 px-4 font-semibold text-rose-600">10.5 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.6 dB</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">15 : 85</td><td class="py-2.5 px-4 font-semibold text-rose-600">8.7 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.9 dB</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">20 : 80</td><td class="py-2.5 px-4 font-semibold text-rose-600">7.3 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.2 dB</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">25 : 75</td><td class="py-2.5 px-4 font-semibold text-rose-600">6.4 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.5 dB</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">30 : 70</td><td class="py-2.5 px-4 font-semibold text-rose-600">5.6 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.8 dB</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">40 : 60</td><td class="py-2.5 px-4 font-semibold text-rose-600">4.3 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">2.5 dB</td></tr>
+                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">50 : 50</td><td class="py-2.5 px-4 font-semibold text-rose-600">3.5 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">3.5 dB</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+            </section>
+
+        </main>
+
+        <!-- TOAST NOTIFIKASI PENGGANTI ALERT() -->
+        <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+            <div class="bg-[#0d3b66] text-white px-4 py-3 rounded-xl shadow-lg border border-sky-400/30 flex items-center gap-3 text-sm font-medium">
+                <i class="fa-solid fa-circle-check text-[#29b6f6] text-lg"></i>
+                <span id="toast-message">Laporan berhasil disalin ke clipboard!</span>
             </div>
-        </section>
-
-    </main>
-
-    <!-- TOAST NOTIFIKASI PENGGANTI ALERT() -->
-    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-[#0d3b66] text-white px-4 py-3 rounded-xl shadow-lg border border-sky-400/30 flex items-center gap-3 text-sm font-medium">
-            <i class="fa-solid fa-circle-check text-[#29b6f6] text-lg"></i>
-            <span id="toast-message">Laporan berhasil disalin ke clipboard!</span>
         </div>
+
+        <!-- FOOTER PERUSAHAAN -->
+        <footer class="bg-white border-t border-slate-200 py-5 mt-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+                <div class="font-semibold text-[#0d3b66]">
+                    &copy; 2026 <span class="font-bold">kaliwaru.net</span>
+                </div>
+                <div>
+                    Sistem Kalkulator Perencanaan &amp; Simulasi Redaman Jaringan FTTH
+                </div>
+            </div>
+        </footer>
+
     </div>
-
-    <!-- FOOTER PERUSAHAAN -->
-    <footer class="bg-white border-t border-slate-200 py-5 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-            <div class="font-semibold text-[#0d3b66]">
-                &copy; 2026 <span class="font-bold">kaliwaru.net</span>
-            </div>
-            <div>
-                Sistem Kalkulator Perencanaan & Simulasi Redaman Jaringan FTTH
-            </div>
-        </div>
-    </footer>
 
     <!-- LOGIKA JAVASCRIPT LENGKAP -->
     <script>
+        // =========================================================================
+        // 0. KUNCI PASSWORD HALAMAN (1234)
+        // =========================================================================
+        const OLT_PAGE_PASSWORD = '1234';
+        const OLT_UNLOCK_KEY = 'kaliwaru_olt_unlocked_v1';
+
+        function applyLockState(isUnlocked) {
+            const gate = document.getElementById('password-gate');
+            const content = document.getElementById('protected-content');
+            const input = document.getElementById('gate-password-input');
+            const errorMsg = document.getElementById('gate-error-msg');
+
+            if (isUnlocked) {
+                gate.classList.add('hidden');
+                content.classList.remove('hidden');
+                document.body.classList.remove('locked');
+                errorMsg.textContent = '';
+            } else {
+                content.classList.add('hidden');
+                gate.classList.remove('hidden');
+                document.body.classList.add('locked');
+                input.value = '';
+                errorMsg.textContent = '';
+                setTimeout(() => input.focus(), 50);
+            }
+        }
+
+        function unlockPage(event) {
+            event.preventDefault();
+            const input = document.getElementById('gate-password-input');
+            const errorMsg = document.getElementById('gate-error-msg');
+
+            if (input.value === OLT_PAGE_PASSWORD) {
+                sessionStorage.setItem(OLT_UNLOCK_KEY, 'true');
+                applyLockState(true);
+            } else {
+                errorMsg.textContent = 'Password salah. Silakan coba lagi.';
+                input.focus();
+                input.select();
+            }
+        }
+
+        function lockCalculator() {
+            sessionStorage.removeItem(OLT_UNLOCK_KEY);
+            applyLockState(false);
+        }
+
         // =========================================================================
         // 1. DATABASE STANDAR SPLITTER (EVEN & UNBALANCED RATIO)
         // =========================================================================
@@ -637,7 +730,6 @@
         // =========================================================================
         function setSfpPower(power, btnElement) {
             document.getElementById('txPower').value = power.toFixed(1);
-            // Update styling tombol preset
             document.querySelectorAll('.sfp-preset').forEach(btn => {
                 btn.classList.remove('border-2', 'border-[#0d3b66]', 'bg-brand-light/40');
                 btn.classList.add('border', 'border-slate-200');
@@ -657,7 +749,6 @@
             const container = document.getElementById('splitter-stages-container');
             container.innerHTML = '';
 
-            // Kelompokkan opsi dropdown berdasarkan kategori
             const categories = [...new Set(SPLITTER_OPTIONS.map(o => o.category))];
 
             splitterStages.forEach((stage, index) => {
@@ -728,7 +819,6 @@
 
         function calculateLinkBudget() {
             try {
-                // Ambil nilai input dengan fallback aman
                 const txPower = parseFloat(document.getElementById('txPower').value) || 0;
                 const cableLength = Math.max(0, parseFloat(document.getElementById('cableLength').value) || 0);
                 const cableLossPerKm = Math.max(0, parseFloat(document.getElementById('cableLossPerKm').value) || 0);
@@ -738,7 +828,6 @@
                 const connectorLossEach = Math.max(0, parseFloat(document.getElementById('connectorLossEach').value) || 0);
                 const safetyMargin = Math.max(0, parseFloat(document.getElementById('safetyMargin').value) || 0);
 
-                // Hitung masing-masing komponen loss
                 const totalCableLoss = cableLength * cableLossPerKm;
                 const totalSpliceLoss = spliceCount * spliceLossEach;
                 const totalConnectorLoss = connectorCount * connectorLossEach;
@@ -753,7 +842,6 @@
                 const totalLoss = totalCableLoss + totalPassiveLoss + totalSplitterLoss + safetyMargin;
                 const rxPower = txPower - totalLoss;
 
-                // Update tampilan angka
                 document.getElementById('result-rx-power').innerHTML = `${rxPower.toFixed(2)} <span class="text-xl font-bold text-slate-500">dBm</span>`;
                 document.getElementById('breakdown-tx').textContent = `${txPower >= 0 ? '+' : ''}${txPower.toFixed(2)} dBm`;
                 document.getElementById('breakdown-km').textContent = cableLength.toFixed(1);
@@ -763,7 +851,6 @@
                 document.getElementById('breakdown-margin').textContent = `-${safetyMargin.toFixed(2)} dB`;
                 document.getElementById('breakdown-total-loss').textContent = `${totalLoss.toFixed(2)} dB`;
 
-                // Evaluasi Status Sinyal ONT (Standar GPON / EPON)
                 const badgeEl = document.getElementById('result-status-badge');
                 const descEl = document.getElementById('result-status-desc');
                 const rxTextEl = document.getElementById('result-rx-power');
@@ -790,12 +877,10 @@
                     rxTextEl.className = 'text-4xl sm:text-5xl font-extrabold text-rose-600 tracking-tight';
                 }
 
-                // Posisi jarum gauge (-32 dBm = 0%, -5 dBm = 100%)
                 const clampedRx = Math.max(-32, Math.min(-5, rxPower));
                 const percentage = ((clampedRx - (-32)) / (-5 - (-32))) * 100;
                 document.getElementById('signal-gauge-marker').style.left = `${percentage}%`;
 
-                // Render Diagram Alur Bertahap
                 renderFlowDiagram(txPower, totalCableLoss, totalPassiveLoss, safetyMargin, rxPower);
             } catch (err) {
                 console.error('Error kalkulasi:', err);
@@ -816,19 +901,17 @@
                 </div>
             `;
 
-            // Step Kabel + Pasif
             const infraLoss = cableLoss + passiveLoss + margin;
             currentPower -= infraLoss;
             html += `
                 <div class="pl-4 border-l-2 border-dashed border-sky-400 ml-3 py-1">
                     <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs">
-                        <span class="text-slate-600"><i class="fa-solid fa-bezier-curve text-slate-400 mr-1.5"></i>Kabel, Splice & Margin (-${infraLoss.toFixed(2)} dB)</span>
+                        <span class="text-slate-600"><i class="fa-solid fa-bezier-curve text-slate-400 mr-1.5"></i>Kabel, Splice &amp; Margin (-${infraLoss.toFixed(2)} dB)</span>
                         <span class="font-bold text-slate-700">${currentPower.toFixed(2)} dBm</span>
                     </div>
                 </div>
             `;
 
-            // Step Setiap Stage Splitter
             splitterStages.forEach((st, idx) => {
                 const found = SPLITTER_OPTIONS.find(o => o.id === st.splitterId) || SPLITTER_OPTIONS[0];
                 currentPower -= found.loss;
@@ -842,7 +925,6 @@
                 `;
             });
 
-            // Titik Akhir ONT
             const ontColor = finalRx >= -24 && finalRx <= -8 ? 'bg-emerald-600' : (finalRx >= -27 && finalRx < -24 ? 'bg-amber-500' : 'bg-rose-600');
             html += `
                 <div class="flex items-center justify-between p-2.5 rounded-xl ${ontColor} text-white text-xs shadow-sm">
@@ -899,7 +981,6 @@
                                `• Status Kelayakan: ${status}\n` +
                                `----------------------------------------`;
 
-            // Gunakan textarea sementara + document.execCommand('copy') sesuai aturan iFrame
             const tempTextArea = document.createElement('textarea');
             tempTextArea.value = textToCopy;
             document.body.appendChild(tempTextArea);
@@ -922,11 +1003,9 @@
             const tbody = document.getElementById('cascade-table-body');
             tbody.innerHTML = '';
 
-            // Sinyal tiba di ODP pertama
-            let trunkPower = txPower - (initDist * lossPerKm) - 0.35; // 0.35 dB konektor/splice awal OLT
+            let trunkPower = txPower - (initDist * lossPerKm) - 0.35;
 
             cascadeNodes.forEach((node, index) => {
-                // Kurangi redaman kabel segmen dari ODP sebelumnya (kecuali ODP pertama)
                 if (index > 0) {
                     trunkPower -= (node.distKm * lossPerKm);
                 }
@@ -935,13 +1014,9 @@
                 const ratioObj = CASCADE_RATIOS.find(r => r.id === node.ratioId) || CASCADE_RATIOS[0];
                 const odpSplitterObj = CASCADE_ODP_SPLITTERS.find(s => s.id === node.odpSplitterId) || CASCADE_ODP_SPLITTERS[2];
 
-                // Sinyal turun ke pelanggan di ODP ini: Input - TapLoss - SplitterODP - Konektor/Splice lokal (0.35 dB)
                 const customerRx = inputAtOdp - ratioObj.tapLoss - odpSplitterObj.loss - 0.35;
+                trunkPower = inputAtOdp - ratioObj.passLoss - 0.20;
 
-                // Sinyal diteruskan ke ODP berikutnya lewat jalur Pass-Through
-                trunkPower = inputAtOdp - ratioObj.passLoss - 0.20; // 0.20 dB loss splice/konektor terusan
-
-                // Status badge
                 let statusBadge = '';
                 if (customerRx > -8.0) {
                     statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">Overload</span>';
@@ -953,7 +1028,6 @@
                     statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">LOS / Kritis</span>';
                 }
 
-                // Opsi select rasio & splitter
                 const ratioSelectHtml = CASCADE_RATIOS.map(r => 
                     `<option value="${r.id}" ${r.id === node.ratioId ? 'selected' : ''}>${r.label} (Tap -${r.tapLoss} / Pass -${r.passLoss})</option>`
                 ).join('');
@@ -1035,6 +1109,7 @@
             renderSplitterStages();
             calculateLinkBudget();
             calculateCascade();
+            applyLockState(sessionStorage.getItem(OLT_UNLOCK_KEY) === 'true');
         });
     </script>
 </body>
