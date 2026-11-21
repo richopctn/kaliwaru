@@ -196,6 +196,180 @@
       font-size: 0.65rem;
     }
 
+    /* Visualisasi Topologi Jalur ODP Interaktif */
+    .odp-topology-wrap {
+      background: linear-gradient(180deg, #09243f 0%, #0f3a63 100%);
+      border-radius: 16px;
+      padding: 14px 10px 10px;
+      margin-bottom: 12px;
+      border: 1px solid #1e4976;
+      box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .odp-legend {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: #bae6fd;
+      padding: 0 6px 8px;
+      border-bottom: 1px solid rgba(186, 230, 253, 0.14);
+      margin-bottom: 6px;
+    }
+
+    .odp-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pulse-dot-inline {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+      display: inline-block;
+    }
+
+    .odp-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    .fiber-base {
+      fill: none;
+      stroke: rgba(56, 189, 248, 0.24);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      transition: stroke 0.25s ease, stroke-width 0.25s ease;
+    }
+
+    .fiber-pulse {
+      fill: none;
+      stroke: #38bdf8;
+      stroke-width: 2.6;
+      stroke-linecap: round;
+      stroke-dasharray: 12 44;
+      animation: opticalFlow 1.9s linear infinite;
+      filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.85));
+      transition: stroke 0.25s ease, stroke-width 0.25s ease;
+    }
+
+    .fiber-route.active .fiber-base {
+      stroke: rgba(74, 222, 128, 0.45);
+      stroke-width: 3.4;
+    }
+
+    .fiber-route.active .fiber-pulse {
+      stroke: #4ade80;
+      stroke-width: 3.6;
+      animation-duration: 1.15s;
+      filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.95));
+    }
+
+    @keyframes opticalFlow {
+      from {
+        stroke-dashoffset: 112;
+      }
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes nodeRadar {
+      0% {
+        transform: scale(0.95);
+        opacity: 0.75;
+      }
+      70% {
+        transform: scale(1.75);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1.75);
+        opacity: 0;
+      }
+    }
+
+    .odp-node {
+      cursor: pointer;
+    }
+
+    .odp-node-ring {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: nodeRadar 2.2s ease-out infinite;
+    }
+
+    .odp-node.active .odp-node-box {
+      fill: #15803d;
+      stroke: #86efac;
+      stroke-width: 1.8;
+    }
+
+    .odp-node-box {
+      fill: #0c4a6e;
+      stroke: #38bdf8;
+      stroke-width: 1.3;
+      transition: fill 0.2s ease, stroke 0.2s ease;
+    }
+
+    .odp-node:hover .odp-node-box {
+      fill: #0369a1;
+      stroke: #7dd3fc;
+    }
+
+    .odp-detail-panel {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 11px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .odp-detail-info {
+      font-size: 0.79rem;
+    }
+
+    .odp-detail-title {
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .odp-detail-meta {
+      color: var(--muted);
+      font-size: 0.74rem;
+      margin-top: 2px;
+    }
+
+    .area-badge {
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .area-badge.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary-dark);
+      box-shadow: 0 3px 10px rgba(15, 76, 129, 0.22);
+    }
+
+    .area-badge.active::before {
+      color: #4ade80;
+    }
+
     .coverage-note {
       display: flex;
       align-items: center;
@@ -421,23 +595,148 @@
     <!-- Card Area Terjangkau -->
     <div class="card">
       <div class="card-header">
-        <div class="card-title">📍 Area Terjangkau</div>
-        <div class="status-pill" style="background: #dcfce7; color: #15803d;">6 Wilayah Aktif</div>
+        <div class="card-title">📍 Jalur ODP &amp; Area Terjangkau</div>
+        <div class="status-pill" style="background: #dcfce7; color: #15803d;">6 Jalur ODP Aktif</div>
       </div>
       <p class="coverage-desc">
-        Jaringan internet rumah &amp; usaha kaliwaru.net melayani area berikut di wilayah Pacitan:
+        Visualisasi distribusi kabel Fiber Optic dari pusat OLT ke titik ODP wilayah. Ketuk salah satu titik ODP untuk melihat status port:
       </p>
+
+      <!-- Animasi Topologi Jalur Serat Optik OLT -> 6 ODP -->
+      <div class="odp-topology-wrap">
+        <div class="odp-legend">
+          <span><i class="pulse-dot-inline"></i> Sinyal Optik Aktif (PON)</span>
+          <span>Redaman Rata-rata: -17.5 dBm</span>
+        </div>
+
+        <svg class="odp-svg" viewBox="0 0 460 235" role="img" aria-label="Diagram Animasi Jalur ODP Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, dan Karanganyar">
+          <defs>
+            <radialGradient id="oltGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.65" />
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+
+          <!-- Jalur Serat Optik (6 Cabang dari Pusat OLT x=230, y=34) -->
+          <!-- 1. Kaliwaru (Kiri Atas) -->
+          <g class="fiber-route active" id="route-kaliwaru">
+            <path class="fiber-base" d="M 230 34 C 155 34, 82 52, 74 96" />
+            <path class="fiber-pulse" style="animation-delay: 0s;" d="M 230 34 C 155 34, 82 52, 74 96" />
+          </g>
+
+          <!-- 2. Wora-wari (Tengah Atas) -->
+          <g class="fiber-route" id="route-worawari">
+            <path class="fiber-base" d="M 230 34 C 230 62, 230 72, 230 96" />
+            <path class="fiber-pulse" style="animation-delay: -0.35s;" d="M 230 34 C 230 62, 230 72, 230 96" />
+          </g>
+
+          <!-- 3. Nglaran (Kanan Atas) -->
+          <g class="fiber-route" id="route-nglaran">
+            <path class="fiber-base" d="M 230 34 C 305 34, 378 52, 386 96" />
+            <path class="fiber-pulse" style="animation-delay: -0.7s;" d="M 230 34 C 305 34, 378 52, 386 96" />
+          </g>
+
+          <!-- 4. Mantren (Kiri Bawah) -->
+          <g class="fiber-route" id="route-mantren">
+            <path class="fiber-base" d="M 230 34 C 180 95, 92 128, 74 182" />
+            <path class="fiber-pulse" style="animation-delay: -1.05s;" d="M 230 34 C 180 95, 92 128, 74 182" />
+          </g>
+
+          <!-- 5. Klesem (Tengah Bawah) -->
+          <g class="fiber-route" id="route-klesem">
+            <path class="fiber-base" d="M 230 34 C 215 105, 245 135, 230 182" />
+            <path class="fiber-pulse" style="animation-delay: -1.4s;" d="M 230 34 C 215 105, 245 135, 230 182" />
+          </g>
+
+          <!-- 6. Karanganyar (Kanan Bawah) -->
+          <g class="fiber-route" id="route-karanganyar">
+            <path class="fiber-base" d="M 230 34 C 280 95, 368 128, 386 182" />
+            <path class="fiber-pulse" style="animation-delay: -1.75s;" d="M 230 34 C 280 95, 368 128, 386 182" />
+          </g>
+
+          <!-- Pusat Server OLT kaliwaru.net -->
+          <g>
+            <circle cx="230" cy="30" r="26" fill="url(#oltGlow)" />
+            <rect x="164" y="12" width="132" height="32" rx="16" fill="#0ea5e9" stroke="#e0f2fe" stroke-width="1.5" />
+            <text x="230" y="26" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="800">SERVER OLT PUSAT</text>
+            <text x="230" y="38" text-anchor="middle" fill="#e0f2fe" font-size="8" font-weight="600">kaliwaru.net NOC</text>
+          </g>
+
+          <!-- Node ODP 1: Kaliwaru -->
+          <g class="odp-node active" id="node-kaliwaru" onclick="selectOdp('kaliwaru')">
+            <circle class="odp-node-ring" cx="74" cy="96" r="10" fill="none" stroke="#4ade80" stroke-width="1.5" />
+            <circle cx="74" cy="96" r="5.5" fill="#4ade80" stroke="#ffffff" stroke-width="1.5" />
+            <rect class="odp-node-box" x="18" y="106" width="112" height="30" rx="8" />
+            <text x="74" y="119" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Kaliwaru</text>
+            <text x="74" y="130" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
+          </g>
+
+          <!-- Node ODP 2: Wora-wari -->
+          <g class="odp-node" id="node-worawari" onclick="selectOdp('worawari')">
+            <circle class="odp-node-ring" style="animation-delay: 0.4s;" cx="230" cy="96" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+            <circle cx="230" cy="96" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+            <rect class="odp-node-box" x="174" y="106" width="112" height="30" rx="8" />
+            <text x="230" y="119" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Wora-wari</text>
+            <text x="230" y="130" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
+          </g>
+
+          <!-- Node ODP 3: Nglaran -->
+          <g class="odp-node" id="node-nglaran" onclick="selectOdp('nglaran')">
+            <circle class="odp-node-ring" style="animation-delay: 0.8s;" cx="386" cy="96" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+            <circle cx="386" cy="96" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+            <rect class="odp-node-box" x="330" y="106" width="112" height="30" rx="8" />
+            <text x="386" y="119" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Nglaran</text>
+            <text x="386" y="130" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 8 Port</text>
+          </g>
+
+          <!-- Node ODP 4: Mantren -->
+          <g class="odp-node" id="node-mantren" onclick="selectOdp('mantren')">
+            <circle class="odp-node-ring" style="animation-delay: 1.1s;" cx="74" cy="182" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+            <circle cx="74" cy="182" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+            <rect class="odp-node-box" x="18" y="192" width="112" height="30" rx="8" />
+            <text x="74" y="205" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Mantren</text>
+            <text x="74" y="216" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
+          </g>
+
+          <!-- Node ODP 5: Klesem -->
+          <g class="odp-node" id="node-klesem" onclick="selectOdp('klesem')">
+            <circle class="odp-node-ring" style="animation-delay: 1.5s;" cx="230" cy="182" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+            <circle cx="230" cy="182" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+            <rect class="odp-node-box" x="174" y="192" width="112" height="30" rx="8" />
+            <text x="230" y="205" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Klesem</text>
+            <text x="230" y="216" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 8 Port</text>
+          </g>
+
+          <!-- Node ODP 6: Karanganyar -->
+          <g class="odp-node" id="node-karanganyar" onclick="selectOdp('karanganyar')">
+            <circle class="odp-node-ring" style="animation-delay: 1.8s;" cx="386" cy="182" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
+            <circle cx="386" cy="182" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
+            <rect class="odp-node-box" x="330" y="192" width="112" height="30" rx="8" />
+            <text x="386" y="205" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Karanganyar</text>
+            <text x="386" y="216" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Panel Info Titik ODP Terpilih -->
+      <div class="odp-detail-panel" id="odpDetailPanel">
+        <div class="odp-detail-info">
+          <div class="odp-detail-title" id="odpDetailTitle">🟢 Jalur ODP Kaliwaru (PON-01)</div>
+          <div class="odp-detail-meta" id="odpDetailMeta">Status: Aktif Normal &bull; Kapasitas Port Tersedia</div>
+        </div>
+      </div>
+
       <div class="area-grid">
-        <span class="area-badge">Kaliwaru</span>
-        <span class="area-badge">Wora-wari</span>
-        <span class="area-badge">Nglaran</span>
-        <span class="area-badge">Mantren</span>
-        <span class="area-badge">Klesem</span>
-        <span class="area-badge">Karanganyar</span>
+        <span class="area-badge active" id="badge-kaliwaru" onclick="selectOdp('kaliwaru')">Kaliwaru</span>
+        <span class="area-badge" id="badge-worawari" onclick="selectOdp('worawari')">Wora-wari</span>
+        <span class="area-badge" id="badge-nglaran" onclick="selectOdp('nglaran')">Nglaran</span>
+        <span class="area-badge" id="badge-mantren" onclick="selectOdp('mantren')">Mantren</span>
+        <span class="area-badge" id="badge-klesem" onclick="selectOdp('klesem')">Klesem</span>
+        <span class="area-badge" id="badge-karanganyar" onclick="selectOdp('karanganyar')">Karanganyar</span>
       </div>
       <div class="coverage-note">
-        <span>Belum tercantum atau mau cek tiang/ODP?</span>
-        <a href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20mau%20cek%20jangkauan%20jaringan%20di%20lokasi%20saya." target="_blank" rel="noopener">Cek Lokasi ↗</a>
+        <span>Mau pasang baru di titik ODP terpilih?</span>
+        <a id="odpWaLink" href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20mau%20cek%20slot%20ODP%20untuk%20pasang%20WiFi%20di%20area%20Kaliwaru." target="_blank" rel="noopener">Tanya Slot Kaliwaru ↗</a>
       </div>
     </div>
 
@@ -527,6 +826,68 @@
   </div>
 
   <script>
+    // Data masing-masing jalur ODP
+    const odpData = {
+      kaliwaru: {
+        name: "Kaliwaru",
+        code: "ODP-KLW-01 (PON-01)",
+        status: "Status: Aktif Normal • Sinyal -16.8 dBm • Port Tersedia"
+      },
+      worawari: {
+        name: "Wora-wari",
+        code: "ODP-WRW-02 (PON-01)",
+        status: "Status: Aktif Normal • Sinyal -17.4 dBm • Port Tersedia"
+      },
+      nglaran: {
+        name: "Nglaran",
+        code: "ODP-NGL-03 (PON-02)",
+        status: "Status: Aktif Normal • Sinyal -18.1 dBm • Port Tersedia"
+      },
+      mantren: {
+        name: "Mantren",
+        code: "ODP-MTR-04 (PON-02)",
+        status: "Status: Aktif Normal • Sinyal -17.9 dBm • Port Tersedia"
+      },
+      klesem: {
+        name: "Klesem",
+        code: "ODP-KLS-05 (PON-03)",
+        status: "Status: Aktif Normal • Sinyal -18.5 dBm • Port Tersedia"
+      },
+      karanganyar: {
+        name: "Karanganyar",
+        code: "ODP-KRA-06 (PON-03)",
+        status: "Status: Aktif Normal • Sinyal -18.2 dBm • Port Tersedia"
+      }
+    };
+
+    // Memilih & menyorot jalur animasi ODP pada diagram SVG dan badge wilayah
+    function selectOdp(key) {
+      const keys = Object.keys(odpData);
+      keys.forEach((k) => {
+        const routeEl = document.getElementById("route-" + k);
+        const nodeEl = document.getElementById("node-" + k);
+        const badgeEl = document.getElementById("badge-" + k);
+        const isSelected = k === key;
+
+        if (routeEl) routeEl.classList.toggle("active", isSelected);
+        if (nodeEl) nodeEl.classList.toggle("active", isSelected);
+        if (badgeEl) badgeEl.classList.toggle("active", isSelected);
+      });
+
+      const info = odpData[key];
+      if (info) {
+        document.getElementById("odpDetailTitle").textContent = "🟢 Jalur " + info.code;
+        document.getElementById("odpDetailMeta").textContent = info.status;
+
+        const waLink = document.getElementById("odpWaLink");
+        const msg = encodeURIComponent(
+          "Halo Admin kaliwaru.net, saya mau cek slot ODP untuk pasang WiFi di area " + info.name + "."
+        );
+        waLink.href = "https://wa.me/6283873333027?text=" + msg;
+        waLink.textContent = "Tanya Slot " + info.name + " ↗";
+      }
+    }
+
     // Mengukur latensi (Ping) dan kestabilan (Jitter) ke endpoint Cloudflare
     async function measurePing() {
       const pings = [];
