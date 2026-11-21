@@ -37,23 +37,19 @@
       flex-direction: column;
       align-items: center;
       padding: 16px;
-      position: relative;
     }
 
-    /* Pastikan konten utama selalu di atas overlay iklan Xtgem */
     .container {
       width: 100%;
       max-width: 460px;
       margin: auto;
-      position: relative;
-      z-index: 9999;
     }
 
     .header {
       background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 65%, #155a96 100%);
       color: #fff;
       border-radius: 20px 20px 0 0;
-      padding: 24px 20px 28px;
+      padding: 26px 20px 28px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -62,8 +58,8 @@
     .header::after {
       content: "";
       position: absolute;
-      width: 180px;
-      height: 180px;
+      width: 190px;
+      height: 190px;
       background: radial-gradient(circle, rgba(41, 182, 246, 0.25) 0%, transparent 70%);
       top: -60px;
       right: -40px;
@@ -71,26 +67,53 @@
       pointer-events: none;
     }
 
-    .brand-badge {
+    /* Logo Tipografi Modern */
+    .brand-logo {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 6px 14px;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(41, 182, 246, 0.35);
+      padding: 8px 18px;
       border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(4px);
     }
 
-    .brand-badge span.dot {
-      width: 8px;
-      height: 8px;
-      background: var(--cyan);
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
       border-radius: 50%;
-      box-shadow: 0 0 8px var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px rgba(41, 182, 246, 0.6);
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .brand-text {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .brand-text span {
+      color: var(--cyan);
+      font-weight: 800;
     }
 
     .header h1 {
@@ -112,8 +135,6 @@
       padding: 20px;
       border: 1px solid var(--border);
       border-top: none;
-      position: relative;
-      z-index: 10000;
     }
 
     .bill-summary {
@@ -154,8 +175,6 @@
       padding: 5px;
       border-radius: 12px;
       margin-bottom: 18px;
-      position: relative;
-      z-index: 10001;
     }
 
     .tab-btn {
@@ -167,7 +186,6 @@
       font-weight: 700;
       color: var(--muted);
       cursor: pointer;
-      touch-action: manipulation;
     }
 
     .tab-btn.active {
@@ -220,7 +238,6 @@
       border: 1px solid var(--border);
       background: #f8fafc;
       cursor: pointer;
-      touch-action: manipulation;
     }
 
     .qris-img-wrapper img {
@@ -234,8 +251,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-top: 14px;
-      position: relative;
-      z-index: 10002;
     }
 
     .btn-outline {
@@ -252,7 +267,6 @@
       font-weight: 700;
       cursor: pointer;
       text-decoration: none;
-      touch-action: manipulation;
     }
 
     .supported-apps {
@@ -323,7 +337,6 @@
       font-weight: 700;
       cursor: pointer;
       flex-shrink: 0;
-      touch-action: manipulation;
     }
 
     .copy-btn.copied {
@@ -335,8 +348,6 @@
       border-top: 1px solid var(--border);
       padding-top: 16px;
       margin-top: 6px;
-      position: relative;
-      z-index: 10002;
     }
 
     .confirm-title {
@@ -375,7 +386,6 @@
       justify-content: center;
       gap: 8px;
       box-shadow: 0 6px 16px rgba(37, 211, 102, 0.28);
-      touch-action: manipulation;
     }
 
     .footer-note {
@@ -384,7 +394,7 @@
       color: var(--muted);
       margin-top: 16px;
       line-height: 1.5;
-      padding-bottom: 40px;
+      padding-bottom: 30px;
     }
 
     .modal {
@@ -427,16 +437,22 @@
       border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
-      touch-action: manipulation;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="brand-badge">
-        <span class="dot"></span>
-        <span>kaliwaru.net</span>
+      <div class="brand-logo">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+          </svg>
+        </div>
+        <div class="brand-text">kaliwaru<span>.net</span></div>
       </div>
       <h1>Pembayaran Tagihan WiFi</h1>
       <p>Pilih metode pembayaran QRIS instan atau Transfer Bank & DANA di bawah ini</p>
@@ -477,16 +493,17 @@
           <div class="qris-img-wrapper" id="qrisBoxTrigger">
             <img
               id="qrisImage"
-              src="https://lh3.googleusercontent.com/d/1AB_xgjpyblfHvva0lORjG3leacyKzylx"
+              src="qris.jpeg"
               alt="QRIS Resmi kaliwaru.net"
+              onerror="handleQrisFallback(this)"
             />
           </div>
 
           <div class="qris-actions">
             <a
-              href="https://drive.google.com/uc?export=download&id=1AB_xgjpyblfHvva0lORjG3leacyKzylx"
-              target="_blank"
-              rel="noopener"
+              id="downloadQrisLink"
+              href="qris.jpeg"
+              download="QRIS-kaliwaru-net.jpeg"
               class="btn-outline"
             >
               ⬇ Simpan QRIS
@@ -565,16 +582,24 @@
 
   <div id="qrisModal" class="modal">
     <div class="modal-content" id="qrisModalBox">
-      <img src="https://lh3.googleusercontent.com/d/1AB_xgjpyblfHvva0lORjG3leacyKzylx" alt="Perbesar QRIS kaliwaru.net" />
+      <img id="qrisModalImg" src="qris.jpeg" alt="Perbesar QRIS kaliwaru.net" />
       <button type="button" class="modal-close" id="btnCloseModal">Tutup</button>
     </div>
   </div>
 
   <script>
+    function handleQrisFallback(img) {
+      if (!img.dataset.triedJpg) {
+        img.dataset.triedJpg = "1";
+        img.src = "qris.jpg";
+        document.getElementById("qrisModalImg").src = "qris.jpg";
+        document.getElementById("downloadQrisLink").href = "qris.jpg";
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
       var ADMIN_WA = "6283873333027";
 
-      // 1. Pindah Tab
       var tabBtns = document.querySelectorAll(".tab-btn");
       tabBtns.forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -586,7 +611,6 @@
         });
       });
 
-      // 2. Salin Nomor Rekening (Dukungan Fallback untuk Chrome HTTP / Non-SSL)
       var copyBtns = document.querySelectorAll(".copy-btn");
       copyBtns.forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -619,7 +643,6 @@
         });
       });
 
-      // 3. Modal Perbesar QRIS
       var modal = document.getElementById("qrisModal");
       document.getElementById("btnZoomQris").addEventListener("click", function () {
         modal.classList.add("open");
@@ -636,7 +659,6 @@
         }
       });
 
-      // 4. Parameter URL Otomatis
       var params = new URLSearchParams(window.location.search);
       var paramNama = params.get("nama");
       var paramAlamat = params.get("alamat");
@@ -668,7 +690,6 @@
         }
       }
 
-      // 5. Kirim Konfirmasi WhatsApp
       document.getElementById("btnSendWa").addEventListener("click", function () {
         var nama = document.getElementById("inputNama").value.trim() || "-";
         var alamat = document.getElementById("inputAlamat").value.trim() || "-";
