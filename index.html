@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaliwaru.net — Layanan Internet Fiber & WiFi Pacitan</title>
+  <title>kaliwaru.net — Layanan Internet Fiber & WiFi Kaliwaru, Pacitan</title>
   <style>
+    /* Variabel Warna Utama */
     :root {
       --primary: #0f4c81;
       --primary-dark: #093154;
@@ -17,6 +18,7 @@
       --border: #e2e8f0;
     }
 
+    /* Reset & Tipografi Dasar */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -36,7 +38,7 @@
       margin: 0 auto;
     }
 
-    /* Header & Brand */
+    /* Header & Identitas Brand */
     .hero {
       background: linear-gradient(135deg, var(--primary-dark), var(--primary));
       color: #fff;
@@ -83,7 +85,7 @@
       color: #e2e8f0;
     }
 
-    /* Quick Actions */
+    /* Tombol Aksi Cepat (Bayar & Admin WA) */
     .action-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -129,7 +131,7 @@
       margin-top: 2px;
     }
 
-    /* Card Umum */
+    /* Struktur Card Umum */
     .card {
       background: var(--card);
       border-radius: 18px;
@@ -161,7 +163,60 @@
       color: #0369a1;
     }
 
-    /* Speedtest Gauge & Metrics */
+    /* Bagian Area Terjangkau */
+    .coverage-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .area-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .area-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0f9ff;
+      color: #0f4c81;
+      border: 1px solid #bae6fd;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .area-badge::before {
+      content: "●";
+      color: #16a34a;
+      font-size: 0.65rem;
+    }
+
+    .coverage-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .coverage-note a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* Widget Speedtest */
     .speed-display {
       text-align: center;
       padding: 14px 10px;
@@ -275,7 +330,7 @@
       font-weight: 600;
     }
 
-    /* Info Layanan */
+    /* Informasi Layanan */
     .info-list {
       list-style: none;
       font-size: 0.86rem;
@@ -303,7 +358,7 @@
       text-align: right;
     }
 
-    /* Area Teknisi */
+    /* Area Teknisi Lapangan */
     .tech-card {
       background: #f8fafc;
       border: 1.5px dashed #cbd5e1;
@@ -343,12 +398,12 @@
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
+    <!-- Header Portal -->
     <div class="hero">
       <div class="brand-badge">📶 kaliwaru<span>.net</span></div>
       <div class="sub-corp">PT. Multi Teknologi Telematika</div>
       <h1>Portal Layanan Pelanggan</h1>
-      <p>Koneksi Internet Fiber Optic &amp; WiFi Rumah Area Pacitan</p>
+      <p>Koneksi Internet Fiber Optic &amp; WiFi Rumah Area Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, Karanganyar &amp; Sekitarnya</p>
     </div>
 
     <!-- Navigasi Utama -->
@@ -361,6 +416,29 @@
         💬 Hubungi Admin
         <small>Konfirmasi &amp; Gangguan</small>
       </a>
+    </div>
+
+    <!-- Card Area Terjangkau -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📍 Area Terjangkau</div>
+        <div class="status-pill" style="background: #dcfce7; color: #15803d;">6 Wilayah Aktif</div>
+      </div>
+      <p class="coverage-desc">
+        Jaringan internet rumah &amp; usaha kaliwaru.net melayani area berikut di wilayah Pacitan:
+      </p>
+      <div class="area-grid">
+        <span class="area-badge">Kaliwaru</span>
+        <span class="area-badge">Wora-wari</span>
+        <span class="area-badge">Nglaran</span>
+        <span class="area-badge">Mantren</span>
+        <span class="area-badge">Klesem</span>
+        <span class="area-badge">Karanganyar</span>
+      </div>
+      <div class="coverage-note">
+        <span>Belum tercantum atau mau cek tiang/ODP?</span>
+        <a href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20mau%20cek%20jangkauan%20jaringan%20di%20lokasi%20saya." target="_blank" rel="noopener">Cek Lokasi ↗</a>
+      </div>
     </div>
 
     <!-- Widget Speedtest -->
@@ -409,6 +487,10 @@
       </div>
       <ul class="info-list">
         <li>
+          <span>Wilayah Cakupan</span>
+          <span>Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, Karanganyar</span>
+        </li>
+        <li>
           <span>Jatuh Tempo Bulanan</span>
           <span>Tanggal 20 Setiap Bulan</span>
         </li>
@@ -445,6 +527,7 @@
   </div>
 
   <script>
+    // Mengukur latensi (Ping) dan kestabilan (Jitter) ke endpoint Cloudflare
     async function measurePing() {
       const pings = [];
       const pingUrl = "https://speed.cloudflare.com/__down?bytes=0";
@@ -466,6 +549,7 @@
       return { ping: Math.round(avg), jitter: Math.round(jitter) };
     }
 
+    // Menjalankan pengujian kecepatan unduh bertahap
     async function runSpeedtest() {
       const btn = document.getElementById("startBtn");
       const status = document.getElementById("testStatus");
