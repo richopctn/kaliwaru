@@ -1,4 +1,408 @@
-<!-- Informasi Layanan -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaliwaru.net — Layanan Internet Fiber & WiFi Pacitan</title>
+  <style>
+    :root {
+      --primary: #0f4c81;
+      --primary-dark: #093154;
+      --accent: #0ea5e9;
+      --success: #16a34a;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Header & Brand */
+    .hero {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: #fff;
+      border-radius: 18px;
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(15, 76, 129, 0.18);
+      margin-bottom: 16px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .brand-badge span {
+      color: #38bdf8;
+    }
+
+    .sub-corp {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      letter-spacing: 0.4px;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .hero p {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+    }
+
+    /* Quick Actions */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .btn-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      padding: 14px 12px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      text-align: center;
+    }
+
+    .btn-nav:active {
+      transform: scale(0.98);
+    }
+
+    .btn-pay {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(15, 76, 129, 0.2);
+    }
+
+    .btn-wa {
+      background: #ffffff;
+      color: var(--success);
+      border: 1.5px solid #bbf7d0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-nav small {
+      font-weight: 400;
+      font-size: 0.74rem;
+      opacity: 0.88;
+      margin-top: 2px;
+    }
+
+    /* Card Umum */
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .status-pill {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    /* Speedtest Gauge & Metrics */
+    .speed-display {
+      text-align: center;
+      padding: 14px 10px;
+      background: #f8fafc;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .speed-value {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .speed-unit {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--primary));
+      transition: width 0.2s ease;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .metric-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .metric-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .metric-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-test {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff;
+      font-size: 0.96rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.25);
+      transition: opacity 0.2s;
+    }
+
+    .btn-test:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .result-note {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      min-height: 20px;
+    }
+
+    .ext-links {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.78rem;
+    }
+
+    .ext-links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Info Layanan */
+    .info-list {
+      list-style: none;
+      font-size: 0.86rem;
+      color: var(--text);
+    }
+
+    .info-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .info-list li:last-child {
+      border-bottom: none;
+    }
+
+    .info-list span:first-child {
+      color: var(--muted);
+    }
+
+    .info-list span:last-child {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* Area Teknisi */
+    .tech-card {
+      background: #f8fafc;
+      border: 1.5px dashed #cbd5e1;
+    }
+
+    .tech-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .btn-tech {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px;
+      border-radius: 12px;
+      background: #1e293b;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: background 0.15s ease;
+    }
+
+    .btn-tech:hover {
+      background: #0f172a;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.76rem;
+      color: var(--muted);
+      padding: 8px 0 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="hero">
+      <div class="brand-badge">📶 kaliwaru<span>.net</span></div>
+      <div class="sub-corp">PT. Multi Teknologi Telematika</div>
+      <h1>Portal Layanan Pelanggan</h1>
+      <p>Koneksi Internet Fiber Optic &amp; WiFi Rumah Area Pacitan</p>
+    </div>
+
+    <!-- Navigasi Utama -->
+    <div class="action-grid">
+      <a href="bayar.html" class="btn-nav btn-pay">
+        💳 Bayar Tagihan
+        <small>QRIS, SeaBank, BRI, DANA</small>
+      </a>
+      <a href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20ingin%20konfirmasi%20/%20bantuan%20layanan%20WiFi." target="_blank" rel="noopener" class="btn-nav btn-wa">
+        💬 Hubungi Admin
+        <small>Konfirmasi &amp; Gangguan</small>
+      </a>
+    </div>
+
+    <!-- Widget Speedtest -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚡ Uji Kecepatan (Speedtest)</div>
+        <div class="status-pill" id="testStatus">Siap Uji</div>
+      </div>
+
+      <div class="speed-display">
+        <div class="speed-value" id="liveSpeed">0.0</div>
+        <div class="speed-unit">Mbps (Download)</div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="metric-label">Ping</div>
+          <div class="metric-val" id="pingVal">- ms</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Jitter</div>
+          <div class="metric-val" id="jitterVal">- ms</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Download</div>
+          <div class="metric-val" id="dlVal">- Mbps</div>
+        </div>
+      </div>
+
+      <button class="btn-test" id="startBtn" onclick="runSpeedtest()">Mulai Speedtest Sekarang</button>
+      <div class="result-note" id="resultNote">Pastikan tidak sedang mengunduh file besar saat pengujian.</div>
+
+      <div class="ext-links">
+        <a href="https://www.speedtest.net" target="_blank" rel="noopener">Uji Lengkap di Speedtest.net ↗</a>
+        <a href="https://fast.com" target="_blank" rel="noopener">Cek di Fast.com ↗</a>
+      </div>
+    </div>
+
+    <!-- Informasi Layanan -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">ℹ️ Informasi Layanan</div>
@@ -24,19 +428,126 @@
     </div>
 
     <!-- Menu Khusus Teknisi -->
-    <div class="card" style="background: #f8fafc; border-style: dashed;">
+    <div class="card tech-card">
       <div class="card-header" style="margin-bottom: 8px;">
-        <div class="card-title" style="font-size: 0.92rem; color: #334155;">🛠️ Area Teknisi Lapangan</div>
+        <div class="card-title" style="font-size: 0.94rem;">🛠️ Tools Teknisi Lapangan</div>
         <span class="status-pill" style="background: #e2e8f0; color: #475569;">Internal</span>
       </div>
-      <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 12px;">
-        Alat bantu perhitungan redaman splitter rasio &amp; distribusi jalur PON OLT.
+      <p class="tech-desc">
+        Kalkulator redaman splitter rasio &amp; perhitungan jalur distribusi PON OLT.
       </p>
-      <a href="olt.html" style="display: block; width: 100%; text-align: center; padding: 11px; border-radius: 10px; background: #1e293b; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 0.88rem;">
-        📐 Buka Kalkulator Rasio OLT
-      </a>
+      <a href="olt.html" class="btn-tech">📐 Buka Kalkulator Rasio OLT</a>
     </div>
 
     <footer>
       &copy; 2026 kaliwaru.net &bull; PT. Multi Teknologi Telematika
     </footer>
+  </div>
+
+  <script>
+    async function measurePing() {
+      const pings = [];
+      const pingUrl = "https://speed.cloudflare.com/__down?bytes=0";
+      for (let i = 0; i < 6; i++) {
+        const t0 = performance.now();
+        try {
+          await fetch(pingUrl + "&r=" + Math.random(), { cache: "no-store" });
+          const dt = performance.now() - t0;
+          if (i > 0) pings.push(dt);
+        } catch (e) {}
+      }
+      if (pings.length === 0) return { ping: 0, jitter: 0 };
+      const avg = pings.reduce((a, b) => a + b, 0) / pings.length;
+      let jitterSum = 0;
+      for (let i = 1; i < pings.length; i++) {
+        jitterSum += Math.abs(pings[i] - pings[i - 1]);
+      }
+      const jitter = pings.length > 1 ? jitterSum / (pings.length - 1) : 0;
+      return { ping: Math.round(avg), jitter: Math.round(jitter) };
+    }
+
+    async function runSpeedtest() {
+      const btn = document.getElementById("startBtn");
+      const status = document.getElementById("testStatus");
+      const liveSpeed = document.getElementById("liveSpeed");
+      const progressBar = document.getElementById("progressBar");
+      const pingVal = document.getElementById("pingVal");
+      const jitterVal = document.getElementById("jitterVal");
+      const dlVal = document.getElementById("dlVal");
+      const resultNote = document.getElementById("resultNote");
+
+      btn.disabled = true;
+      btn.textContent = "Sedang Menguji Jaringan...";
+      liveSpeed.textContent = "0.0";
+      pingVal.textContent = "...";
+      jitterVal.textContent = "...";
+      dlVal.textContent = "...";
+      progressBar.style.width = "10%";
+      status.textContent = "Uji Ping...";
+      resultNote.textContent = "Mengukur latensi respon server...";
+
+      const { ping, jitter } = await measurePing();
+      pingVal.textContent = ping > 0 ? ping + " ms" : "N/A";
+      jitterVal.textContent = ping > 0 ? jitter + " ms" : "N/A";
+      progressBar.style.width = "30%";
+
+      status.textContent = "Uji Download...";
+      resultNote.textContent = "Mengukur kecepatan unduh aktual...";
+
+      const testSizes = [5000000, 15000000];
+      let finalMbps = 0;
+
+      try {
+        for (let s = 0; s < testSizes.length; s++) {
+          const bytes = testSizes[s];
+          const startTime = performance.now();
+          const response = await fetch("https://speed.cloudflare.com/__down?bytes=" + bytes + "&r=" + Math.random(), {
+            cache: "no-store"
+          });
+
+          const reader = response.body.getReader();
+          let receivedBytes = 0;
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            receivedBytes += value.length;
+
+            const elapsedSec = (performance.now() - startTime) / 1000;
+            if (elapsedSec > 0.15) {
+              const currentMbps = (receivedBytes * 8) / (elapsedSec * 1000000);
+              liveSpeed.textContent = currentMbps.toFixed(1);
+              const basePct = s === 0 ? 30 : 65;
+              const stepPct = Math.min(35, (receivedBytes / bytes) * 35);
+              progressBar.style.width = (basePct + stepPct) + "%";
+            }
+          }
+
+          const totalSec = (performance.now() - startTime) / 1000;
+          finalMbps = (receivedBytes * 8) / (totalSec * 1000000);
+          liveSpeed.textContent = finalMbps.toFixed(1);
+        }
+
+        progressBar.style.width = "100%";
+        dlVal.textContent = finalMbps.toFixed(1) + " Mbps";
+        status.textContent = "Selesai";
+
+        if (finalMbps >= 20) {
+          resultNote.textContent = "✅ Koneksi sangat lancar untuk streaming 4K, gaming, & video call.";
+        } else if (finalMbps >= 5) {
+          resultNote.textContent = "✅ Koneksi stabil untuk streaming HD, browsing, & media sosial.";
+        } else {
+          resultNote.textContent = "⚠️ Kecepatan terdeteksi rendah. Coba dekatkan perangkat ke router WiFi.";
+        }
+      } catch (err) {
+        status.textContent = "Gagal";
+        resultNote.textContent = "Gagal terhubung ke server uji. Periksa koneksi internet Anda.";
+        progressBar.style.width = "0%";
+      }
+
+      btn.disabled = false;
+      btn.textContent = "Uji Ulang Speedtest";
+    }
+  </script>
+</body>
+</html>
