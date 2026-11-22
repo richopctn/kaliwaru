@@ -2,41 +2,142 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Pembayaran Tagihan WiFi - kaliwaru.net</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#082644" />
+  <meta name="description" content="Pembayaran tagihan WiFi kaliwaru.net via QRIS, Transfer SeaBank, BRI, DANA, atau tunai. Konfirmasi pembayaran langsung ke admin WhatsApp.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23093154'/%3E%3Cpath d='M12 26a30 30 0 0 1 40 0M20 35a19 19 0 0 1 24 0M28 44a8 8 0 0 1 8 0' fill='none' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='53' r='4' fill='%234ade80'/%3E%3C/svg%3E">
+  <title>Pembayaran Tagihan WiFi — kaliwaru.net</title>
+
+  <script>
+    // Fallback QR ditentukan lebih awal agar error event tidak terlewat.
+    window.handleQrisError = function (img) {
+      if (!img.dataset.triedJpg) {
+        img.dataset.triedJpg = "1";
+        img.src = "qris.jpg";
+        return;
+      }
+      img.style.display = "none";
+      document.querySelectorAll(".qris-placeholder").forEach(function (el) { el.hidden = false; });
+      var dl = document.getElementById("downloadQrisLink");
+      var zoom = document.getElementById("btnZoomQris");
+      if (dl) dl.hidden = true;
+      if (zoom) zoom.hidden = true;
+
+      var trigger = document.getElementById("qrisBoxTrigger");
+      if (trigger) {
+        trigger.removeAttribute("role");
+        trigger.removeAttribute("aria-label");
+        trigger.removeAttribute("tabindex");
+        trigger.style.cursor = "default";
+      }
+    };
+  </script>
+
   <style>
+    /* ============================================================
+       1. VARIABEL & TEMA
+       ============================================================ */
     :root {
+      color-scheme: light;
+
       --navy: #0d3b66;
-      --navy-dark: #082644;
+      --navy-text: #0d3b66;
       --cyan: #29b6f6;
       --cyan-light: #e1f5fe;
+      --cyan-border: #bae6fd;
+      --header-start: #082644;
+      --header-mid: #0d3b66;
+      --header-end: #155a96;
+
       --bg: #f4f7fb;
+      --bg-glow: rgba(41, 182, 246, 0.1);
       --card: #ffffff;
+      --card-2: #f8fafc;
+      --tabs-bg: #f1f5f9;
+
       --text: #1e293b;
       --muted: #64748b;
       --border: #e2e8f0;
+
       --green: #16a34a;
+      --green-text: #166534;
       --green-bg: #dcfce7;
       --wa: #25d366;
-      --wa-dark: #1ebe5d;
+
+      --shadow: 0 12px 30px rgba(13, 59, 102, 0.08);
+      --ring: 0 0 0 3px rgba(41, 182, 246, 0.4);
     }
 
-    * {
+    [data-theme="dark"] {
+      color-scheme: dark;
+
+      --navy: #7dd3fc;
+      --navy-text: #7dd3fc;
+      --cyan: #38bdf8;
+      --cyan-light: rgba(56, 189, 248, 0.14);
+      --cyan-border: rgba(56, 189, 248, 0.35);
+      --header-start: #061426;
+      --header-mid: #0a2743;
+      --header-end: #0d3f66;
+
+      --bg: #0b1220;
+      --bg-glow: rgba(56, 189, 248, 0.08);
+      --card: #131f33;
+      --card-2: #17253c;
+      --tabs-bg: #0f1b2d;
+
+      --text: #e2e8f0;
+      --muted: #9aabc2;
+      --border: #24344d;
+
+      --green: #22c55e;
+      --green-text: #86efac;
+      --green-bg: rgba(74, 222, 128, 0.14);
+      --wa: #25d366;
+
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+      --ring: 0 0 0 3px rgba(56, 189, 248, 0.45);
+    }
+
+    /* ============================================================
+       2. RESET & DASAR
+       ============================================================ */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
     }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      background: var(--bg);
-      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px;
+      padding: 16px 14px 26px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      background:
+        radial-gradient(760px 360px at 50% -6%, var(--bg-glow), transparent 65%),
+        var(--bg);
+      background-attachment: fixed;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    img, svg { display: block; max-width: 100%; }
+    [hidden] { display: none !important; }
+
+    :focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
     }
 
     .container {
@@ -45,14 +146,69 @@
       margin: auto;
     }
 
+    /* ============================================================
+       3. BAR ATAS: KEMBALI & TEMA
+       ============================================================ */
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: 1;
+      min-width: 0;
+      padding: 10px 13px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      color: var(--navy-text);
+      font-size: 0.79rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+    .back-link span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .back-link:hover { transform: translateY(-1px); border-color: var(--cyan); }
+    .back-link:active { transform: scale(0.98); }
+
+    .theme-btn {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 1rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.16s ease;
+    }
+    .theme-btn:hover { transform: translateY(-1px); }
+    .theme-btn:active { transform: scale(0.95); }
+
+    /* ============================================================
+       4. HEADER
+       ============================================================ */
     .header {
-      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 65%, #155a96 100%);
+      position: relative;
+      overflow: hidden;
       color: #fff;
       border-radius: 20px 20px 0 0;
       padding: 26px 20px 28px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
+      background: linear-gradient(135deg, var(--header-start) 0%, var(--header-mid) 65%, var(--header-end) 100%);
     }
 
     .header::after {
@@ -66,8 +222,8 @@
       border-radius: 50%;
       pointer-events: none;
     }
+    .header > * { position: relative; z-index: 1; }
 
-    /* Logo Tipografi Modern */
     .brand-logo {
       display: inline-flex;
       align-items: center;
@@ -78,6 +234,7 @@
       border-radius: 999px;
       margin-bottom: 14px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+      -webkit-backdrop-filter: blur(4px);
       backdrop-filter: blur(4px);
     }
 
@@ -92,12 +249,11 @@
       box-shadow: 0 0 12px rgba(41, 182, 246, 0.6);
       flex-shrink: 0;
     }
-
     .brand-icon svg {
       width: 16px;
       height: 16px;
       fill: none;
-      stroke: #ffffff;
+      stroke: #fff;
       stroke-width: 2.4;
       stroke-linecap: round;
       stroke-linejoin: round;
@@ -107,31 +263,44 @@
       font-size: 19px;
       font-weight: 900;
       letter-spacing: -0.3px;
-      color: #ffffff;
+      color: #fff;
       line-height: 1;
     }
-
-    .brand-text span {
-      color: var(--cyan);
-      font-weight: 800;
-    }
+    .brand-text span { color: var(--cyan); font-weight: 800; }
 
     .header h1 {
-      font-size: 21px;
+      font-size: clamp(1.1rem, 5vw, 1.32rem);
       font-weight: 800;
       margin-bottom: 6px;
+      letter-spacing: -0.3px;
     }
-
     .header p {
       font-size: 13.5px;
       color: #cbd5e1;
       line-height: 1.45;
+      max-width: 40ch;
+      margin-inline: auto;
     }
 
+    .due-chip {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #d1fae5;
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(167, 243, 208, 0.3);
+    }
+
+    /* ============================================================
+       5. KARTU UTAMA
+       ============================================================ */
     .main-card {
       background: var(--card);
       border-radius: 0 0 20px 20px;
-      box-shadow: 0 12px 30px rgba(13, 59, 102, 0.08);
+      box-shadow: var(--shadow);
       padding: 20px;
       border: 1px solid var(--border);
       border-top: none;
@@ -140,91 +309,83 @@
     .bill-summary {
       display: none;
       background: var(--cyan-light);
-      border: 1px solid #bae6fd;
+      border: 1px solid var(--cyan-border);
       border-radius: 14px;
       padding: 14px 16px;
       margin-bottom: 18px;
     }
-
-    .bill-summary.active {
-      display: block;
-    }
+    .bill-summary.active { display: block; }
 
     .bill-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
       font-size: 13.5px;
       margin-bottom: 6px;
     }
-
+    .bill-row span:first-child { color: var(--muted); }
+    .bill-row strong, .bill-row span:last-child { text-align: right; }
     .bill-row:last-child {
       margin-bottom: 0;
       padding-top: 8px;
-      border-top: 1px dashed #7dd3fc;
+      border-top: 1px dashed var(--cyan);
       font-weight: 700;
       font-size: 15px;
-      color: var(--navy);
+      color: var(--navy-text);
     }
 
+    /* Tabs */
     .tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      background: #f1f5f9;
+      gap: 6px;
+      background: var(--tabs-bg);
       padding: 5px;
       border-radius: 12px;
       margin-bottom: 18px;
+      border: 1px solid var(--border);
     }
 
     .tab-btn {
       border: none;
       background: transparent;
-      padding: 11px 10px;
+      padding: 11px 8px;
       border-radius: 9px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--muted);
-      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease;
     }
-
+    .tab-btn:hover { color: var(--navy-text); }
     .tab-btn.active {
-      background: #fff;
-      color: var(--navy);
+      background: var(--card);
+      color: var(--navy-text);
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
     }
 
-    .tab-content {
-      display: none;
-    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .tab-content.active {
-      display: block;
-    }
-
+    /* QRIS */
     .qris-box {
       text-align: center;
-      background: #ffffff;
+      background: var(--card);
       border: 1.5px solid var(--border);
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
     }
 
-    .qris-header-info {
-      margin-bottom: 12px;
-    }
-
     .qris-merchant {
       font-size: 17px;
       font-weight: 800;
-      color: var(--navy);
+      color: var(--navy-text);
     }
-
     .qris-nmid {
       font-size: 12px;
       color: var(--muted);
-      font-family: monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       margin-top: 2px;
     }
 
@@ -233,17 +394,46 @@
       display: inline-block;
       width: 100%;
       max-width: 310px;
+      margin-top: 14px;
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid var(--border);
-      background: #f8fafc;
-      cursor: pointer;
+      background: var(--card-2);
+      cursor: zoom-in;
     }
-
     .qris-img-wrapper img {
       width: 100%;
       height: auto;
       display: block;
+    }
+
+    .qris-placeholder {
+      padding: 26px 16px;
+      background: var(--card-2);
+      color: var(--muted);
+    }
+    .qris-placeholder .ph-icon { font-size: 2rem; margin-bottom: 6px; }
+    .qris-placeholder b {
+      display: block;
+      color: var(--navy-text);
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .qris-placeholder small {
+      display: block;
+      font-size: 0.76rem;
+      line-height: 1.5;
+    }
+    .qris-placeholder a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 9px;
+      background: var(--wa);
+      color: #052e16;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-decoration: none;
     }
 
     .qris-actions {
@@ -252,7 +442,6 @@
       gap: 10px;
       margin-top: 14px;
     }
-
     .btn-outline {
       display: inline-flex;
       align-items: center;
@@ -261,21 +450,25 @@
       padding: 11px 12px;
       border-radius: 10px;
       border: 1.5px solid var(--navy);
-      background: #fff;
-      color: var(--navy);
+      background: var(--card);
+      color: var(--navy-text);
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       text-decoration: none;
+      transition: opacity 0.16s ease, transform 0.16s ease;
     }
+    .btn-outline:hover { transform: translateY(-1px); }
 
     .supported-apps {
       margin-top: 12px;
       font-size: 11.5px;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.5;
     }
+    .supported-apps strong { color: var(--text); }
 
+    /* Bank */
     .bank-list {
       display: flex;
       flex-direction: column;
@@ -290,29 +483,32 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #fff;
+      gap: 10px;
+      background: var(--card);
+      cursor: pointer;
+      transition: border-color 0.16s ease, transform 0.16s ease;
     }
+    .bank-card:hover { border-color: var(--cyan); transform: translateY(-1px); }
+    .bank-card.picked { border-color: var(--navy); box-shadow: var(--ring); }
 
     .bank-name {
       font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--navy);
+      color: var(--navy-text);
       display: flex;
       align-items: center;
       gap: 6px;
     }
-
     .status-on {
       font-size: 10px;
       background: var(--green-bg);
-      color: var(--green);
+      color: var(--green-text);
       padding: 2px 6px;
       border-radius: 999px;
       font-weight: 700;
     }
-
     .acc-number {
       font-size: 17px;
       font-weight: 800;
@@ -321,46 +517,41 @@
       margin: 4px 0 2px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
-
-    .acc-holder {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .acc-holder { font-size: 12px; color: var(--muted); }
 
     .copy-btn {
       background: var(--cyan-light);
-      color: var(--navy);
-      border: none;
-      padding: 10px 15px;
+      color: var(--navy-text);
+      border: 1px solid var(--cyan-border);
+      padding: 10px 13px;
       border-radius: 10px;
       font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
       flex-shrink: 0;
+      transition: background 0.18s ease, color 0.18s ease;
     }
-
+    .copy-btn:hover { background: var(--navy); color: #fff; }
     .copy-btn.copied {
       background: var(--green);
+      border-color: var(--green);
       color: #fff;
     }
+    [data-theme="dark"] .copy-btn:hover { color: #062033; }
 
+    /* Konfirmasi */
     .confirm-section {
       border-top: 1px solid var(--border);
       padding-top: 16px;
       margin-top: 6px;
     }
-
     .confirm-title {
       font-size: 14px;
       font-weight: 700;
-      color: var(--navy);
+      color: var(--navy-text);
       margin-bottom: 10px;
     }
-
-    .form-group {
-      margin-bottom: 10px;
-    }
-
+    .form-group { margin-bottom: 10px; }
     .form-input, .form-select {
       width: 100%;
       padding: 11px 12px;
@@ -368,13 +559,20 @@
       border-radius: 10px;
       font-size: 14px;
       color: var(--text);
-      background: #fff;
+      background: var(--card);
+      transition: border-color 0.16s ease;
     }
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: var(--ring);
+    }
+    .form-input.invalid { border-color: #dc2626; }
 
     .btn-wa {
       width: 100%;
       background: var(--wa);
-      color: #fff;
+      color: #052e16;
       border: none;
       padding: 14px 16px;
       border-radius: 12px;
@@ -386,17 +584,29 @@
       justify-content: center;
       gap: 8px;
       box-shadow: 0 6px 16px rgba(37, 211, 102, 0.28);
+      transition: transform 0.16s ease, filter 0.16s ease;
     }
+    .btn-wa:hover { transform: translateY(-1px); filter: brightness(1.04); }
+    .btn-wa:active { transform: scale(0.99); }
 
     .footer-note {
       text-align: center;
       font-size: 12px;
       color: var(--muted);
       margin-top: 16px;
-      line-height: 1.5;
-      padding-bottom: 30px;
+      line-height: 1.6;
+      padding-bottom: 8px;
     }
+    .footer-note a {
+      color: var(--navy-text);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .footer-note a:hover { text-decoration: underline; }
 
+    /* ============================================================
+       6. MODAL, TOAST & REVEAL
+       ============================================================ */
     .modal {
       display: none;
       position: fixed;
@@ -407,41 +617,77 @@
       justify-content: center;
       padding: 20px;
     }
-
-    .modal.open {
-      display: flex;
-    }
+    .modal.open { display: flex; }
 
     .modal-content {
-      background: #fff;
+      background: var(--card);
       border-radius: 16px;
       padding: 14px;
       max-width: 420px;
       width: 100%;
       text-align: center;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
     }
-
     .modal-content img {
       width: 100%;
       height: auto;
       border-radius: 10px;
     }
-
     .modal-close {
       margin-top: 12px;
       width: 100%;
       padding: 12px;
-      background: var(--navy);
-      color: #fff;
+      background: var(--navy-text);
+      color: var(--card);
       border: none;
       border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
     }
+    [data-theme="dark"] .modal-close { color: #062033; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 100000;
+      transform: translate(-50%, 18px);
+      background: #0f172a;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
+    <!-- ===================== TOMBOL KEMBALI ===================== -->
+    <div class="top-actions">
+      <a class="back-link" href="https://kaliwarunet.web.id" aria-label="Kembali ke kaliwarunet.web.id">
+        <span aria-hidden="true">←</span>
+        <span>Kembali ke kaliwarunet.web.id</span>
+      </a>
+      <button type="button" class="theme-btn" id="themeToggle" aria-label="Aktifkan mode gelap" aria-pressed="false" title="Ganti tema">🌙</button>
+    </div>
+
+    <!-- ===================== HEADER ===================== -->
     <div class="header">
       <div class="brand-logo">
         <div class="brand-icon" aria-hidden="true">
@@ -455,62 +701,57 @@
         <div class="brand-text">kaliwaru<span>.net</span></div>
       </div>
       <h1>Pembayaran Tagihan WiFi</h1>
-      <p>Pilih metode pembayaran QRIS instan atau Transfer Bank & DANA di bawah ini</p>
+      <p>Pilih metode pembayaran QRIS instan atau Transfer Bank &amp; DANA di bawah ini.</p>
+      <div class="due-chip">📅 Jatuh tempo setiap tanggal 20</div>
     </div>
 
+    <!-- ===================== KARTU UTAMA ===================== -->
     <div class="main-card">
-      <div id="billSummary" class="bill-summary">
-        <div class="bill-row" id="rowNama" style="display:none;">
+      <div id="billSummary" class="bill-summary" role="status" aria-live="polite">
+        <div class="bill-row" id="rowNama" hidden>
           <span>Nama Pelanggan</span>
           <strong id="valNama">-</strong>
         </div>
-        <div class="bill-row" id="rowAlamat" style="display:none;">
+        <div class="bill-row" id="rowAlamat" hidden>
           <span>Alamat / Area</span>
           <strong id="valAlamat">-</strong>
         </div>
-        <div class="bill-row" id="rowBulan" style="display:none;">
+        <div class="bill-row" id="rowBulan" hidden>
           <span>Periode Tagihan</span>
           <strong id="valBulan">-</strong>
         </div>
-        <div class="bill-row" id="rowNominal" style="display:none;">
+        <div class="bill-row" id="rowNominal" hidden>
           <span>Total Tagihan</span>
           <span id="valNominal">-</span>
         </div>
       </div>
 
-      <div class="tabs">
-        <button type="button" class="tab-btn active" data-tab="qris">QRIS (E-Wallet & Bank)</button>
-        <button type="button" class="tab-btn" data-tab="transfer">Transfer Bank & DANA</button>
+      <div class="tabs" role="tablist" aria-label="Metode pembayaran">
+        <button type="button" class="tab-btn active" id="tabbtn-qris" role="tab" aria-selected="true" aria-controls="tab-qris" data-tab="qris">QRIS (E-Wallet &amp; Bank)</button>
+        <button type="button" class="tab-btn" id="tabbtn-transfer" role="tab" aria-selected="false" aria-controls="tab-transfer" data-tab="transfer">Transfer Bank &amp; DANA</button>
       </div>
 
-      <div id="tab-qris" class="tab-content active">
+      <!-- QRIS -->
+      <div id="tab-qris" class="tab-content active" role="tabpanel" aria-labelledby="tabbtn-qris">
         <div class="qris-box">
           <div class="qris-header-info">
             <div class="qris-merchant">kaliwaru.net</div>
             <div class="qris-nmid">NMID : ID1026585284510 • A01</div>
           </div>
 
-          <div class="qris-img-wrapper" id="qrisBoxTrigger">
-            <img
-              id="qrisImage"
-              src="qris.jpeg"
-              alt="QRIS Resmi kaliwaru.net"
-              onerror="handleQrisFallback(this)"
-            />
+          <div class="qris-img-wrapper" id="qrisBoxTrigger" role="button" tabindex="0" aria-label="Perbesar kode QRIS">
+            <img id="qrisImage" src="qris.jpeg" alt="QRIS Resmi kaliwaru.net" onerror="handleQrisError(this)" />
+            <div class="qris-placeholder" hidden>
+              <div class="ph-icon" aria-hidden="true">📷</div>
+              <b>Kode QRIS sedang disiapkan</b>
+              <small>Untuk sementara, silakan gunakan Transfer Bank / DANA atau konfirmasi langsung ke admin WhatsApp.</small>
+              <a href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20ingin%20bayar%20tagihan%20dan%20minta%20kode%20QRIS." target="_blank" rel="noopener">Minta QRIS ke Admin ↗</a>
+            </div>
           </div>
 
           <div class="qris-actions">
-            <a
-              id="downloadQrisLink"
-              href="qris.jpeg"
-              download="QRIS-kaliwaru-net.jpeg"
-              class="btn-outline"
-            >
-              ⬇ Simpan QRIS
-            </a>
-            <button type="button" class="btn-outline" id="btnZoomQris">
-              🔍 Perbesar QR
-            </button>
+            <a id="downloadQrisLink" href="qris.jpeg" download="QRIS-kaliwaru-net.jpeg" class="btn-outline">⬇ Simpan QRIS</a>
+            <button type="button" class="btn-outline" id="btnZoomQris">🔍 Perbesar QR</button>
           </div>
 
           <div class="supported-apps">
@@ -519,46 +760,55 @@
         </div>
       </div>
 
-      <div id="tab-transfer" class="tab-content">
+      <!-- Transfer -->
+      <div id="tab-transfer" class="tab-content" role="tabpanel" aria-labelledby="tabbtn-transfer">
         <div class="bank-list">
-          <div class="bank-card">
+          <div class="bank-card" data-method="Transfer SeaBank">
             <div>
               <div class="bank-name">SEABANK <span class="status-on">ON</span></div>
               <div class="acc-number">901443525518</div>
               <div class="acc-holder">a.n. Richo Hardian</div>
             </div>
-            <button type="button" class="copy-btn" data-copy="901443525518">Salin</button>
+            <button type="button" class="copy-btn" data-copy="901443525518" aria-label="Salin nomor SeaBank">Salin</button>
           </div>
 
-          <div class="bank-card">
+          <div class="bank-card" data-method="Transfer BRI">
             <div>
               <div class="bank-name">BANK BRI <span class="status-on">ON</span></div>
               <div class="acc-number">645801017973534</div>
               <div class="acc-holder">a.n. Richo Hardian</div>
             </div>
-            <button type="button" class="copy-btn" data-copy="645801017973534">Salin</button>
+            <button type="button" class="copy-btn" data-copy="645801017973534" aria-label="Salin nomor BRI">Salin</button>
           </div>
 
-          <div class="bank-card">
+          <div class="bank-card" data-method="DANA">
             <div>
               <div class="bank-name">DANA <span class="status-on">ON</span></div>
               <div class="acc-number">083873333027</div>
               <div class="acc-holder">a.n. Richo Hardian</div>
             </div>
-            <button type="button" class="copy-btn" data-copy="083873333027">Salin</button>
+            <button type="button" class="copy-btn" data-copy="083873333027" aria-label="Salin nomor DANA">Salin</button>
           </div>
         </div>
       </div>
 
+      <!-- Konfirmasi -->
       <div class="confirm-section">
         <div class="confirm-title">Konfirmasi Bukti Pembayaran</div>
         <div class="form-group">
-          <input type="text" id="inputNama" class="form-input" placeholder="Nama Pelanggan / Atas Nama WiFi" />
+          <label class="sr-only" for="inputNama">Nama pelanggan</label>
+          <input type="text" id="inputNama" class="form-input" placeholder="Nama Pelanggan / Atas Nama WiFi *" autocomplete="name" />
         </div>
         <div class="form-group">
-          <input type="text" id="inputAlamat" class="form-input" placeholder="Alamat / Dusun (Opsional)" />
+          <label class="sr-only" for="inputAlamat">Alamat</label>
+          <input type="text" id="inputAlamat" class="form-input" placeholder="Alamat / Dusun (Opsional)" autocomplete="street-address" />
         </div>
         <div class="form-group">
+          <label class="sr-only" for="inputPeriode">Periode tagihan</label>
+          <input type="text" id="inputPeriode" class="form-input" placeholder="Periode Tagihan (contoh: November 2026)" />
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="inputMetode">Metode pembayaran</label>
           <select id="inputMetode" class="form-select">
             <option value="QRIS">Metode: QRIS</option>
             <option value="Transfer SeaBank">Metode: Transfer SeaBank</option>
@@ -568,147 +818,282 @@
           </select>
         </div>
 
-        <button type="button" class="btn-wa" id="btnSendWa">
-          Kirim Konfirmasi ke WhatsApp Admin
-        </button>
+        <button type="button" class="btn-wa" id="btnSendWa">📤 Kirim Konfirmasi ke WhatsApp Admin</button>
       </div>
     </div>
 
     <div class="footer-note">
       Pembayaran tunai juga dapat dilakukan langsung ke rumah atau melalui kolektor lapangan.<br />
-      Butuh bantuan? Hubungi Admin: <strong>083873333027</strong>
+      Butuh bantuan? Hubungi Admin: <strong>083873333027</strong><br />
+      <a href="https://kaliwarunet.web.id">← Kembali ke kaliwarunet.web.id</a>
     </div>
-  </div>
+  </main>
 
-  <div id="qrisModal" class="modal">
+  <!-- Modal QR -->
+  <div id="qrisModal" class="modal" role="dialog" aria-modal="true" aria-label="Perbesar kode QRIS" aria-hidden="true">
     <div class="modal-content" id="qrisModalBox">
-      <img id="qrisModalImg" src="qris.jpeg" alt="Perbesar QRIS kaliwaru.net" />
+      <img id="qrisModalImg" src="qris.jpeg" alt="Perbesar QRIS kaliwaru.net" onerror="handleQrisError(this)" />
+      <div class="qris-placeholder" hidden>
+        <div class="ph-icon" aria-hidden="true">📷</div>
+        <b>QRIS belum tersedia</b>
+        <small>Silakan minta kode QRIS ke admin atau gunakan metode transfer bank.</small>
+      </div>
       <button type="button" class="modal-close" id="btnCloseModal">Tutup</button>
     </div>
   </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script>
-    function handleQrisFallback(img) {
-      if (!img.dataset.triedJpg) {
-        img.dataset.triedJpg = "1";
-        img.src = "qris.jpg";
-        document.getElementById("qrisModalImg").src = "qris.jpg";
-        document.getElementById("downloadQrisLink").href = "qris.jpg";
-      }
-    }
-
     document.addEventListener("DOMContentLoaded", function () {
-      var ADMIN_WA = "6283873333027";
+      "use strict";
 
-      var tabBtns = document.querySelectorAll(".tab-btn");
-      tabBtns.forEach(function (btn) {
+      var ADMIN_WA = "6283873333027";
+      var HOME_URL = "https://kaliwarunet.web.id";
+
+      /* ---------- Toast ---------- */
+      var toastEl = document.getElementById("toast");
+      var toastTimer;
+      function showToast(message) {
+        toastEl.textContent = message;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2600);
+      }
+
+      /* ---------- Tema (sama seperti halaman utama) ---------- */
+      var root = document.documentElement;
+      var themeBtn = document.getElementById("themeToggle");
+      var savedTheme = null;
+      try { savedTheme = localStorage.getItem("kw-theme"); } catch (e) {}
+
+      if (savedTheme === "dark" || savedTheme === "light") {
+        root.dataset.theme = savedTheme;
+      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        root.dataset.theme = "dark";
+      }
+
+      function syncTheme() {
+        var dark = root.dataset.theme === "dark";
+        themeBtn.textContent = dark ? "☀️" : "🌙";
+        themeBtn.setAttribute("aria-pressed", String(dark));
+        themeBtn.setAttribute("aria-label", dark ? "Aktifkan mode terang" : "Aktifkan mode gelap");
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", dark ? "#061426" : "#082644");
+      }
+      syncTheme();
+
+      themeBtn.addEventListener("click", function () {
+        var next = root.dataset.theme === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try { localStorage.setItem("kw-theme", next); } catch (e) {}
+        syncTheme();
+        showToast(next === "dark" ? "Mode gelap aktif" : "Mode terang aktif");
+      });
+
+      /* ---------- Tabs ---------- */
+      var tabBtns = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
+      var methodSelect = document.getElementById("inputMetode");
+      var bankCards = Array.prototype.slice.call(document.querySelectorAll(".bank-card"));
+
+      function activateTab(name) {
+        tabBtns.forEach(function (btn) {
+          var active = btn.getAttribute("data-tab") === name;
+          btn.classList.toggle("active", active);
+          btn.setAttribute("aria-selected", String(active));
+          btn.tabIndex = active ? 0 : -1;
+        });
+        document.querySelectorAll(".tab-content").forEach(function (panel) {
+          panel.classList.toggle("active", panel.id === "tab-" + name);
+        });
+      }
+
+      function syncBankCard() {
+        bankCards.forEach(function (card) {
+          card.classList.toggle("picked", card.getAttribute("data-method") === methodSelect.value);
+        });
+      }
+
+      tabBtns.forEach(function (btn, index) {
         btn.addEventListener("click", function () {
-          var target = this.getAttribute("data-tab");
-          tabBtns.forEach(function (b) { b.classList.remove("active"); });
-          document.querySelectorAll(".tab-content").forEach(function (c) { c.classList.remove("active"); });
-          this.classList.add("active");
-          document.getElementById("tab-" + target).classList.add("active");
+          var name = btn.getAttribute("data-tab");
+          activateTab(name);
+          if (name === "qris") {
+            methodSelect.value = "QRIS";
+          } else if (methodSelect.value === "QRIS") {
+            methodSelect.value = "Transfer SeaBank";
+          }
+          syncBankCard();
+        });
+
+        btn.addEventListener("keydown", function (e) {
+          if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+          e.preventDefault();
+          var step = e.key === "ArrowRight" ? 1 : -1;
+          var next = tabBtns[(index + step + tabBtns.length) % tabBtns.length];
+          next.focus();
+          next.click();
         });
       });
 
-      var copyBtns = document.querySelectorAll(".copy-btn");
-      copyBtns.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          var text = this.getAttribute("data-copy");
-          var buttonEl = this;
+      methodSelect.addEventListener("change", function () {
+        var value = this.value;
+        if (value === "QRIS") activateTab("qris");
+        else if (value !== "Tunai") activateTab("transfer");
+        syncBankCard();
+      });
 
-          function showCopied() {
-            var orig = buttonEl.textContent;
-            buttonEl.textContent = "Tersalin!";
-            buttonEl.classList.add("copied");
+      bankCards.forEach(function (card) {
+        card.addEventListener("click", function (e) {
+          if (e.target.closest(".copy-btn")) return;
+          methodSelect.value = card.getAttribute("data-method");
+          activateTab("transfer");
+          syncBankCard();
+          showToast("Metode " + methodSelect.value + " dipilih");
+        });
+      });
+
+      /* ---------- Salin nomor ---------- */
+      function legacyCopy(text) {
+        var temp = document.createElement("textarea");
+        temp.value = text;
+        temp.style.position = "fixed";
+        temp.style.left = "-9999px";
+        document.body.appendChild(temp);
+        temp.select();
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(temp);
+        return ok;
+      }
+
+      document.querySelectorAll(".copy-btn").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var text = btn.getAttribute("data-copy");
+          var original = btn.textContent;
+
+          function done(ok) {
+            if (!ok) { showToast("Gagal menyalin. Nomor: " + text); return; }
+            btn.textContent = "Tersalin!";
+            btn.classList.add("copied");
+            showToast("Nomor berhasil disalin");
             setTimeout(function () {
-              buttonEl.textContent = orig;
-              buttonEl.classList.remove("copied");
+              btn.textContent = original;
+              btn.classList.remove("copied");
             }, 1800);
           }
 
           if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(text).then(showCopied);
+            navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(legacyCopy(text)); });
           } else {
-            var tempInput = document.createElement("textarea");
-            tempInput.value = text;
-            tempInput.style.position = "fixed";
-            tempInput.style.left = "-9999px";
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-            showCopied();
+            done(legacyCopy(text));
           }
         });
       });
 
+      /* ---------- Modal QR ---------- */
       var modal = document.getElementById("qrisModal");
-      document.getElementById("btnZoomQris").addEventListener("click", function () {
+      var modalBox = document.getElementById("qrisModalBox");
+      var lastFocused = null;
+
+      function openModal() {
+        lastFocused = document.activeElement;
         modal.classList.add("open");
-      });
-      document.getElementById("qrisBoxTrigger").addEventListener("click", function () {
-        modal.classList.add("open");
-      });
-      document.getElementById("btnCloseModal").addEventListener("click", function () {
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        document.getElementById("btnCloseModal").focus();
+      }
+      function closeModal() {
         modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (lastFocused && lastFocused.focus) lastFocused.focus();
+      }
+
+      document.getElementById("btnZoomQris").addEventListener("click", openModal);
+      document.getElementById("qrisBoxTrigger").addEventListener("click", openModal);
+      document.getElementById("qrisBoxTrigger").addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(); }
       });
+      document.getElementById("btnCloseModal").addEventListener("click", closeModal);
       modal.addEventListener("click", function (e) {
-        if (e.target === modal) {
-          modal.classList.remove("open");
-        }
+        if (e.target === modal || e.target === modalBox) closeModal();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
       });
 
+      /* ---------- Ringkasan dari query URL ---------- */
       var params = new URLSearchParams(window.location.search);
       var paramNama = params.get("nama");
       var paramAlamat = params.get("alamat");
       var paramNominal = params.get("nominal");
       var paramBulan = params.get("bulan");
 
+      function rupiah(raw) {
+        var text = String(raw == null ? "" : raw);
+        var number = parseInt(text.replace(/\D/g, ""), 10);
+        return isNaN(number) ? text : "Rp " + number.toLocaleString("id-ID");
+      }
+
       if (paramNama || paramAlamat || paramNominal || paramBulan) {
         document.getElementById("billSummary").classList.add("active");
+
         if (paramNama) {
-          document.getElementById("rowNama").style.display = "flex";
+          document.getElementById("rowNama").hidden = false;
           document.getElementById("valNama").textContent = paramNama;
           document.getElementById("inputNama").value = paramNama;
         }
         if (paramAlamat) {
-          document.getElementById("rowAlamat").style.display = "flex";
+          document.getElementById("rowAlamat").hidden = false;
           document.getElementById("valAlamat").textContent = paramAlamat;
           document.getElementById("inputAlamat").value = paramAlamat;
         }
         if (paramBulan) {
-          document.getElementById("rowBulan").style.display = "flex";
+          document.getElementById("rowBulan").hidden = false;
           document.getElementById("valBulan").textContent = paramBulan;
+          document.getElementById("inputPeriode").value = paramBulan;
         }
         if (paramNominal) {
-          document.getElementById("rowNominal").style.display = "flex";
-          var angka = parseInt(paramNominal.replace(/\D/g, ""), 10);
-          document.getElementById("valNominal").textContent = isNaN(angka)
-            ? paramNominal
-            : "Rp " + angka.toLocaleString("id-ID");
+          document.getElementById("rowNominal").hidden = false;
+          document.getElementById("valNominal").textContent = rupiah(paramNominal);
         }
       }
 
+      /* ---------- Kirim konfirmasi WA ---------- */
+      var inputNama = document.getElementById("inputNama");
       document.getElementById("btnSendWa").addEventListener("click", function () {
-        var nama = document.getElementById("inputNama").value.trim() || "-";
+        var nama = inputNama.value.trim();
+        if (!nama) {
+          inputNama.classList.add("invalid");
+          inputNama.focus();
+          showToast("Nama pelanggan wajib diisi");
+          return;
+        }
+        inputNama.classList.remove("invalid");
+
         var alamat = document.getElementById("inputAlamat").value.trim() || "-";
-        var metode = document.getElementById("inputMetode").value;
-        var bulanText = paramBulan ? "\n• Bulan : " + paramBulan : "";
-        var nominalText = paramNominal
-          ? "\n• Nominal : Rp " + parseInt(paramNominal.replace(/\D/g, ""), 10).toLocaleString("id-ID")
-          : "";
+        var periode = document.getElementById("inputPeriode").value.trim();
+        var metode = methodSelect.value;
 
         var pesan =
-          "Halo Admin, saya ingin konfirmasi pembayaran tagihan WiFi:\n\n" +
+          "Halo Admin kaliwaru.net, saya ingin konfirmasi pembayaran tagihan WiFi:\n\n" +
           "• Nama : " + nama + "\n" +
           "• Alamat : " + alamat + "\n" +
-          "• Metode : " + metode +
-          bulanText +
-          nominalText +
-          "\n\n(Berikut saya lampirkan bukti pembayarannya)";
+          "• Metode : " + metode + "\n" +
+          (periode ? "• Periode : " + periode + "\n" : "") +
+          (paramNominal ? "• Nominal : " + rupiah(paramNominal) + "\n" : "") +
+          "\n(Berikut saya kirimkan bukti pembayarannya)";
 
         window.location.href = "https://wa.me/" + ADMIN_WA + "?text=" + encodeURIComponent(pesan);
+      });
+
+      inputNama.addEventListener("input", function () { inputNama.classList.remove("invalid"); });
+
+      // Pastikan tautan kembali selalu mengarah ke domain utama yang diminta.
+      document.querySelectorAll('a[href="' + HOME_URL + '"]').forEach(function (link) {
+        link.setAttribute("title", "Kembali ke beranda kaliwarunet.web.id");
       });
     });
   </script>
