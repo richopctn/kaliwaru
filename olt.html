@@ -1,1116 +1,1382 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Rasio OLT & FTTH Link Budget - kaliwaru.net</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome untuk Ikon Jaringan & UI -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            navy: '#0d3b66',
-                            dark: '#082644',
-                            cyan: '#29b6f6',
-                            light: '#e0f4fe',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Kustomisasi scrollbar & transisi halus */
-        body {
-            background-color: #f4f7fa;
-            color: #1e293b;
-        }
-        body.locked {
-            overflow: hidden;
-        }
-        .tab-active {
-            background-color: #0d3b66;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(13, 59, 102, 0.25);
-        }
-        .tab-inactive {
-            background-color: #ffffff;
-            color: #475569;
-        }
-        .tab-inactive:hover {
-            background-color: #f1f5f9;
-            color: #0d3b66;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#093154">
+  <meta name="description" content="Kalkulator rasio OLT, optical link budget FTTH, dan simulasi estafet ODP untuk teknisi kaliwaru.net.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23093154'/%3E%3Cpath d='M12 26a30 30 0 0 1 40 0M20 35a19 19 0 0 1 24 0M28 44a8 8 0 0 1 8 0' fill='none' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='53' r='4' fill='%234ade80'/%3E%3C/svg%3E">
+  <title>Kalkulator Rasio OLT &amp; FTTH Link Budget — kaliwaru.net</title>
+
+  <style>
+    /* ============================================================
+       1. VARIABEL & TEMA
+       ============================================================ */
+    :root {
+      color-scheme: light;
+
+      --primary: #0f4c81;
+      --primary-dark: #093154;
+      --primary-soft: #e0f2fe;
+      --accent: #0ea5e9;
+      --accent-2: #38bdf8;
+      --success: #15803d;
+      --success-text: #166534;
+      --success-soft: #dcfce7;
+      --warning: #b45309;
+      --warning-soft: #fef3c7;
+      --danger: #b91c1c;
+      --danger-soft: #fee2e2;
+      --purple: #7e22ce;
+      --purple-soft: #f3e8ff;
+
+      --header-start: #093154;
+      --header-end: #0f4c81;
+
+      --bg: #f1f5f9;
+      --bg-glow: rgba(14, 165, 233, 0.1);
+      --card: #ffffff;
+      --card-2: #f8fafc;
+      --text: #1e293b;
+      --muted: #64748b;
+      --faint: #64748b;
+      --border: #e2e8f0;
+
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 18px 38px rgba(15, 76, 129, 0.14);
+      --ring: 0 0 0 3px rgba(56, 189, 248, 0.38);
+      --radius: 18px;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+
+      --primary: #38bdf8;
+      --primary-dark: #7dd3fc;
+      --primary-soft: rgba(56, 189, 248, 0.14);
+      --accent: #22d3ee;
+      --accent-2: #7dd3fc;
+      --success: #4ade80;
+      --success-text: #86efac;
+      --success-soft: rgba(74, 222, 128, 0.14);
+      --warning: #fbbf24;
+      --warning-soft: rgba(251, 191, 36, 0.14);
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.14);
+      --purple: #c084fc;
+      --purple-soft: rgba(192, 132, 252, 0.14);
+
+      --header-start: #061426;
+      --header-end: #0b2b47;
+
+      --bg: #0b1220;
+      --bg-glow: rgba(56, 189, 248, 0.08);
+      --card: #131f33;
+      --card-2: #17253c;
+      --text: #e2e8f0;
+      --muted: #9aabc2;
+      --faint: #9aabc2;
+      --border: #24344d;
+
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 18px 38px rgba(0, 0, 0, 0.45);
+      --ring: 0 0 0 3px rgba(56, 189, 248, 0.45);
+    }
+
+    /* ============================================================
+       2. RESET & DASAR
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body.locked { overflow: hidden; }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      background:
+        radial-gradient(980px 420px at 10% -8%, var(--bg-glow), transparent 62%),
+        var(--bg);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .hidden { display: none !important; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+
+    .container { width: min(100% - 28px, 1180px); margin-inline: auto; }
+
+    /* ============================================================
+       3. GATE PASSWORD
+       ============================================================ */
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(15, 23, 42, 0.95);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
+    .gate-card {
+      width: min(100%, 400px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+    .gate-top {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .brand-inline {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 13px; border-radius: 12px; color: #fff;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      font-weight: 800; letter-spacing: -0.3px; font-size: 0.98rem;
+    }
+    .brand-inline span { color: var(--accent-2); }
+    .lock-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.68rem; font-weight: 800;
+      padding: 4px 9px; border-radius: 999px;
+      color: var(--warning); background: var(--warning-soft);
+    }
+    .gate-card h2 { font-size: 1.08rem; margin-bottom: 4px; }
+    .gate-card > p { font-size: 0.78rem; color: var(--muted); margin-bottom: 16px; }
+    .gate-error {
+      font-size: 0.76rem; font-weight: 700; color: var(--danger);
+      min-height: 20px; margin-top: 6px;
+    }
+    .gate-help {
+      display: block; text-align: center; margin-top: 12px;
+      font-size: 0.74rem; color: var(--muted); text-decoration: none;
+    }
+    .gate-help:hover { color: var(--primary); }
+
+    /* ============================================================
+       4. TOPBAR & HEADER APLIKASI
+       ============================================================ */
+    .topbar {
+      position: sticky; top: 0; z-index: 40;
+      background: color-mix(in srgb, var(--card) 88%, transparent);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0;
+    }
+    .back-link {
+      flex: 1; min-width: 0;
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 12px; border-radius: 11px;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--primary-dark); font-size: 0.78rem; font-weight: 700;
+      text-decoration: none; box-shadow: var(--shadow);
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+    .back-link span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .back-link:hover { transform: translateY(-1px); border-color: var(--accent-2); }
+    .icon-btn {
+      flex: 0 0 auto; width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border-radius: 11px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); font-size: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .icon-btn:hover { border-color: var(--accent-2); }
+
+    .app-header {
+      position: relative; overflow: hidden;
+      color: #fff; border-radius: 20px;
+      padding: 20px; margin: 16px 0;
+      background: linear-gradient(135deg, var(--header-start), var(--header-end));
+      box-shadow: var(--shadow-lg);
+    }
+    .app-header::after {
+      content: ""; position: absolute; width: 240px; height: 240px;
+      right: -110px; top: -140px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.3), transparent 68%);
+      pointer-events: none;
+    }
+    .app-header > * { position: relative; z-index: 1; }
+    .header-top {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 14px;
+    }
+    .brand-box {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 9px 14px; border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+    .brand-symbol {
+      width: 38px; height: 38px; border-radius: 11px;
+      display: grid; place-items: center; font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.14); color: var(--accent-2);
+    }
+    .brand-name { font-size: 1.25rem; font-weight: 850; letter-spacing: -0.5px; line-height: 1; }
+    .brand-name span { color: var(--accent-2); }
+    .brand-tag {
+      font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.6px;
+      color: #bae6fd; font-weight: 700; margin-top: 4px;
+    }
+    .header-title { font-size: 0.95rem; font-weight: 750; margin-top: 10px; }
+    .header-title small {
+      display: inline-block; margin-right: 8px; padding: 3px 8px;
+      border-radius: 999px; font-size: 0.66rem;
+      background: var(--primary-soft); color: var(--primary-dark);
+    }
+
+    .header-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .tabs {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      padding: 5px; border-radius: 13px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .tab {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 12px; border-radius: 9px;
+      border: none; background: transparent; color: #dbeafe;
+      font-size: 0.76rem; font-weight: 700;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+    .tab:hover { background: rgba(255, 255, 255, 0.12); }
+    .tab.active { background: #fff; color: var(--primary-dark); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16); }
+
+    /* ============================================================
+       5. TOMBOL, CARD & FORM
+       ============================================================ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 10px 14px; border-radius: 11px;
+      border: 1px solid transparent; font-size: 0.78rem; font-weight: 750;
+      text-decoration: none; transition: transform 0.16s ease, opacity 0.16s ease, background 0.16s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: scale(0.98); }
+    .btn-light { background: rgba(255, 255, 255, 0.16); color: #fff; border-color: rgba(255, 255, 255, 0.25); }
+    .btn-accent { background: var(--accent-2); color: #062033; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    [data-theme="dark"] .btn-primary { color: #062033; }
+    .btn-soft { background: var(--card-2); color: var(--text); border-color: var(--border); }
+    .btn-danger { background: var(--danger-soft); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+    .btn-block { width: 100%; }
+
+    .banner {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 14px;
+      padding: 18px 20px; border-radius: var(--radius);
+      color: #fff; margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      box-shadow: var(--shadow);
+    }
+    .banner h2 { font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .banner p { font-size: 0.78rem; color: #dbeafe; margin-top: 4px; max-width: 70ch; }
+    .banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .layout { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
+    @media (min-width: 980px) {
+      .layout { grid-template-columns: 7fr 5fr; }
+      .sticky-col { position: sticky; top: 82px; }
+    }
+    .stack { display: grid; gap: 16px; }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
+    }
+    .card-head {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 10px; margin-bottom: 14px;
+    }
+    .card-title {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 0.94rem; font-weight: 750; color: var(--primary-dark);
+    }
+    .num {
+      width: 28px; height: 28px; border-radius: 9px;
+      display: grid; place-items: center; flex: 0 0 auto;
+      background: var(--primary-soft); color: var(--primary);
+      font-size: 0.78rem; font-weight: 800;
+    }
+    .hint { font-size: 0.76rem; color: var(--muted); margin-bottom: 14px; line-height: 1.55; }
+    .subtle { font-size: 0.7rem; color: var(--faint); font-weight: 600; }
+
+    .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    @media (min-width: 520px) { .preset-grid { grid-template-columns: repeat(4, 1fr); } }
+    .preset {
+      text-align: left; padding: 10px; border-radius: 12px;
+      border: 1.5px solid var(--border); background: var(--card-2);
+      transition: border-color 0.16s ease, background 0.16s ease;
+    }
+    .preset:hover { border-color: var(--accent-2); }
+    .preset.active { border-color: var(--primary); background: var(--primary-soft); box-shadow: var(--ring); }
+    .preset b { display: block; font-size: 0.74rem; color: var(--text); }
+    .preset small { display: block; font-size: 0.72rem; color: var(--primary); font-weight: 750; margin-top: 2px; }
+
+    .field-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 560px) { .field-grid { grid-template-columns: 1fr 1fr; } }
+    .field label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-bottom: 5px; }
+    .input-wrap { position: relative; }
+    .input-wrap .input { padding-right: 58px; }
+    .unit {
+      position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+      font-size: 0.68rem; color: var(--faint); font-weight: 700; pointer-events: none;
+    }
+    .input, .select {
+      width: 100%; padding: 10px 12px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--card-2); color: var(--text);
+      font-size: 0.85rem; font-weight: 600;
+    }
+    .input:focus, .select:focus { outline: none; border-color: var(--accent); box-shadow: var(--ring); }
+    .input-pair { display: flex; gap: 7px; }
+    .input-pair .input:last-child { flex: 0 0 96px; font-size: 0.76rem; }
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+    .stage-row {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--card-2); margin-bottom: 9px;
+    }
+    .stage-main { flex: 1; min-width: 200px; }
+    .stage-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+    .stage-label { font-size: 0.72rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.4px; }
+    .stage-loss {
+      font-size: 0.7rem; font-weight: 800; color: var(--danger);
+      background: var(--danger-soft); padding: 2px 7px; border-radius: 6px;
+    }
+
+    /* ============================================================
+       6. HASIL & METER
+       ============================================================ */
+    .result-card { overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); }
+    .result-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 14px 16px; background: #0f172a; color: #fff;
+    }
+    .result-head span { display: block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-2); font-weight: 800; }
+    .result-head strong { display: block; font-size: 0.82rem; margin-top: 2px; }
+    .result-body { padding: 16px; }
+    .rx-box {
+      text-align: center; padding: 16px 12px; border-radius: 14px;
+      border: 1px solid var(--border); background: var(--card-2); margin-bottom: 16px;
+    }
+    .rx-caption { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 750; }
+    .rx-value { font-size: clamp(2.1rem, 9vw, 2.8rem); font-weight: 850; color: var(--primary); letter-spacing: -1.5px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+    .rx-value small { font-size: 1rem; color: var(--muted); font-weight: 750; letter-spacing: 0; }
+    .rx-value.warn { color: var(--warning); }
+    .rx-value.bad { color: var(--danger); }
+    .rx-value.high { color: var(--purple); }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 8px; padding: 5px 11px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 800;
+    }
+    .status-badge.ok { background: var(--success-soft); color: var(--success-text); }
+    .status-badge.warn { background: var(--warning-soft); color: var(--warning); }
+    .status-badge.bad { background: var(--danger-soft); color: var(--danger); }
+    .status-badge.high { background: var(--purple-soft); color: var(--purple); }
+    .status-desc { font-size: 0.75rem; color: var(--muted); margin: 8px auto 0; max-width: 46ch; }
+
+    .meter-labels {
+      display: flex; justify-content: space-between; gap: 4px;
+      font-size: 0.6rem; font-weight: 800; color: var(--faint); margin-bottom: 6px;
+    }
+    .meter { position: relative; display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--border); }
+    .meter i { display: block; height: 100%; }
+    .seg-red { width: 25%; background: #ef4444; }
+    .seg-amber { width: 25%; background: #f59e0b; }
+    .seg-green { width: 40%; background: #22c55e; }
+    .seg-purple { width: 10%; background: #a855f7; }
+    .marker {
+      position: absolute; top: 0; bottom: 0; width: 6px;
+      background: #0f172a; box-shadow: 0 0 0 2px #fff;
+      transition: left 0.3s ease;
+    }
+    [data-theme="dark"] .marker { background: #fff; box-shadow: 0 0 0 2px #0f172a; }
+
+    .breakdown { display: grid; gap: 9px; padding-top: 14px; margin-top: 14px; border-top: 1px solid var(--border); font-size: 0.78rem; }
+    .break-row { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); }
+    .break-row b { color: var(--text); font-weight: 750; text-align: right; }
+    .break-row.neg b { color: var(--danger); }
+    .break-row.total { border-top: 1px dashed var(--border); padding-top: 9px; font-weight: 800; color: var(--text); }
+    .break-row.total b { color: var(--danger); }
+
+    .flow { display: grid; gap: 6px; }
+    .flow-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 9px 11px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--card-2);
+      font-size: 0.73rem;
+    }
+    .flow-item.indent { margin-left: 14px; border-left: 2px dashed var(--accent); }
+    .flow-item.olt { background: var(--primary); color: #fff; border-color: var(--primary); }
+    [data-theme="dark"] .flow-item.olt { color: #062033; }
+    .flow-item.ont { background: var(--success); color: #fff; border-color: var(--success); }
+    .flow-item.ont.warn { background: var(--warning); border-color: var(--warning); }
+    .flow-item.ont.bad { background: var(--danger); border-color: var(--danger); }
+    [data-theme="dark"] .flow-item.ont,
+    [data-theme="dark"] .flow-item.ont.warn,
+    [data-theme="dark"] .flow-item.ont.bad { color: #062033; }
+    .flow-item b { font-weight: 800; white-space: nowrap; }
+
+    /* ============================================================
+       7. TABEL
+       ============================================================ */
+    .table-card { overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); }
+    .table-head {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
+      padding: 13px 16px; background: var(--card-2); border-bottom: 1px solid var(--border);
+    }
+    .table-head h3 { font-size: 0.9rem; font-weight: 750; color: var(--primary-dark); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    th {
+      text-align: left; padding: 11px 12px; white-space: nowrap;
+      background: var(--card-2); color: var(--muted);
+      font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.4px;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    .table-input, .table-select {
+      padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--card-2); color: var(--text); font-size: 0.75rem;
+    }
+    .table-input.name { width: 110px; font-weight: 750; }
+    .table-input.dist { width: 66px; }
+    .badge {
+      display: inline-block; padding: 4px 9px; border-radius: 999px;
+      font-size: 0.68rem; font-weight: 800; white-space: nowrap;
+    }
+    .badge.ok { background: var(--success-soft); color: var(--success-text); }
+    .badge.warn { background: var(--warning-soft); color: var(--warning); }
+    .badge.bad { background: var(--danger-soft); color: var(--danger); }
+    .badge.high { background: var(--purple-soft); color: var(--purple); }
+    .ref-table { border: 1px solid var(--border); border-radius: 13px; overflow: hidden; }
+    .ref-title {
+      padding: 11px 14px; color: #fff; font-size: 0.8rem; font-weight: 750;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    }
+    .ref-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 900px) { .ref-grid { grid-template-columns: 1fr 1fr; } }
+    .loss-high { color: var(--danger); font-weight: 750; }
+    .loss-low { color: var(--success-text); font-weight: 750; }
+
+    /* ============================================================
+       8. TOAST & FOOTER
+       ============================================================ */
+    .toast {
+      position: fixed; right: 16px; bottom: 16px; z-index: 120;
+      transform: translateY(18px); opacity: 0; pointer-events: none;
+      max-width: min(360px, calc(100vw - 32px));
+      padding: 11px 15px; border-radius: 12px;
+      background: #0f172a; color: #fff; font-size: 0.78rem; font-weight: 650;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .toast.show { opacity: 1; transform: none; }
+    footer { text-align: center; color: var(--muted); font-size: 0.72rem; padding: 24px 0 10px; }
+    footer a { color: var(--primary); font-weight: 700; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased locked">
+<body class="locked">
 
-    <!-- LAYAR KUNCI PASSWORD SAAT MEMBUKA HALAMAN -->
-    <div id="password-gate" class="fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="w-full max-w-sm bg-white rounded-2xl border border-slate-200 p-6 shadow-2xl">
-            <div class="flex items-center justify-between mb-4">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#0d3b66] to-[#165692] text-white font-extrabold text-base tracking-tight shadow-sm">
-                    <i class="fa-solid fa-wifi text-[#29b6f6]"></i>
-                    <span>kaliwaru<span class="text-[#29b6f6]">.net</span></span>
-                </div>
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
-                    <i class="fa-solid fa-lock"></i> Terkunci
-                </span>
+  <!-- ===================== GATE PASSWORD ===================== -->
+  <div id="password-gate" class="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <div class="gate-top">
+        <div class="brand-inline">📶 kaliwaru<span>.net</span></div>
+        <span class="lock-pill">🔒 Terkunci</span>
+      </div>
+      <h2 id="gateTitle">Akses Kalkulator OLT</h2>
+      <p>Masukkan password teknisi untuk membuka kalkulator rasio OLT &amp; optical link budget FTTH.</p>
+
+      <form onsubmit="unlockPage(event)">
+        <label class="sr-only" for="gate-password-input">Password akses</label>
+        <input type="password" id="gate-password-input" inputmode="numeric" autocomplete="current-password" placeholder="Masukkan password" required class="input" />
+        <p id="gate-error-msg" class="gate-error" role="alert"></p>
+        <button type="submit" class="btn btn-primary btn-block">🔓 Buka Kalkulator</button>
+      </form>
+      <a class="gate-help" href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20teknisi%20dan%20butuh%20password%20akses%20kalkulator%20OLT." target="_blank" rel="noopener">Lupa password? Minta ke admin WhatsApp ↗</a>
+    </div>
+  </div>
+
+  <!-- ===================== KONTEN APLIKASI ===================== -->
+  <div id="protected-content" class="hidden">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="back-link" href="https://kaliwarunet.my.id" aria-label="Kembali ke kaliwarunet.my.id">
+          <span aria-hidden="true">←</span>
+          <span>Kembali ke kaliwarunet.my.id</span>
+        </a>
+        <button type="button" class="icon-btn" id="themeToggle" aria-label="Aktifkan mode gelap" aria-pressed="false" title="Ganti tema">🌙</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="app-header">
+        <div class="header-top">
+          <div>
+            <div class="brand-box">
+              <span class="brand-symbol" aria-hidden="true">📡</span>
+              <div>
+                <div class="brand-name">kaliwaru<span>.net</span></div>
+                <div class="brand-tag">Fiber &amp; WiFi Pacitan</div>
+              </div>
             </div>
+            <div class="header-title"><small>FTTH ENGINEERING TOOL</small>Kalkulator Rasio OLT &amp; Optical Power Budget</div>
+          </div>
 
-            <h2 class="text-lg font-bold text-slate-800">Akses Kalkulator OLT</h2>
-            <p class="text-xs text-slate-500 mt-1 mb-4">
-                Masukkan password teknisi untuk membuka halaman kalkulator rasio OLT &amp; link budget FTTH.
-            </p>
-
-            <form onsubmit="unlockPage(event)" class="space-y-3">
-                <div>
-                    <label for="gate-password-input" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                        Password Akses
-                    </label>
-                    <input
-                        type="password"
-                        id="gate-password-input"
-                        inputmode="numeric"
-                        autocomplete="current-password"
-                        placeholder="Masukkan password"
-                        required
-                        class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]"
-                    >
-                </div>
-                <p id="gate-error-msg" class="text-xs font-semibold text-rose-600 min-h-[18px]"></p>
-                <button
-                    type="submit"
-                    class="w-full py-2.5 px-4 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow"
-                >
-                    <i class="fa-solid fa-unlock-keyhole text-[#29b6f6]"></i>
-                    <span>Buka Kalkulator</span>
-                </button>
-            </form>
+          <div class="header-actions">
+            <nav class="tabs" role="tablist" aria-label="Menu kalkulator">
+              <button type="button" class="tab active" id="btn-tab-calculator" role="tab" aria-selected="true" aria-controls="tab-calculator" onclick="switchTab('calculator')">🧮 Hitung Link Budget</button>
+              <button type="button" class="tab" id="btn-tab-cascade" role="tab" aria-selected="false" aria-controls="tab-cascade" onclick="switchTab('cascade')">🔗 Simulasi Estafet ODP</button>
+              <button type="button" class="tab" id="btn-tab-reference" role="tab" aria-selected="false" aria-controls="tab-reference" onclick="switchTab('reference')">📋 Tabel Redaman</button>
+            </nav>
+            <button type="button" class="btn btn-light" onclick="lockCalculator()" title="Kunci halaman kembali">🔒 Kunci</button>
+          </div>
         </div>
+      </div>
     </div>
 
-    <!-- KONTEN HALAMAN UTAMA (TERSEMBUNYI SEBELUM PASSWORD VALID) -->
-    <div id="protected-content" class="hidden min-h-screen flex flex-col">
-
-        <!-- HEADER PROFESIONAL DENGAN BRAND TEKS & IKON KALIWARU.NET -->
-        <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                    <!-- Area Brand Teks & Ikon Perusahaan -->
-                    <div class="flex items-center gap-4">
-                        <div class="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#0d3b66] to-[#165692] text-white shadow-sm border border-[#082644]/20">
-                            <div class="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center text-[#29b6f6] text-lg shrink-0">
-                                <i class="fa-solid fa-tower-broadcast"></i>
-                            </div>
-                            <div class="leading-none">
-                                <div class="text-xl sm:text-2xl font-extrabold tracking-tight flex items-center">
-                                    <span>kaliwaru</span><span class="text-[#29b6f6]">.net</span>
-                                </div>
-                                <div class="text-[10px] font-semibold tracking-wider uppercase text-sky-200 mt-1">
-                                    Fiber &amp; WiFi Pacitan
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hidden lg:block h-10 w-px bg-slate-200"></div>
-                        <div class="hidden lg:block">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-light text-brand-navy">
-                                <i class="fa-solid fa-network-wired text-brand-cyan"></i> FTTH Network Engineering Tool
-                            </span>
-                            <h1 class="text-base font-bold text-slate-800 mt-1">Kalkulator Rasio OLT &amp; Optical Power Budget</h1>
-                        </div>
-                    </div>
-
-                    <!-- Navigasi Tab Utama + Tombol Kunci -->
-                    <div class="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
-                        <nav class="flex flex-wrap items-center justify-center gap-2 bg-slate-100 p-1.5 rounded-xl flex-grow md:flex-grow-0">
-                            <button onclick="switchTab('calculator')" id="btn-tab-calculator" class="tab-active flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-calculator"></i>
-                                <span>Hitung Link Budget</span>
-                            </button>
-                            <button onclick="switchTab('cascade')" id="btn-tab-cascade" class="tab-inactive flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-diagram-project"></i>
-                                <span>Simulasi Estafet ODP</span>
-                            </button>
-                            <button onclick="switchTab('reference')" id="btn-tab-reference" class="tab-inactive flex-1 md:flex-none px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-table-list"></i>
-                                <span>Tabel Redaman</span>
-                            </button>
-                        </nav>
-                        <button
-                            type="button"
-                            onclick="lockCalculator()"
-                            title="Kunci halaman kembali"
-                            class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-200 text-slate-700 hover:text-rose-700 text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 shadow-sm"
-                        >
-                            <i class="fa-solid fa-lock"></i>
-                            <span>Kunci</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- KONTEN UTAMA -->
-        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-
-            <!-- =================================================================== -->
-            <!-- TAB 1: KALKULATOR REDAMAN & RASIO OLT (SINGLE PATH LINK BUDGET)    -->
-            <!-- =================================================================== -->
-            <section id="tab-calculator" class="space-y-6">
-                
-                <!-- Banner Informasi Singkat -->
-                <div class="bg-gradient-to-r from-[#0d3b66] to-[#165692] rounded-2xl p-5 sm:p-6 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-wave-square text-[#29b6f6]"></i>
-                            Perhitungan Redaman Jalur Optik (OLT ke ONT/ONU)
-                        </h2>
-                        <p class="text-xs sm:text-sm text-sky-100 mt-1">
-                            Simulasikan redaman kabel fiber, sambungan, konektor, dan kombinasi splitter rasio (unbalanced) maupun splitter rata (even) secara bertingkat.
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-2 self-end sm:self-center">
-                        <button onclick="resetCalculator()" class="px-3.5 py-2 bg-white/15 hover:bg-white/25 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 backdrop-blur-sm">
-                            <i class="fa-solid fa-rotate-left"></i> Reset Default
-                        </button>
-                        <button onclick="copySummary()" class="px-3.5 py-2 bg-[#29b6f6] hover:bg-sky-400 text-[#082644] rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow">
-                            <i class="fa-regular fa-copy"></i> Salin Laporan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Grid Utama: Kiri (Input Parameter) & Kanan (Hasil & Visualisasi) -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    
-                    <!-- KOLOM KIRI: PARAMETER INPUT (7 Kolom di Desktop) -->
-                    <div class="lg:col-span-7 space-y-6">
-                        
-                        <!-- Card 1: Sumber Optik OLT (Tx Power) -->
-                        <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
-                                    <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">1</span>
-                                    Daya Pancar SFP OLT (Tx Power)
-                                </h3>
-                                <span class="text-xs font-medium text-slate-400">GPON / EPON / XGS-PON</span>
-                            </div>
-
-                            <!-- Preset Cepat Modul SFP -->
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-                                <button type="button" onclick="setSfpPower(3.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
-                                    <div class="text-xs font-bold text-slate-700">SFP Class B+</div>
-                                    <div class="text-xs text-[#0d3b66] font-semibold">+3.0 dBm</div>
-                                </button>
-                                <button type="button" onclick="setSfpPower(5.0, this)" class="sfp-preset px-3 py-2 rounded-xl border-2 border-[#0d3b66] bg-brand-light/40 text-left transition">
-                                    <div class="text-xs font-bold text-[#0d3b66]">SFP Class C+</div>
-                                    <div class="text-xs text-[#0d3b66] font-semibold">+5.0 dBm</div>
-                                </button>
-                                <button type="button" onclick="setSfpPower(7.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
-                                    <div class="text-xs font-bold text-slate-700">SFP Class C++</div>
-                                    <div class="text-xs text-[#0d3b66] font-semibold">+7.0 dBm</div>
-                                </button>
-                                <button type="button" onclick="setSfpPower(9.0, this)" class="sfp-preset px-3 py-2 rounded-xl border border-slate-200 text-left hover:border-[#29b6f6] transition">
-                                    <div class="text-xs font-bold text-slate-700">SFP C+++ / High</div>
-                                    <div class="text-xs text-[#0d3b66] font-semibold">+9.0 dBm</div>
-                                </button>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Daya Tx OLT Manual (dBm)</label>
-                                    <div class="relative">
-                                        <input type="number" id="txPower" value="5.0" step="0.1" min="-10" max="20" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-[#0d3b66] focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                        <span class="absolute right-3.5 top-2.5 text-xs font-bold text-slate-400">dBm</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Panjang Gelombang (Wavelength)</label>
-                                    <select id="wavelength" onchange="updateWavelengthLoss()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                        <option value="0.35">1310 nm Upstream (0.35 dB/km)</option>
-                                        <option value="0.25" selected>1490 nm Downstream (0.25 dB/km)</option>
-                                        <option value="0.20">1550 nm Video/RF (0.20 dB/km)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 2: Parameter Infrastruktur Kabel, Splicing & Konektor -->
-                        <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
-                                    <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">2</span>
-                                    Redaman Kabel Fiber, Splicing &amp; Konektor
-                                </h3>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <!-- Panjang Kabel -->
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Total Panjang Kabel (km)</label>
-                                    <div class="relative">
-                                        <input type="number" id="cableLength" value="3.5" step="0.1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                        <span class="absolute right-3.5 top-2.5 text-xs font-semibold text-slate-400">km</span>
-                                    </div>
-                                </div>
-                                <!-- Redaman Kabel per km -->
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Redaman Kabel (dB/km)</label>
-                                    <div class="relative">
-                                        <input type="number" id="cableLossPerKm" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                        <span class="absolute right-3.5 top-2.5 text-xs font-semibold text-slate-400">dB/km</span>
-                                    </div>
-                                </div>
-                                <!-- Jumlah Splicing -->
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jumlah Sambungan / Splicing (0.1 dB/titik)</label>
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" id="spliceCount" value="4" step="1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                        <input type="number" id="spliceLossEach" value="0.10" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per splice (dB)" class="w-24 px-2.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    </div>
-                                </div>
-                                <!-- Jumlah Konektor -->
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jumlah Konektor / Adapter (0.25 dB/titik)</label>
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" id="connectorCount" value="4" step="1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                        <input type="number" id="connectorLossEach" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per konektor (dB)" class="w-24 px-2.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Safety Margin -->
-                            <div class="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                                <div>
-                                    <label class="text-xs font-semibold text-slate-600">Margin Cadangan / Bending Loss (Safety Margin)</label>
-                                    <p class="text-[11px] text-slate-400">Cadangan untuk tekukan kabel (macro-bending) &amp; penuaan fiber (standar 1.0 - 2.0 dB)</p>
-                                </div>
-                                <div class="relative w-full sm:w-36">
-                                    <input type="number" id="safetyMargin" value="1.5" step="0.1" min="0" oninput="calculateLinkBudget()" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                                    <span class="absolute right-3 top-2 text-xs font-semibold text-slate-400">dB</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 3: Konfigurasi Splitter Bertingkat (ODC / ODP / Rasio) -->
-                        <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                                <h3 class="text-base font-bold text-[#0d3b66] flex items-center gap-2">
-                                    <span class="w-7 h-7 rounded-lg bg-brand-light text-[#0d3b66] flex items-center justify-center text-sm font-extrabold">3</span>
-                                    Konfigurasi Splitter Bertingkat (Rasio / Even)
-                                </h3>
-                                <button type="button" onclick="addSplitterStage()" class="px-3 py-1.5 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                                    <i class="fa-solid fa-plus"></i> Tambah Stage Splitter
-                                </button>
-                            </div>
-
-                            <p class="text-xs text-slate-500 mb-4">
-                                Pilih jenis splitter di tiap tahap (Stage 1 ODC, Stage 2 ODP, dst). Untuk <strong>Splitter Rasio (Unbalanced)</strong>, pilih port keluaran yang diukur (misal cabang tap 10% atau terusannya 90%).
-                            </p>
-
-                            <!-- Daftar Stage Splitter Dinamis -->
-                            <div id="splitter-stages-container" class="space-y-3">
-                                <!-- Di-render melalui JavaScript -->
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- KOLOM KANAN: HASIL ANALISIS & VISUALISASI ALUR SINYAL (5 Kolom di Desktop) -->
-                    <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-                        
-                        <!-- Card Hasil Utama (Rx Power & Status Indikator) -->
-                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md">
-                            <div class="bg-slate-900 px-5 py-4 text-white flex items-center justify-between">
-                                <div>
-                                    <span class="text-[11px] uppercase tracking-wider text-sky-400 font-bold">Estimasi Daya Terima ONT</span>
-                                    <h3 class="text-sm font-semibold text-slate-200">Optical Power Meter (OPM) Simulasi</h3>
-                                </div>
-                                <i class="fa-solid fa-gauge-high text-2xl text-[#29b6f6]"></i>
-                            </div>
-
-                            <div class="p-6">
-                                <!-- Angka Besar Rx Power -->
-                                <div class="text-center py-4 px-3 rounded-2xl bg-slate-50 border border-slate-200/80 mb-5">
-                                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Daya Terima di ONT / ONU (Rx)</div>
-                                    <div id="result-rx-power" class="text-4xl sm:text-5xl font-extrabold text-[#0d3b66] tracking-tight">
-                                        -19.63 <span class="text-xl font-bold text-slate-500">dBm</span>
-                                    </div>
-                                    
-                                    <!-- Badge Status Sinyal -->
-                                    <div id="result-status-badge" class="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                        <i class="fa-solid fa-circle-check"></i>
-                                        <span>OPTIMAL / SANGAT BAGUS</span>
-                                    </div>
-                                    <p id="result-status-desc" class="text-xs text-slate-600 mt-2.5 max-w-sm mx-auto">
-                                        Redaman berada di rentang ideal (-15 s/d -24 dBm). Koneksi stabil dan memiliki margin aman untuk jangka panjang.
-                                    </p>
-                                </div>
-
-                                <!-- Visualisasi Bar Meter Sinyal -->
-                                <div class="mb-6">
-                                    <div class="flex justify-between text-[11px] font-bold text-slate-500 mb-1.5">
-                                        <span>LOS (&lt;-28)</span>
-                                        <span>Warning (-25)</span>
-                                        <span class="text-emerald-600">Ideal (-18)</span>
-                                        <span>Overload (&gt;-8)</span>
-                                    </div>
-                                    <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden relative flex">
-                                        <div class="w-1/4 bg-rose-500 h-full" title="Kritis / LOS (< -27 dBm)"></div>
-                                        <div class="w-1/4 bg-amber-400 h-full" title="Toleransi / Warning (-24 s/d -27 dBm)"></div>
-                                        <div class="w-2/5 bg-emerald-500 h-full" title="Optimal (-12 s/d -24 dBm)"></div>
-                                        <div class="w-[10%] bg-purple-500 h-full" title="Overload (> -8 dBm)"></div>
-                                        <!-- Penanda Jarum -->
-                                        <div id="signal-gauge-marker" class="absolute top-0 bottom-0 w-1.5 bg-slate-900 ring-2 ring-white transition-all duration-300" style="left: 65%;"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Rincian Perhitungan Redaman (Breakdown) -->
-                                <div class="space-y-2.5 text-xs sm:text-sm border-t border-slate-100 pt-4">
-                                    <div class="flex justify-between items-center text-slate-600">
-                                        <span>Daya Awal (Tx OLT)</span>
-                                        <span id="breakdown-tx" class="font-bold text-[#0d3b66]">+5.00 dBm</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-slate-600">
-                                        <span>Redaman Kabel (<span id="breakdown-km">3.5</span> km)</span>
-                                        <span id="breakdown-cable" class="font-semibold text-rose-600">-0.88 dB</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-slate-600">
-                                        <span>Redaman Splicing &amp; Konektor</span>
-                                        <span id="breakdown-passive" class="font-semibold text-rose-600">-1.40 dB</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-slate-600">
-                                        <span>Total Redaman Splitter</span>
-                                        <span id="breakdown-splitter" class="font-semibold text-rose-600">-20.85 dB</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-slate-600">
-                                        <span>Safety Margin (Cadangan)</span>
-                                        <span id="breakdown-margin" class="font-semibold text-rose-600">-1.50 dB</span>
-                                    </div>
-                                    <div class="flex justify-between items-center pt-2.5 border-t border-dashed border-slate-300 font-bold text-slate-800">
-                                        <span>Total Redaman Jalur (Total Loss)</span>
-                                        <span id="breakdown-total-loss" class="text-rose-700">24.63 dB</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card Visualisasi Diagram Alur Sinyal Bertahap -->
-                        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-                            <h4 class="text-sm font-bold text-[#0d3b66] mb-3 flex items-center gap-2">
-                                <i class="fa-solid fa-route text-[#29b6f6]"></i>
-                                Diagram Alur Distribusi Daya Optik
-                            </h4>
-                            <div id="visual-flow-diagram" class="space-y-2">
-                                <!-- Di-render otomatis oleh JavaScript -->
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- =================================================================== -->
-            <!-- TAB 2: SIMULASI RANTAI RASIO (CASCADE / ESTAFET ODP)                -->
-            <!-- =================================================================== -->
-            <section id="tab-cascade" class="hidden space-y-6">
-                <div class="bg-gradient-to-r from-[#0d3b66] to-[#165692] rounded-2xl p-5 sm:p-6 text-white shadow-md">
-                    <h2 class="text-lg sm:text-xl font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-diagram-project text-[#29b6f6]"></i>
-                        Simulasi Jalur Estafet ODP (Unbalanced Cascade / Topologi Bus FTTH)
-                    </h2>
-                    <p class="text-xs sm:text-sm text-sky-100 mt-1">
-                        Rancang jalur distribusi estafet dari OLT melewati beberapa titik tiang ODP secara berurutan menggunakan Splitter Rasio (misal: 10:90, 20:80, 30:70) yang digabung dengan Splitter ODP lokal (1:4 atau 1:8).
-                    </p>
-                </div>
-
-                <!-- Parameter Global Estafet -->
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Daya Tx OLT Awal (dBm)</label>
-                            <select id="cascade-tx" onchange="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-[#0d3b66]">
-                                <option value="3.0">SFP Class B+ (+3.0 dBm)</option>
-                                <option value="5.0" selected>SFP Class C+ (+5.0 dBm)</option>
-                                <option value="7.0">SFP Class C++ (+7.0 dBm)</option>
-                                <option value="9.0">SFP Class C+++ (+9.0 dBm)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Jarak OLT ke ODP-1 (km)</label>
-                            <input type="number" id="cascade-init-dist" value="1.5" step="0.1" min="0" oninput="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1.5">Redaman Kabel (dB/km)</label>
-                            <input type="number" id="cascade-cable-loss" value="0.25" step="0.01" min="0" oninput="calculateCascade()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold">
-                        </div>
-                        <div>
-                            <button type="button" onclick="addCascadeNode()" class="w-full px-4 py-2.5 bg-[#0d3b66] hover:bg-[#082644] text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow">
-                                <i class="fa-solid fa-plus-circle"></i> Tambah Titik ODP Estafet
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tabel / Kartu Hasil Estafet per Titik ODP -->
-                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                    <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
-                        <h3 class="text-sm font-bold text-[#0d3b66]">Susunan Rantai ODP &amp; Estimasi Redaman Setiap Cabang</h3>
-                        <span class="text-xs text-slate-500">*Sudah termasuk estimasi redaman splice/konektor 0.35 dB per titik ODP</span>
-                    </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
-                                    <th class="py-3.5 px-4 font-bold">Titik ODP</th>
-                                    <th class="py-3.5 px-4 font-bold">Jarak Segmen (km)</th>
-                                    <th class="py-3.5 px-4 font-bold">Splitter Rasio (Tap : Terusan)</th>
-                                    <th class="py-3.5 px-4 font-bold">Splitter Distribusi ODP</th>
-                                    <th class="py-3.5 px-4 font-bold">Sinyal Masuk ODP</th>
-                                    <th class="py-3.5 px-4 font-bold">Daya Terima ONT (Rx)</th>
-                                    <th class="py-3.5 px-4 font-bold">Status</th>
-                                    <th class="py-3.5 px-4 text-center font-bold">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cascade-table-body" class="divide-y divide-slate-200 text-sm">
-                                <!-- Di-render otomatis melalui JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-
-            <!-- =================================================================== -->
-            <!-- TAB 3: TABEL REFERENSI STANDAR REDAMAN SPLITTER                     -->
-            <!-- =================================================================== -->
-            <section id="tab-reference" class="hidden space-y-6">
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-                    <h2 class="text-lg font-bold text-[#0d3b66] mb-1">Tabel Referensi Standar Redaman Optik FTTH (PLC &amp; FBT Splitter)</h2>
-                    <p class="text-xs text-slate-500 mb-6">Acuan standar industri ITU-T G.984 untuk perencanaan jaringan FTTH kaliwaru.net.</p>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Tabel 1: Even / Balanced Splitter -->
-                        <div class="border border-slate-200 rounded-xl overflow-hidden">
-                            <div class="bg-[#0d3b66] text-white px-4 py-3 font-bold text-sm flex items-center gap-2">
-                                <i class="fa-solid fa-code-branch text-[#29b6f6]"></i>
-                                1. Splitter Rata (Even / Balanced PLC Splitter)
-                            </div>
-                            <table class="w-full text-sm text-left">
-                                <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
-                                    <tr>
-                                        <th class="py-3 px-4">Rasio Splitter</th>
-                                        <th class="py-3 px-4">Jumlah Port</th>
-                                        <th class="py-3 px-4">Redaman Maksimal (Insertion Loss)</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-200">
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 2</td><td class="py-2.5 px-4">2 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">3.7 dB (3.5 - 4.0 dB)</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 4</td><td class="py-2.5 px-4">4 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">7.3 dB (7.0 - 7.5 dB)</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 8</td><td class="py-2.5 px-4">8 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">10.5 dB (10.2 - 10.8 dB)</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 16</td><td class="py-2.5 px-4">16 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">13.7 dB (13.5 - 14.0 dB)</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 32</td><td class="py-2.5 px-4">32 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">17.1 dB (16.8 - 17.5 dB)</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">1 : 64</td><td class="py-2.5 px-4">64 Port</td><td class="py-2.5 px-4 font-semibold text-rose-600">20.5 dB (20.2 - 21.0 dB)</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Tabel 2: Unbalanced / Asymmetric Ratio Splitter -->
-                        <div class="border border-slate-200 rounded-xl overflow-hidden">
-                            <div class="bg-[#0d3b66] text-white px-4 py-3 font-bold text-sm flex items-center gap-2">
-                                <i class="fa-solid fa-sliders text-[#29b6f6]"></i>
-                                2. Splitter Rasio Tidak Rata (Unbalanced / FBT Coupler)
-                            </div>
-                            <table class="w-full text-sm text-left">
-                                <thead class="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
-                                    <tr>
-                                        <th class="py-3 px-4">Rasio (Tap : Terusan)</th>
-                                        <th class="py-3 px-4">Loss Cabang (Tap)</th>
-                                        <th class="py-3 px-4">Loss Terusan (Pass-through)</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-200">
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">5 : 95</td><td class="py-2.5 px-4 font-semibold text-rose-600">13.7 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.4 dB</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">10 : 90</td><td class="py-2.5 px-4 font-semibold text-rose-600">10.5 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.6 dB</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">15 : 85</td><td class="py-2.5 px-4 font-semibold text-rose-600">8.7 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">0.9 dB</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">20 : 80</td><td class="py-2.5 px-4 font-semibold text-rose-600">7.3 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.2 dB</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">25 : 75</td><td class="py-2.5 px-4 font-semibold text-rose-600">6.4 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.5 dB</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">30 : 70</td><td class="py-2.5 px-4 font-semibold text-rose-600">5.6 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">1.8 dB</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">40 : 60</td><td class="py-2.5 px-4 font-semibold text-rose-600">4.3 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">2.5 dB</td></tr>
-                                    <tr><td class="py-2.5 px-4 font-bold text-[#0d3b66]">50 : 50</td><td class="py-2.5 px-4 font-semibold text-rose-600">3.5 dB</td><td class="py-2.5 px-4 font-semibold text-emerald-700">3.5 dB</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
-
-        <!-- TOAST NOTIFIKASI PENGGANTI ALERT() -->
-        <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-            <div class="bg-[#0d3b66] text-white px-4 py-3 rounded-xl shadow-lg border border-sky-400/30 flex items-center gap-3 text-sm font-medium">
-                <i class="fa-solid fa-circle-check text-[#29b6f6] text-lg"></i>
-                <span id="toast-message">Laporan berhasil disalin ke clipboard!</span>
-            </div>
+    <main class="container">
+      <!-- ===================== TAB 1 ===================== -->
+      <section id="tab-calculator" role="tabpanel" aria-labelledby="btn-tab-calculator">
+        <div class="banner">
+          <div>
+            <h2>📶 Perhitungan Redaman Jalur Optik (OLT → ONT/ONU)</h2>
+            <p>Simulasikan redaman kabel, sambungan, konektor, dan kombinasi splitter rasio (unbalanced) maupun splitter rata (even) secara bertingkat.</p>
+          </div>
+          <div class="banner-actions">
+            <button type="button" class="btn btn-light" onclick="resetCalculator()">🔄 Reset Default</button>
+            <button type="button" class="btn btn-accent" onclick="copySummary()">📄 Salin Laporan</button>
+          </div>
         </div>
 
-        <!-- FOOTER PERUSAHAAN -->
-        <footer class="bg-white border-t border-slate-200 py-5 mt-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-                <div class="font-semibold text-[#0d3b66]">
-                    &copy; 2026 <span class="font-bold">kaliwaru.net</span>
+        <div class="layout">
+          <!-- KOLOM KIRI -->
+          <div class="stack">
+            <!-- Card 1 -->
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><span class="num">1</span> Daya Pancar SFP OLT (Tx Power)</div>
+                <span class="subtle">GPON / EPON / XGS-PON</span>
+              </div>
+
+              <div class="preset-grid">
+                <button type="button" class="sfp-preset preset" data-power="3" aria-pressed="false" onclick="setSfpPower(3.0, this)"><b>SFP Class B+</b><small>+3.0 dBm</small></button>
+                <button type="button" class="sfp-preset preset active" data-power="5" aria-pressed="true" onclick="setSfpPower(5.0, this)"><b>SFP Class C+</b><small>+5.0 dBm</small></button>
+                <button type="button" class="sfp-preset preset" data-power="7" aria-pressed="false" onclick="setSfpPower(7.0, this)"><b>SFP Class C++</b><small>+7.0 dBm</small></button>
+                <button type="button" class="sfp-preset preset" data-power="9" aria-pressed="false" onclick="setSfpPower(9.0, this)"><b>SFP C+++ / High</b><small>+9.0 dBm</small></button>
+              </div>
+
+              <div class="field-grid">
+                <div class="field">
+                  <label for="txPower">Daya Tx OLT Manual (dBm)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="txPower" class="input" value="5.0" step="0.1" min="-10" max="20" oninput="calculateLinkBudget()" />
+                    <span class="unit">dBm</span>
+                  </div>
                 </div>
-                <div>
-                    Sistem Kalkulator Perencanaan &amp; Simulasi Redaman Jaringan FTTH
+                <div class="field">
+                  <label for="wavelength">Panjang Gelombang</label>
+                  <select id="wavelength" class="select" onchange="updateWavelengthLoss()">
+                    <option value="0.35">1310 nm Upstream (0.35 dB/km)</option>
+                    <option value="0.25" selected>1490 nm Downstream (0.25 dB/km)</option>
+                    <option value="0.20">1550 nm Video/RF (0.20 dB/km)</option>
+                  </select>
                 </div>
+              </div>
             </div>
-        </footer>
 
-    </div>
-
-    <!-- LOGIKA JAVASCRIPT LENGKAP -->
-    <script>
-        // =========================================================================
-        // 0. KUNCI PASSWORD HALAMAN (1234)
-        // =========================================================================
-        const OLT_PAGE_PASSWORD = '1234';
-        const OLT_UNLOCK_KEY = 'kaliwaru_olt_unlocked_v1';
-
-        function applyLockState(isUnlocked) {
-            const gate = document.getElementById('password-gate');
-            const content = document.getElementById('protected-content');
-            const input = document.getElementById('gate-password-input');
-            const errorMsg = document.getElementById('gate-error-msg');
-
-            if (isUnlocked) {
-                gate.classList.add('hidden');
-                content.classList.remove('hidden');
-                document.body.classList.remove('locked');
-                errorMsg.textContent = '';
-            } else {
-                content.classList.add('hidden');
-                gate.classList.remove('hidden');
-                document.body.classList.add('locked');
-                input.value = '';
-                errorMsg.textContent = '';
-                setTimeout(() => input.focus(), 50);
-            }
-        }
-
-        function unlockPage(event) {
-            event.preventDefault();
-            const input = document.getElementById('gate-password-input');
-            const errorMsg = document.getElementById('gate-error-msg');
-
-            if (input.value === OLT_PAGE_PASSWORD) {
-                sessionStorage.setItem(OLT_UNLOCK_KEY, 'true');
-                applyLockState(true);
-            } else {
-                errorMsg.textContent = 'Password salah. Silakan coba lagi.';
-                input.focus();
-                input.select();
-            }
-        }
-
-        function lockCalculator() {
-            sessionStorage.removeItem(OLT_UNLOCK_KEY);
-            applyLockState(false);
-        }
-
-        // =========================================================================
-        // 1. DATABASE STANDAR SPLITTER (EVEN & UNBALANCED RATIO)
-        // =========================================================================
-        const SPLITTER_OPTIONS = [
-            // Even / Balanced Splitters
-            { id: 'even_1_2', category: 'Even Splitter (Rata)', label: '1 : 2 (Rata)', loss: 3.7 },
-            { id: 'even_1_4', category: 'Even Splitter (Rata)', label: '1 : 4 (Rata)', loss: 7.3 },
-            { id: 'even_1_8', category: 'Even Splitter (Rata)', label: '1 : 8 (Rata)', loss: 10.5 },
-            { id: 'even_1_16', category: 'Even Splitter (Rata)', label: '1 : 16 (Rata)', loss: 13.7 },
-            { id: 'even_1_32', category: 'Even Splitter (Rata)', label: '1 : 32 (Rata)', loss: 17.1 },
-            { id: 'even_1_64', category: 'Even Splitter (Rata)', label: '1 : 64 (Rata)', loss: 20.5 },
-
-            // Unbalanced / Ratio Splitters (Tap / Drop Port)
-            { id: 'ratio_5_95_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 5:95 — Ambil Port 5% (Tap)', loss: 13.7 },
-            { id: 'ratio_10_90_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 10:90 — Ambil Port 10% (Tap)', loss: 10.5 },
-            { id: 'ratio_15_85_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 15:85 — Ambil Port 15% (Tap)', loss: 8.7 },
-            { id: 'ratio_20_80_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 20:80 — Ambil Port 20% (Tap)', loss: 7.3 },
-            { id: 'ratio_25_75_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 25:75 — Ambil Port 25% (Tap)', loss: 6.4 },
-            { id: 'ratio_30_70_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 30:70 — Ambil Port 30% (Tap)', loss: 5.6 },
-            { id: 'ratio_40_60_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 40:60 — Ambil Port 40% (Tap)', loss: 4.3 },
-            { id: 'ratio_50_50', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 50:50 — Seimbang (Coupler)', loss: 3.5 },
-
-            // Unbalanced / Ratio Splitters (Pass-through / Terusan)
-            { id: 'ratio_5_95_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 5:95 — Ambil Port 95% (Terusan)', loss: 0.4 },
-            { id: 'ratio_10_90_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 10:90 — Ambil Port 90% (Terusan)', loss: 0.6 },
-            { id: 'ratio_15_85_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 15:85 — Ambil Port 85% (Terusan)', loss: 0.9 },
-            { id: 'ratio_20_80_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 20:80 — Ambil Port 80% (Terusan)', loss: 1.2 },
-            { id: 'ratio_25_75_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 25:75 — Ambil Port 75% (Terusan)', loss: 1.5 },
-            { id: 'ratio_30_70_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 30:70 — Ambil Port 70% (Terusan)', loss: 1.8 },
-            { id: 'ratio_40_60_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 40:60 — Ambil Port 60% (Terusan)', loss: 2.5 },
-        ];
-
-        // State default Stage Splitter pada Tab 1
-        let splitterStages = [
-            { id: 1, name: 'Stage 1 (ODC / Rasio Utama)', splitterId: 'ratio_20_80_tap' },
-            { id: 2, name: 'Stage 2 (ODP Distribusi)', splitterId: 'even_1_8' }
-        ];
-
-        // Data Ratio untuk Simulasi Estafet ODP (Tab 2)
-        const CASCADE_RATIOS = [
-            { id: '10_90', label: '10 : 90', tapLoss: 10.5, passLoss: 0.6 },
-            { id: '15_85', label: '15 : 85', tapLoss: 8.7, passLoss: 0.9 },
-            { id: '20_80', label: '20 : 80', tapLoss: 7.3, passLoss: 1.2 },
-            { id: '25_75', label: '25 : 75', tapLoss: 6.4, passLoss: 1.5 },
-            { id: '30_70', label: '30 : 70', tapLoss: 5.6, passLoss: 1.8 },
-            { id: '40_60', label: '40 : 60', tapLoss: 4.3, passLoss: 2.5 },
-            { id: '50_50', label: '50 : 50', tapLoss: 3.5, passLoss: 3.5 },
-            { id: 'end_direct', label: 'Akhir Jalur (Tanpa Rasio)', tapLoss: 0.0, passLoss: 0.0 }
-        ];
-
-        const CASCADE_ODP_SPLITTERS = [
-            { id: '1_2', label: '1 : 2 (3.7 dB)', loss: 3.7 },
-            { id: '1_4', label: '1 : 4 (7.3 dB)', loss: 7.3 },
-            { id: '1_8', label: '1 : 8 (10.5 dB)', loss: 10.5 },
-            { id: '1_16', label: '1 : 16 (13.7 dB)', loss: 13.7 }
-        ];
-
-        // State default rantai estafet ODP
-        let cascadeNodes = [
-            { id: 1, name: 'ODP-01', distKm: 0.0, ratioId: '10_90', odpSplitterId: '1_8' },
-            { id: 2, name: 'ODP-02', distKm: 0.4, ratioId: '15_85', odpSplitterId: '1_8' },
-            { id: 3, name: 'ODP-03', distKm: 0.5, ratioId: '20_80', odpSplitterId: '1_8' },
-            { id: 4, name: 'ODP-04', distKm: 0.3, ratioId: '30_70', odpSplitterId: '1_8' },
-            { id: 5, name: 'ODP-05 (Ujung)', distKm: 0.4, ratioId: 'end_direct', odpSplitterId: '1_8' }
-        ];
-
-        // =========================================================================
-        // 2. FUNGSI NAVIGASI TAB & NOTIFIKASI TOAST
-        // =========================================================================
-        function switchTab(tabName) {
-            const tabs = ['calculator', 'cascade', 'reference'];
-            tabs.forEach(t => {
-                const section = document.getElementById(`tab-${t}`);
-                const btn = document.getElementById(`btn-tab-${t}`);
-                if (t === tabName) {
-                    section.classList.remove('hidden');
-                    btn.classList.remove('tab-inactive');
-                    btn.classList.add('tab-active');
-                } else {
-                    section.classList.add('hidden');
-                    btn.classList.remove('tab-active');
-                    btn.classList.add('tab-inactive');
-                }
-            });
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast-notification');
-            document.getElementById('toast-message').textContent = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        // =========================================================================
-        // 3. LOGIKA TAB 1: KALKULATOR LINK BUDGET & SPLITTER BERTINGKAT
-        // =========================================================================
-        function setSfpPower(power, btnElement) {
-            document.getElementById('txPower').value = power.toFixed(1);
-            document.querySelectorAll('.sfp-preset').forEach(btn => {
-                btn.classList.remove('border-2', 'border-[#0d3b66]', 'bg-brand-light/40');
-                btn.classList.add('border', 'border-slate-200');
-            });
-            btnElement.classList.remove('border', 'border-slate-200');
-            btnElement.classList.add('border-2', 'border-[#0d3b66]', 'bg-brand-light/40');
-            calculateLinkBudget();
-        }
-
-        function updateWavelengthLoss() {
-            const wlLoss = document.getElementById('wavelength').value;
-            document.getElementById('cableLossPerKm').value = wlLoss;
-            calculateLinkBudget();
-        }
-
-        function renderSplitterStages() {
-            const container = document.getElementById('splitter-stages-container');
-            container.innerHTML = '';
-
-            const categories = [...new Set(SPLITTER_OPTIONS.map(o => o.category))];
-
-            splitterStages.forEach((stage, index) => {
-                const selectedObj = SPLITTER_OPTIONS.find(o => o.id === stage.splitterId) || SPLITTER_OPTIONS[0];
-                
-                let optionsHtml = '';
-                categories.forEach(cat => {
-                    optionsHtml += `<optgroup label="${cat}">`;
-                    SPLITTER_OPTIONS.filter(o => o.category === cat).forEach(opt => {
-                        const isSelected = opt.id === stage.splitterId ? 'selected' : '';
-                        optionsHtml += `<option value="${opt.id}" ${isSelected}>${opt.label} (-${opt.loss.toFixed(1)} dB)</option>`;
-                    });
-                    optionsHtml += `</optgroup>`;
-                });
-
-                const stageCard = document.createElement('div');
-                stageCard.className = 'p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition hover:border-sky-300';
-                stageCard.innerHTML = `
-                    <div class="flex-grow">
-                        <div class="flex items-center justify-between mb-1.5">
-                            <span class="text-xs font-bold text-[#0d3b66] uppercase tracking-wide">
-                                <i class="fa-solid fa-share-nodes text-[#29b6f6] mr-1"></i> Stage ${index + 1}
-                            </span>
-                            <span class="text-xs font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
-                                -${selectedObj.loss.toFixed(1)} dB
-                            </span>
-                        </div>
-                        <select onchange="updateSplitterStage(${index}, this.value)" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#29b6f6]">
-                            ${optionsHtml}
-                        </select>
-                    </div>
-                    ${splitterStages.length > 1 ? `
-                        <button type="button" onclick="removeSplitterStage(${index})" title="Hapus Stage" class="self-end sm:self-center px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-bold transition">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    ` : ''}
-                `;
-                container.appendChild(stageCard);
-            });
-        }
-
-        function addSplitterStage() {
-            if (splitterStages.length >= 6) {
-                showToast('Maksimal 6 tahap splitter bertingkat!');
-                return;
-            }
-            const nextNum = splitterStages.length + 1;
-            splitterStages.push({
-                id: Date.now(),
-                name: `Stage ${nextNum}`,
-                splitterId: 'even_1_4'
-            });
-            renderSplitterStages();
-            calculateLinkBudget();
-        }
-
-        function removeSplitterStage(index) {
-            splitterStages.splice(index, 1);
-            renderSplitterStages();
-            calculateLinkBudget();
-        }
-
-        function updateSplitterStage(index, newSplitterId) {
-            splitterStages[index].splitterId = newSplitterId;
-            renderSplitterStages();
-            calculateLinkBudget();
-        }
-
-        function calculateLinkBudget() {
-            try {
-                const txPower = parseFloat(document.getElementById('txPower').value) || 0;
-                const cableLength = Math.max(0, parseFloat(document.getElementById('cableLength').value) || 0);
-                const cableLossPerKm = Math.max(0, parseFloat(document.getElementById('cableLossPerKm').value) || 0);
-                const spliceCount = Math.max(0, parseInt(document.getElementById('spliceCount').value) || 0);
-                const spliceLossEach = Math.max(0, parseFloat(document.getElementById('spliceLossEach').value) || 0);
-                const connectorCount = Math.max(0, parseInt(document.getElementById('connectorCount').value) || 0);
-                const connectorLossEach = Math.max(0, parseFloat(document.getElementById('connectorLossEach').value) || 0);
-                const safetyMargin = Math.max(0, parseFloat(document.getElementById('safetyMargin').value) || 0);
-
-                const totalCableLoss = cableLength * cableLossPerKm;
-                const totalSpliceLoss = spliceCount * spliceLossEach;
-                const totalConnectorLoss = connectorCount * connectorLossEach;
-                const totalPassiveLoss = totalSpliceLoss + totalConnectorLoss;
-
-                let totalSplitterLoss = 0;
-                splitterStages.forEach(st => {
-                    const found = SPLITTER_OPTIONS.find(o => o.id === st.splitterId);
-                    if (found) totalSplitterLoss += found.loss;
-                });
-
-                const totalLoss = totalCableLoss + totalPassiveLoss + totalSplitterLoss + safetyMargin;
-                const rxPower = txPower - totalLoss;
-
-                document.getElementById('result-rx-power').innerHTML = `${rxPower.toFixed(2)} <span class="text-xl font-bold text-slate-500">dBm</span>`;
-                document.getElementById('breakdown-tx').textContent = `${txPower >= 0 ? '+' : ''}${txPower.toFixed(2)} dBm`;
-                document.getElementById('breakdown-km').textContent = cableLength.toFixed(1);
-                document.getElementById('breakdown-cable').textContent = `-${totalCableLoss.toFixed(2)} dB`;
-                document.getElementById('breakdown-passive').textContent = `-${totalPassiveLoss.toFixed(2)} dB`;
-                document.getElementById('breakdown-splitter').textContent = `-${totalSplitterLoss.toFixed(2)} dB`;
-                document.getElementById('breakdown-margin').textContent = `-${safetyMargin.toFixed(2)} dB`;
-                document.getElementById('breakdown-total-loss').textContent = `${totalLoss.toFixed(2)} dB`;
-
-                const badgeEl = document.getElementById('result-status-badge');
-                const descEl = document.getElementById('result-status-desc');
-                const rxTextEl = document.getElementById('result-rx-power');
-
-                if (rxPower > -8.0) {
-                    badgeEl.className = 'mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200';
-                    badgeEl.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>OVERLOAD / TERLALU TINGGI (&gt; -8 dBm)</span>';
-                    descEl.textContent = 'Sinyal optik terlalu kuat! Berisiko merusak sensor optik ONT. Tambahkan attenuator atau perbesar rasio splitter.';
-                    rxTextEl.className = 'text-4xl sm:text-5xl font-extrabold text-purple-700 tracking-tight';
-                } else if (rxPower >= -24.0) {
-                    badgeEl.className = 'mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200';
-                    badgeEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>OPTIMAL / SANGAT BAGUS (-8 s/d -24 dBm)</span>';
-                    descEl.textContent = 'Redaman berada di rentang ideal. Koneksi internet pelanggan sangat stabil dan memiliki margin aman.';
-                    rxTextEl.className = 'text-4xl sm:text-5xl font-extrabold text-[#0d3b66] tracking-tight';
-                } else if (rxPower >= -27.0) {
-                    badgeEl.className = 'mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200';
-                    badgeEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <span>TOLERANSI / WARNING (-24 s/d -27 dBm)</span>';
-                    descEl.textContent = 'Sinyal masih bisa terkoneksi namun mendekati ambang batas. Rentan putus jika kabel tertekuk atau suhu berubah.';
-                    rxTextEl.className = 'text-4xl sm:text-5xl font-extrabold text-amber-600 tracking-tight';
-                } else {
-                    badgeEl.className = 'mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200';
-                    badgeEl.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <span>KRITIS / LOS (&lt; -27 dBm)</span>';
-                    descEl.textContent = 'Sinyal terlalu lemah (Loss of Signal). ONT tidak akan mendapatkan link/registrasi ke OLT. Kurangi rasio splitter!';
-                    rxTextEl.className = 'text-4xl sm:text-5xl font-extrabold text-rose-600 tracking-tight';
-                }
-
-                const clampedRx = Math.max(-32, Math.min(-5, rxPower));
-                const percentage = ((clampedRx - (-32)) / (-5 - (-32))) * 100;
-                document.getElementById('signal-gauge-marker').style.left = `${percentage}%`;
-
-                renderFlowDiagram(txPower, totalCableLoss, totalPassiveLoss, safetyMargin, rxPower);
-            } catch (err) {
-                console.error('Error kalkulasi:', err);
-            }
-        }
-
-        function renderFlowDiagram(txPower, cableLoss, passiveLoss, margin, finalRx) {
-            const diagram = document.getElementById('visual-flow-diagram');
-            let currentPower = txPower;
-
-            let html = `
-                <div class="flex items-center justify-between p-2.5 rounded-xl bg-[#0d3b66] text-white text-xs">
-                    <div class="flex items-center gap-2 font-bold">
-                        <i class="fa-solid fa-server text-[#29b6f6]"></i>
-                        <span>OLT Port (Tx)</span>
-                    </div>
-                    <span class="font-extrabold text-sky-300">${currentPower >= 0 ? '+' : ''}${currentPower.toFixed(2)} dBm</span>
+            <!-- Card 2 -->
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><span class="num">2</span> Redaman Kabel, Splicing &amp; Konektor</div>
+              </div>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="cableLength">Total Panjang Kabel (km)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="cableLength" class="input" value="3.5" step="0.1" min="0" oninput="calculateLinkBudget()" />
+                    <span class="unit">km</span>
+                  </div>
                 </div>
-            `;
-
-            const infraLoss = cableLoss + passiveLoss + margin;
-            currentPower -= infraLoss;
-            html += `
-                <div class="pl-4 border-l-2 border-dashed border-sky-400 ml-3 py-1">
-                    <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs">
-                        <span class="text-slate-600"><i class="fa-solid fa-bezier-curve text-slate-400 mr-1.5"></i>Kabel, Splice &amp; Margin (-${infraLoss.toFixed(2)} dB)</span>
-                        <span class="font-bold text-slate-700">${currentPower.toFixed(2)} dBm</span>
-                    </div>
+                <div class="field">
+                  <label for="cableLossPerKm">Redaman Kabel (dB/km)</label>
+                  <div class="input-wrap">
+                    <input type="number" id="cableLossPerKm" class="input" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" />
+                    <span class="unit">dB/km</span>
+                  </div>
                 </div>
-            `;
-
-            splitterStages.forEach((st, idx) => {
-                const found = SPLITTER_OPTIONS.find(o => o.id === st.splitterId) || SPLITTER_OPTIONS[0];
-                currentPower -= found.loss;
-                html += `
-                    <div class="pl-4 border-l-2 border-dashed border-sky-400 ml-3 py-1">
-                        <div class="flex items-center justify-between p-2 rounded-lg bg-sky-50/70 border border-sky-200 text-xs">
-                            <span class="font-medium text-[#0d3b66]"><i class="fa-solid fa-code-branch text-[#29b6f6] mr-1.5"></i>Stage ${idx + 1}: ${found.label} (-${found.loss.toFixed(1)} dB)</span>
-                            <span class="font-bold text-[#0d3b66]">${currentPower.toFixed(2)} dBm</span>
-                        </div>
-                    </div>
-                `;
-            });
-
-            const ontColor = finalRx >= -24 && finalRx <= -8 ? 'bg-emerald-600' : (finalRx >= -27 && finalRx < -24 ? 'bg-amber-500' : 'bg-rose-600');
-            html += `
-                <div class="flex items-center justify-between p-2.5 rounded-xl ${ontColor} text-white text-xs shadow-sm">
-                    <div class="flex items-center gap-2 font-bold">
-                        <i class="fa-solid fa-router"></i>
-                        <span>ONT / Modem Pelanggan (Rx)</span>
-                    </div>
-                    <span class="font-extrabold">${finalRx.toFixed(2)} dBm</span>
+                <div class="field">
+                  <label for="spliceCount">Jumlah Splicing (0.1 dB/titik)</label>
+                  <div class="input-pair">
+                    <input type="number" id="spliceCount" class="input" value="4" step="1" min="0" oninput="calculateLinkBudget()" />
+                    <input type="number" id="spliceLossEach" class="input" value="0.10" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per splice (dB)" aria-label="Redaman per splice" />
+                  </div>
                 </div>
-            `;
+                <div class="field">
+                  <label for="connectorCount">Jumlah Konektor (0.25 dB/titik)</label>
+                  <div class="input-pair">
+                    <input type="number" id="connectorCount" class="input" value="4" step="1" min="0" oninput="calculateLinkBudget()" />
+                    <input type="number" id="connectorLossEach" class="input" value="0.25" step="0.01" min="0" oninput="calculateLinkBudget()" title="Redaman per konektor (dB)" aria-label="Redaman per konektor" />
+                  </div>
+                </div>
+              </div>
 
-            diagram.innerHTML = html;
+              <div class="divider"></div>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="safetyMargin">Safety Margin / Bending Loss</label>
+                  <div class="input-wrap">
+                    <input type="number" id="safetyMargin" class="input" value="1.5" step="0.1" min="0" oninput="calculateLinkBudget()" />
+                    <span class="unit">dB</span>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="subtle" style="display:block;padding-top:22px">Cadangan untuk tekukan kabel (macro-bending) &amp; penuaan fiber. Standar: 1.0 – 2.0 dB.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><span class="num">3</span> Konfigurasi Splitter Bertingkat</div>
+                <button type="button" class="btn btn-primary" onclick="addSplitterStage()">＋ Tambah Stage</button>
+              </div>
+              <p class="hint">Pilih jenis splitter di tiap tahap (Stage 1 ODC, Stage 2 ODP, dst). Untuk splitter rasio (unbalanced), pilih port keluaran yang diukur: cabang <em>tap</em> atau terusan <em>pass</em>.</p>
+              <div id="splitter-stages-container"></div>
+            </div>
+          </div>
+
+          <!-- KOLOM KANAN -->
+          <div class="stack sticky-col">
+            <div class="result-card">
+              <div class="result-head">
+                <div><span>Estimasi Daya Terima ONT</span><strong>Optical Power Meter (Simulasi)</strong></div>
+                <span style="font-size:1.4rem" aria-hidden="true">📊</span>
+              </div>
+              <div class="result-body">
+                <div class="rx-box">
+                  <div class="rx-caption">Daya Terima di ONT / ONU (Rx)</div>
+                  <div id="result-rx-power" class="rx-value" aria-live="polite">-19.63 <small>dBm</small></div>
+                  <div id="result-status-badge" class="status-badge ok">OPTIMAL / SANGAT BAGUS</div>
+                  <p id="result-status-desc" class="status-desc">Redaman berada di rentang ideal (-8 s/d -24 dBm).</p>
+                </div>
+
+                <div class="meter-labels">
+                  <span>LOS (&lt;-27)</span>
+                  <span>Warning</span>
+                  <span>Ideal</span>
+                  <span>Overload (&gt;-8)</span>
+                </div>
+                <div class="meter" role="img" aria-label="Skala kualitas sinyal optik">
+                  <i class="seg-red"></i><i class="seg-amber"></i><i class="seg-green"></i><i class="seg-purple"></i>
+                  <span id="signal-gauge-marker" class="marker" style="left:60%"></span>
+                </div>
+
+                <div class="breakdown">
+                  <div class="break-row"><span>Daya Awal (Tx OLT)</span><b id="breakdown-tx">+5.00 dBm</b></div>
+                  <div class="break-row neg"><span>Redaman Kabel (<span id="breakdown-km">3.5</span> km)</span><b id="breakdown-cable">-0.88 dB</b></div>
+                  <div class="break-row neg"><span>Redaman Splicing &amp; Konektor</span><b id="breakdown-passive">-1.40 dB</b></div>
+                  <div class="break-row neg"><span>Total Redaman Splitter</span><b id="breakdown-splitter">-20.85 dB</b></div>
+                  <div class="break-row neg"><span>Safety Margin</span><b id="breakdown-margin">-1.50 dB</b></div>
+                  <div class="break-row total"><span>Total Redaman Jalur</span><b id="breakdown-total-loss">24.63 dB</b></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title" style="margin-bottom:12px">🧭 Diagram Alur Distribusi Daya Optik</div>
+              <div id="visual-flow-diagram" class="flow"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== TAB 2 ===================== -->
+      <section id="tab-cascade" class="hidden space-y-6" role="tabpanel" aria-labelledby="btn-tab-cascade">
+        <div class="banner">
+          <div>
+            <h2>🔗 Simulasi Jalur Estafet ODP (Unbalanced Cascade / Bus FTTH)</h2>
+            <p>Rancang distribusi dari OLT melewati beberapa titik ODP berurutan dengan splitter rasio (10:90, 20:80, 30:70) yang digabung splitter ODP lokal (1:4 / 1:8).</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="field-grid">
+            <div class="field">
+              <label for="cascade-tx">Daya Tx OLT Awal (dBm)</label>
+              <select id="cascade-tx" class="select" onchange="calculateCascade()">
+                <option value="3.0">SFP Class B+ (+3.0 dBm)</option>
+                <option value="5.0" selected>SFP Class C+ (+5.0 dBm)</option>
+                <option value="7.0">SFP Class C++ (+7.0 dBm)</option>
+                <option value="9.0">SFP Class C+++ (+9.0 dBm)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="cascade-init-dist">Jarak OLT ke ODP-1 (km)</label>
+              <div class="input-wrap">
+                <input type="number" id="cascade-init-dist" class="input" value="1.5" step="0.1" min="0" oninput="calculateCascade()" />
+                <span class="unit">km</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="cascade-cable-loss">Redaman Kabel (dB/km)</label>
+              <div class="input-wrap">
+                <input type="number" id="cascade-cable-loss" class="input" value="0.25" step="0.01" min="0" oninput="calculateCascade()" />
+                <span class="unit">dB/km</span>
+              </div>
+            </div>
+            <div class="field" style="display:flex;align-items:flex-end">
+              <button type="button" class="btn btn-primary btn-block" onclick="addCascadeNode()">＋ Tambah Titik ODP Estafet</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-head">
+            <h3>Susunan Rantai ODP &amp; Estimasi Redaman Tiap Cabang</h3>
+            <span class="subtle">*Termasuk estimasi redaman splice/konektor 0.35 dB per titik ODP</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Titik ODP</th><th>Jarak Segmen</th><th>Splitter Rasio (Tap : Terusan)</th>
+                  <th>Splitter ODP</th><th>Sinyal Masuk</th><th>Rx ONT</th><th>Status</th><th style="text-align:center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="cascade-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== TAB 3 ===================== -->
+      <section id="tab-reference" class="hidden" role="tabpanel" aria-labelledby="btn-tab-reference">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2 style="font-size:1rem;font-weight:750;color:var(--primary-dark)">Tabel Referensi Standar Redaman Optik FTTH</h2>
+              <p class="subtle">Acuan perencanaan jaringan FTTH kaliwaru.net (PLC &amp; FBT splitter).</p>
+            </div>
+          </div>
+
+          <div class="ref-grid">
+            <div class="ref-table">
+              <div class="ref-title">1. Splitter Rata (Even / Balanced PLC)</div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Rasio</th><th>Port</th><th>Insertion Loss Maks.</th></tr></thead>
+                  <tbody>
+                    <tr><td><b>1 : 2</b></td><td>2 Port</td><td class="loss-high">3.7 dB (3.5 – 4.0)</td></tr>
+                    <tr><td><b>1 : 4</b></td><td>4 Port</td><td class="loss-high">7.3 dB (7.0 – 7.5)</td></tr>
+                    <tr><td><b>1 : 8</b></td><td>8 Port</td><td class="loss-high">10.5 dB (10.2 – 10.8)</td></tr>
+                    <tr><td><b>1 : 16</b></td><td>16 Port</td><td class="loss-high">13.7 dB (13.5 – 14.0)</td></tr>
+                    <tr><td><b>1 : 32</b></td><td>32 Port</td><td class="loss-high">17.1 dB (16.8 – 17.5)</td></tr>
+                    <tr><td><b>1 : 64</b></td><td>64 Port</td><td class="loss-high">20.5 dB (20.2 – 21.0)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="ref-table">
+              <div class="ref-title">2. Splitter Rasio Tidak Rata (Unbalanced / FBT)</div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Rasio (Tap : Terusan)</th><th>Loss Tap</th><th>Loss Terusan</th></tr></thead>
+                  <tbody>
+                    <tr><td><b>5 : 95</b></td><td class="loss-high">13.7 dB</td><td class="loss-low">0.4 dB</td></tr>
+                    <tr><td><b>10 : 90</b></td><td class="loss-high">10.5 dB</td><td class="loss-low">0.6 dB</td></tr>
+                    <tr><td><b>15 : 85</b></td><td class="loss-high">8.7 dB</td><td class="loss-low">0.9 dB</td></tr>
+                    <tr><td><b>20 : 80</b></td><td class="loss-high">7.3 dB</td><td class="loss-low">1.2 dB</td></tr>
+                    <tr><td><b>25 : 75</b></td><td class="loss-high">6.4 dB</td><td class="loss-low">1.5 dB</td></tr>
+                    <tr><td><b>30 : 70</b></td><td class="loss-high">5.6 dB</td><td class="loss-low">1.8 dB</td></tr>
+                    <tr><td><b>40 : 60</b></td><td class="loss-high">4.3 dB</td><td class="loss-low">2.5 dB</td></tr>
+                    <tr><td><b>50 : 50</b></td><td class="loss-high">3.5 dB</td><td class="loss-low">3.5 dB</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        &copy; 2026 <b>kaliwaru.net</b> — Sistem Kalkulator Perencanaan &amp; Simulasi Redaman Jaringan FTTH<br />
+        <a href="https://kaliwarunet.my.id">← Kembali ke kaliwarunet.my.id</a>
+      </footer>
+    </main>
+  </div>
+
+  <div id="toast-notification" class="toast" role="status" aria-live="polite">
+    <span id="toast-message">Laporan berhasil disalin ke clipboard!</span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       0. KUNCI HALAMAN
+       Catatan: password ini tersimpan di sisi klien, berfungsi sebagai pengunci
+       UI agar tidak terbuka tidak sengaja, BUKAN pengamanan data sensitif.
+       Ubah nilai di bawah bila diperlukan.
+       ========================================================================= */
+    const OLT_PAGE_PASSWORD = '1234';
+    const OLT_UNLOCK_KEY = 'kaliwaru_olt_unlocked_v1';
+    const HOME_URL = 'https://kaliwarunet.my.id';
+
+    function applyLockState(isUnlocked) {
+      const gate = document.getElementById('password-gate');
+      const content = document.getElementById('protected-content');
+      const input = document.getElementById('gate-password-input');
+      const errorMsg = document.getElementById('gate-error-msg');
+
+      if (isUnlocked) {
+        gate.classList.add('hidden');
+        content.classList.remove('hidden');
+        document.body.classList.remove('locked');
+        errorMsg.textContent = '';
+        setTimeout(function () {
+          const firstTab = document.getElementById('btn-tab-calculator');
+          if (firstTab) firstTab.focus();
+        }, 50);
+      } else {
+        content.classList.add('hidden');
+        gate.classList.remove('hidden');
+        document.body.classList.add('locked');
+        input.value = '';
+        errorMsg.textContent = '';
+        setTimeout(function () { input.focus(); }, 50);
+      }
+    }
+
+    function unlockPage(event) {
+      event.preventDefault();
+      const input = document.getElementById('gate-password-input');
+      const errorMsg = document.getElementById('gate-error-msg');
+
+      if (input.value.trim() === OLT_PAGE_PASSWORD) {
+        sessionStorage.setItem(OLT_UNLOCK_KEY, 'true');
+        applyLockState(true);
+      } else {
+        errorMsg.textContent = 'Password salah. Silakan coba lagi.';
+        input.focus();
+        input.select();
+      }
+    }
+
+    function lockCalculator() {
+      sessionStorage.removeItem(OLT_UNLOCK_KEY);
+      applyLockState(false);
+    }
+
+    /* =========================================================================
+       1. DATABASE SPLITTER
+       ========================================================================= */
+    const SPLITTER_OPTIONS = [
+      { id: 'even_1_2', category: 'Even Splitter (Rata)', label: '1 : 2 (Rata)', loss: 3.7 },
+      { id: 'even_1_4', category: 'Even Splitter (Rata)', label: '1 : 4 (Rata)', loss: 7.3 },
+      { id: 'even_1_8', category: 'Even Splitter (Rata)', label: '1 : 8 (Rata)', loss: 10.5 },
+      { id: 'even_1_16', category: 'Even Splitter (Rata)', label: '1 : 16 (Rata)', loss: 13.7 },
+      { id: 'even_1_32', category: 'Even Splitter (Rata)', label: '1 : 32 (Rata)', loss: 17.1 },
+      { id: 'even_1_64', category: 'Even Splitter (Rata)', label: '1 : 64 (Rata)', loss: 20.5 },
+
+      { id: 'ratio_5_95_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 5:95 — Port 5% (Tap)', loss: 13.7 },
+      { id: 'ratio_10_90_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 10:90 — Port 10% (Tap)', loss: 10.5 },
+      { id: 'ratio_15_85_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 15:85 — Port 15% (Tap)', loss: 8.7 },
+      { id: 'ratio_20_80_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 20:80 — Port 20% (Tap)', loss: 7.3 },
+      { id: 'ratio_25_75_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 25:75 — Port 25% (Tap)', loss: 6.4 },
+      { id: 'ratio_30_70_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 30:70 — Port 30% (Tap)', loss: 5.6 },
+      { id: 'ratio_40_60_tap', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 40:60 — Port 40% (Tap)', loss: 4.3 },
+      { id: 'ratio_50_50', category: 'Rasio Unbalanced (Port Tap / Cabang)', label: 'Rasio 50:50 — Seimbang (Coupler)', loss: 3.5 },
+
+      { id: 'ratio_5_95_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 5:95 — Port 95% (Terusan)', loss: 0.4 },
+      { id: 'ratio_10_90_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 10:90 — Port 90% (Terusan)', loss: 0.6 },
+      { id: 'ratio_15_85_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 15:85 — Port 85% (Terusan)', loss: 0.9 },
+      { id: 'ratio_20_80_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 20:80 — Port 80% (Terusan)', loss: 1.2 },
+      { id: 'ratio_25_75_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 25:75 — Port 75% (Terusan)', loss: 1.5 },
+      { id: 'ratio_30_70_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 30:70 — Port 70% (Terusan)', loss: 1.8 },
+      { id: 'ratio_40_60_pass', category: 'Rasio Unbalanced (Port Terusan / Pass)', label: 'Rasio 40:60 — Port 60% (Terusan)', loss: 2.5 }
+    ];
+
+    let splitterStages = [
+      { id: 1, name: 'Stage 1 (ODC / Rasio Utama)', splitterId: 'ratio_20_80_tap' },
+      { id: 2, name: 'Stage 2 (ODP Distribusi)', splitterId: 'even_1_8' }
+    ];
+
+    const CASCADE_RATIOS = [
+      { id: '10_90', label: '10 : 90', tapLoss: 10.5, passLoss: 0.6 },
+      { id: '15_85', label: '15 : 85', tapLoss: 8.7, passLoss: 0.9 },
+      { id: '20_80', label: '20 : 80', tapLoss: 7.3, passLoss: 1.2 },
+      { id: '25_75', label: '25 : 75', tapLoss: 6.4, passLoss: 1.5 },
+      { id: '30_70', label: '30 : 70', tapLoss: 5.6, passLoss: 1.8 },
+      { id: '40_60', label: '40 : 60', tapLoss: 4.3, passLoss: 2.5 },
+      { id: '50_50', label: '50 : 50', tapLoss: 3.5, passLoss: 3.5 },
+      { id: 'end_direct', label: 'Akhir Jalur (Tanpa Rasio)', tapLoss: 0.0, passLoss: 0.0 }
+    ];
+
+    const CASCADE_ODP_SPLITTERS = [
+      { id: '1_2', label: '1 : 2 (3.7 dB)', loss: 3.7 },
+      { id: '1_4', label: '1 : 4 (7.3 dB)', loss: 7.3 },
+      { id: '1_8', label: '1 : 8 (10.5 dB)', loss: 10.5 },
+      { id: '1_16', label: '1 : 16 (13.7 dB)', loss: 13.7 }
+    ];
+
+    let cascadeNodes = [
+      { id: 1, name: 'ODP-01', distKm: 0.0, ratioId: '10_90', odpSplitterId: '1_8' },
+      { id: 2, name: 'ODP-02', distKm: 0.4, ratioId: '15_85', odpSplitterId: '1_8' },
+      { id: 3, name: 'ODP-03', distKm: 0.5, ratioId: '20_80', odpSplitterId: '1_8' },
+      { id: 4, name: 'ODP-04', distKm: 0.3, ratioId: '30_70', odpSplitterId: '1_8' },
+      { id: 5, name: 'ODP-05 (Ujung)', distKm: 0.4, ratioId: 'end_direct', odpSplitterId: '1_8' }
+    ];
+
+    /* =========================================================================
+       2. NAVIGASI TAB, TOAST & UTILITAS
+       ========================================================================= */
+    function switchTab(tabName) {
+      ['calculator', 'cascade', 'reference'].forEach(function (t) {
+        const active = t === tabName;
+        const section = document.getElementById('tab-' + t);
+        const btn = document.getElementById('btn-tab-' + t);
+        if (section) section.classList.toggle('hidden', !active);
+        if (btn) {
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-selected', String(active));
+          btn.tabIndex = active ? 0 : -1;
         }
+      });
+    }
 
-        function resetCalculator() {
-            document.getElementById('txPower').value = '5.0';
-            document.getElementById('wavelength').value = '0.25';
-            document.getElementById('cableLength').value = '3.5';
-            document.getElementById('cableLossPerKm').value = '0.25';
-            document.getElementById('spliceCount').value = '4';
-            document.getElementById('spliceLossEach').value = '0.10';
-            document.getElementById('connectorCount').value = '4';
-            document.getElementById('connectorLossEach').value = '0.25';
-            document.getElementById('safetyMargin').value = '1.5';
-            
-            splitterStages = [
-                { id: 1, name: 'Stage 1', splitterId: 'ratio_20_80_tap' },
-                { id: 2, name: 'Stage 2', splitterId: 'even_1_8' }
-            ];
-            renderSplitterStages();
-            calculateLinkBudget();
-            showToast('Parameter berhasil dikembalikan ke pengaturan awal.');
-        }
+    let toastTimer;
+    function showToast(message) {
+      const toast = document.getElementById('toast-notification');
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 3000);
+    }
 
-        function copySummary() {
-            const tx = document.getElementById('txPower').value;
-            const km = document.getElementById('cableLength').value;
-            const totalLoss = document.getElementById('breakdown-total-loss').textContent;
-            const rx = document.getElementById('result-rx-power').innerText.trim();
-            const status = document.getElementById('result-status-badge').innerText.trim();
+    function esc(value) {
+      return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
 
-            let stageText = splitterStages.map((s, i) => {
-                const opt = SPLITTER_OPTIONS.find(o => o.id === s.splitterId);
-                return `  - Stage ${i + 1}: ${opt ? opt.label : ''} (-${opt ? opt.loss : 0} dB)`;
-            }).join('\n');
+    function copyText(text, done) {
+      function legacy() {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        temp.style.position = 'fixed';
+        temp.style.left = '-9999px';
+        document.body.appendChild(temp);
+        temp.select();
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(temp);
+        return ok;
+      }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(legacy()); });
+      } else {
+        done(legacy());
+      }
+    }
 
-            const textToCopy = `*LAPORAN PERHITUNGAN RASIO OLT - KALIWARU.NET*\n` +
-                               `----------------------------------------\n` +
-                               `• Daya Tx OLT     : +${tx} dBm\n` +
-                               `• Panjang Kabel   : ${km} km\n` +
-                               `• Konfigurasi Splitter:\n${stageText}\n` +
-                               `• Total Redaman   : ${totalLoss}\n` +
-                               `• Estimasi Rx ONT : ${rx}\n` +
-                               `• Status Kelayakan: ${status}\n` +
-                               `----------------------------------------`;
+    /* =========================================================================
+       3. TAB 1 — LINK BUDGET
+       ========================================================================= */
+    function highlightSfpPreset(power) {
+      document.querySelectorAll('.sfp-preset').forEach(function (btn) {
+        const active = Math.abs(parseFloat(btn.dataset.power) - power) < 0.01;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+    }
 
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textToCopy;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextArea);
+    function setSfpPower(power, btnElement) {
+      document.getElementById('txPower').value = power.toFixed(1);
+      highlightSfpPreset(power);
+      calculateLinkBudget();
+    }
 
-            showToast('Laporan perhitungan berhasil disalin ke clipboard!');
-        }
+    function updateWavelengthLoss() {
+      document.getElementById('cableLossPerKm').value = document.getElementById('wavelength').value;
+      calculateLinkBudget();
+    }
 
+    function renderSplitterStages() {
+      const container = document.getElementById('splitter-stages-container');
+      container.innerHTML = '';
+      const categories = [...new Set(SPLITTER_OPTIONS.map(function (o) { return o.category; }))];
 
-        // =========================================================================
-        // 4. LOGIKA TAB 2: SIMULASI RANTAI ESTAFET ODP (CASCADE)
-        // =========================================================================
-        function calculateCascade() {
-            const txPower = parseFloat(document.getElementById('cascade-tx').value) || 5.0;
-            const initDist = Math.max(0, parseFloat(document.getElementById('cascade-init-dist').value) || 0);
-            const lossPerKm = Math.max(0, parseFloat(document.getElementById('cascade-cable-loss').value) || 0.25);
+      splitterStages.forEach(function (stage, index) {
+        const selected = SPLITTER_OPTIONS.find(function (o) { return o.id === stage.splitterId; }) || SPLITTER_OPTIONS[0];
 
-            const tbody = document.getElementById('cascade-table-body');
-            tbody.innerHTML = '';
-
-            let trunkPower = txPower - (initDist * lossPerKm) - 0.35;
-
-            cascadeNodes.forEach((node, index) => {
-                if (index > 0) {
-                    trunkPower -= (node.distKm * lossPerKm);
-                }
-
-                const inputAtOdp = trunkPower;
-                const ratioObj = CASCADE_RATIOS.find(r => r.id === node.ratioId) || CASCADE_RATIOS[0];
-                const odpSplitterObj = CASCADE_ODP_SPLITTERS.find(s => s.id === node.odpSplitterId) || CASCADE_ODP_SPLITTERS[2];
-
-                const customerRx = inputAtOdp - ratioObj.tapLoss - odpSplitterObj.loss - 0.35;
-                trunkPower = inputAtOdp - ratioObj.passLoss - 0.20;
-
-                let statusBadge = '';
-                if (customerRx > -8.0) {
-                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800">Overload</span>';
-                } else if (customerRx >= -24.0) {
-                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">Optimal</span>';
-                } else if (customerRx >= -27.0) {
-                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">Warning</span>';
-                } else {
-                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">LOS / Kritis</span>';
-                }
-
-                const ratioSelectHtml = CASCADE_RATIOS.map(r => 
-                    `<option value="${r.id}" ${r.id === node.ratioId ? 'selected' : ''}>${r.label} (Tap -${r.tapLoss} / Pass -${r.passLoss})</option>`
-                ).join('');
-
-                const odpSelectHtml = CASCADE_ODP_SPLITTERS.map(s => 
-                    `<option value="${s.id}" ${s.id === node.odpSplitterId ? 'selected' : ''}>${s.label}</option>`
-                ).join('');
-
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition';
-                tr.innerHTML = `
-                    <td class="py-3 px-4 font-bold text-[#0d3b66]">
-                        <input type="text" value="${node.name}" onchange="updateCascadeNode(${index}, 'name', this.value)" class="w-28 px-2 py-1 bg-transparent border-b border-dashed border-slate-300 focus:border-[#29b6f6] focus:outline-none text-xs sm:text-sm font-bold">
-                    </td>
-                    <td class="py-3 px-4">
-                        ${index === 0 ? '<span class="text-xs text-slate-400 italic">Dari OLT</span>' : `
-                            <div class="flex items-center gap-1">
-                                <input type="number" value="${node.distKm}" step="0.1" min="0" oninput="updateCascadeNode(${index}, 'distKm', parseFloat(this.value) || 0)" class="w-16 px-2 py-1 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold">
-                                <span class="text-xs text-slate-500">km</span>
-                            </div>
-                        `}
-                    </td>
-                    <td class="py-3 px-4">
-                        <select onchange="updateCascadeNode(${index}, 'ratioId', this.value)" class="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold text-slate-800">
-                            ${ratioSelectHtml}
-                        </select>
-                    </td>
-                    <td class="py-3 px-4">
-                        <select onchange="updateCascadeNode(${index}, 'odpSplitterId', this.value)" class="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-semibold text-slate-800">
-                            ${odpSelectHtml}
-                        </select>
-                    </td>
-                    <td class="py-3 px-4 font-semibold text-slate-600 text-xs sm:text-sm">
-                        ${inputAtOdp >= 0 ? '+' : ''}${inputAtOdp.toFixed(2)} dBm
-                    </td>
-                    <td class="py-3 px-4 font-extrabold text-sm ${customerRx < -27 ? 'text-rose-600' : (customerRx < -24 ? 'text-amber-600' : 'text-[#0d3b66]')}">
-                        ${customerRx.toFixed(2)} dBm
-                    </td>
-                    <td class="py-3 px-4">${statusBadge}</td>
-                    <td class="py-3 px-4 text-center">
-                        ${cascadeNodes.length > 1 ? `
-                            <button type="button" onclick="removeCascadeNode(${index})" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition" title="Hapus Titik ODP">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        ` : '-'}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function addCascadeNode() {
-            const nextIdx = cascadeNodes.length + 1;
-            const formattedNum = nextIdx < 10 ? `0${nextIdx}` : nextIdx;
-            cascadeNodes.push({
-                id: Date.now(),
-                name: `ODP-${formattedNum}`,
-                distKm: 0.4,
-                ratioId: '20_80',
-                odpSplitterId: '1_8'
-            });
-            calculateCascade();
-        }
-
-        function removeCascadeNode(index) {
-            cascadeNodes.splice(index, 1);
-            calculateCascade();
-        }
-
-        function updateCascadeNode(index, field, value) {
-            cascadeNodes[index][field] = value;
-            calculateCascade();
-        }
-
-        // =========================================================================
-        // 5. INISIALISASI SAAT HALAMAN DIMUAT
-        // =========================================================================
-        window.addEventListener('DOMContentLoaded', () => {
-            renderSplitterStages();
-            calculateLinkBudget();
-            calculateCascade();
-            applyLockState(sessionStorage.getItem(OLT_UNLOCK_KEY) === 'true');
+        let optionsHtml = '';
+        categories.forEach(function (cat) {
+          optionsHtml += '<optgroup label="' + esc(cat) + '">';
+          SPLITTER_OPTIONS.filter(function (o) { return o.category === cat; }).forEach(function (opt) {
+            const isSelected = opt.id === stage.splitterId ? 'selected' : '';
+            optionsHtml += '<option value="' + opt.id + '" ' + isSelected + '>' + esc(opt.label) + ' (-' + opt.loss.toFixed(1) + ' dB)</option>';
+          });
+          optionsHtml += '</optgroup>';
         });
-    </script>
+
+        const row = document.createElement('div');
+        row.className = 'stage-row';
+        row.innerHTML =
+          '<div class="stage-main">' +
+            '<div class="stage-meta">' +
+              '<span class="stage-label">Stage ' + (index + 1) + '</span>' +
+              '<span class="stage-loss">-' + selected.loss.toFixed(1) + ' dB</span>' +
+            '</div>' +
+            '<select class="select" aria-label="Splitter stage ' + (index + 1) + '" onchange="updateSplitterStage(' + index + ', this.value)">' + optionsHtml + '</select>' +
+          '</div>' +
+          (splitterStages.length > 1
+            ? '<button type="button" class="btn btn-danger" onclick="removeSplitterStage(' + index + ')" title="Hapus stage ' + (index + 1) + '">🗑 Hapus</button>'
+            : '');
+        container.appendChild(row);
+      });
+    }
+
+    function addSplitterStage() {
+      if (splitterStages.length >= 6) {
+        showToast('Maksimal 6 tahap splitter bertingkat!');
+        return;
+      }
+      splitterStages.push({ id: Date.now(), name: 'Stage ' + (splitterStages.length + 1), splitterId: 'even_1_4' });
+      renderSplitterStages();
+      calculateLinkBudget();
+    }
+
+    function removeSplitterStage(index) {
+      splitterStages.splice(index, 1);
+      renderSplitterStages();
+      calculateLinkBudget();
+    }
+
+    function updateSplitterStage(index, newSplitterId) {
+      splitterStages[index].splitterId = newSplitterId;
+      renderSplitterStages();
+      calculateLinkBudget();
+    }
+
+    // Posisi jarum meter diselaraskan dengan batas status yang dipakai kalkulasi.
+    function meterPosition(rx) {
+      if (rx <= -27) return Math.max(0, ((rx + 32) / 5) * 25);
+      if (rx <= -24) return 25 + ((rx + 27) / 3) * 25;
+      if (rx <= -8) return 50 + ((rx + 24) / 16) * 40;
+      return Math.min(100, 90 + ((rx + 8) / 8) * 10);
+    }
+
+    function calculateLinkBudget() {
+      try {
+        const txPower = parseFloat(document.getElementById('txPower').value) || 0;
+        const cableLength = Math.max(0, parseFloat(document.getElementById('cableLength').value) || 0);
+        const cableLossPerKm = Math.max(0, parseFloat(document.getElementById('cableLossPerKm').value) || 0);
+        const spliceCount = Math.max(0, parseInt(document.getElementById('spliceCount').value) || 0);
+        const spliceLossEach = Math.max(0, parseFloat(document.getElementById('spliceLossEach').value) || 0);
+        const connectorCount = Math.max(0, parseInt(document.getElementById('connectorCount').value) || 0);
+        const connectorLossEach = Math.max(0, parseFloat(document.getElementById('connectorLossEach').value) || 0);
+        const safetyMargin = Math.max(0, parseFloat(document.getElementById('safetyMargin').value) || 0);
+
+        const totalCableLoss = cableLength * cableLossPerKm;
+        const totalPassiveLoss = spliceCount * spliceLossEach + connectorCount * connectorLossEach;
+
+        let totalSplitterLoss = 0;
+        splitterStages.forEach(function (st) {
+          const found = SPLITTER_OPTIONS.find(function (o) { return o.id === st.splitterId; });
+          if (found) totalSplitterLoss += found.loss;
+        });
+
+        const totalLoss = totalCableLoss + totalPassiveLoss + totalSplitterLoss + safetyMargin;
+        const rxPower = txPower - totalLoss;
+
+        document.getElementById('result-rx-power').innerHTML = rxPower.toFixed(2) + ' <small>dBm</small>';
+        document.getElementById('breakdown-tx').textContent = (txPower >= 0 ? '+' : '') + txPower.toFixed(2) + ' dBm';
+        document.getElementById('breakdown-km').textContent = cableLength.toFixed(1);
+        document.getElementById('breakdown-cable').textContent = '-' + totalCableLoss.toFixed(2) + ' dB';
+        document.getElementById('breakdown-passive').textContent = '-' + totalPassiveLoss.toFixed(2) + ' dB';
+        document.getElementById('breakdown-splitter').textContent = '-' + totalSplitterLoss.toFixed(2) + ' dB';
+        document.getElementById('breakdown-margin').textContent = '-' + safetyMargin.toFixed(2) + ' dB';
+        document.getElementById('breakdown-total-loss').textContent = totalLoss.toFixed(2) + ' dB';
+
+        const badge = document.getElementById('result-status-badge');
+        const desc = document.getElementById('result-status-desc');
+        const rxText = document.getElementById('result-rx-power');
+
+        if (rxPower > -8) {
+          badge.className = 'status-badge high';
+          badge.textContent = '⚡ OVERLOAD / TERLALU TINGGI (> -8 dBm)';
+          desc.textContent = 'Sinyal optik terlalu kuat. Berisiko merusak sensor ONT — tambahkan attenuator atau perbesar rasio splitter.';
+          rxText.className = 'rx-value high';
+        } else if (rxPower >= -24) {
+          badge.className = 'status-badge ok';
+          badge.textContent = '✅ OPTIMAL / SANGAT BAGUS (-8 s/d -24 dBm)';
+          desc.textContent = 'Redaman berada di rentang ideal. Koneksi stabil dan memiliki margin aman untuk jangka panjang.';
+          rxText.className = 'rx-value';
+        } else if (rxPower >= -27) {
+          badge.className = 'status-badge warn';
+          badge.textContent = '⚠️ TOLERANSI / WARNING (-24 s/d -27 dBm)';
+          desc.textContent = 'Sinyal masih tersambung namun mendekati batas. Rentan putus saat kabel tertekuk atau suhu berubah.';
+          rxText.className = 'rx-value warn';
+        } else {
+          badge.className = 'status-badge bad';
+          badge.textContent = '❌ KRITIS / LOS (< -27 dBm)';
+          desc.textContent = 'Sinyal terlalu lemah (Loss of Signal). ONT tidak akan registrasi ke OLT. Kurangi rasio splitter atau jarak kabel.';
+          rxText.className = 'rx-value bad';
+        }
+
+        document.getElementById('signal-gauge-marker').style.left = meterPosition(rxPower) + '%';
+        renderFlowDiagram(txPower, totalCableLoss, totalPassiveLoss, safetyMargin, rxPower);
+      } catch (err) {
+        console.error('Error kalkulasi link budget:', err);
+      }
+    }
+
+    function renderFlowDiagram(txPower, cableLoss, passiveLoss, margin, finalRx) {
+      const diagram = document.getElementById('visual-flow-diagram');
+      let current = txPower;
+      let html =
+        '<div class="flow-item olt"><span>🖥️ OLT Port (Tx)</span><b>' + (current >= 0 ? '+' : '') + current.toFixed(2) + ' dBm</b></div>';
+
+      const infraLoss = cableLoss + passiveLoss + margin;
+      current -= infraLoss;
+      html +=
+        '<div class="flow-item indent"><span>🧵 Kabel, Splice &amp; Margin (-' + infraLoss.toFixed(2) + ' dB)</span><b>' + current.toFixed(2) + ' dBm</b></div>';
+
+      splitterStages.forEach(function (st, idx) {
+        const found = SPLITTER_OPTIONS.find(function (o) { return o.id === st.splitterId; }) || SPLITTER_OPTIONS[0];
+        current -= found.loss;
+        html +=
+          '<div class="flow-item indent"><span>🔀 Stage ' + (idx + 1) + ': ' + esc(found.label) + ' (-' + found.loss.toFixed(1) + ' dB)</span><b>' + current.toFixed(2) + ' dBm</b></div>';
+      });
+
+      const ontClass = finalRx >= -24 && finalRx <= -8 ? '' : (finalRx >= -27 && finalRx < -24 ? ' warn' : ' bad');
+      html +=
+        '<div class="flow-item ont' + ontClass + '"><span>📟 ONT Pelanggan (Rx)</span><b>' + finalRx.toFixed(2) + ' dBm</b></div>';
+
+      diagram.innerHTML = html;
+    }
+
+    function resetCalculator() {
+      document.getElementById('txPower').value = '5.0';
+      document.getElementById('wavelength').value = '0.25';
+      document.getElementById('cableLength').value = '3.5';
+      document.getElementById('cableLossPerKm').value = '0.25';
+      document.getElementById('spliceCount').value = '4';
+      document.getElementById('spliceLossEach').value = '0.10';
+      document.getElementById('connectorCount').value = '4';
+      document.getElementById('connectorLossEach').value = '0.25';
+      document.getElementById('safetyMargin').value = '1.5';
+
+      splitterStages = [
+        { id: 1, name: 'Stage 1', splitterId: 'ratio_20_80_tap' },
+        { id: 2, name: 'Stage 2', splitterId: 'even_1_8' }
+      ];
+      highlightSfpPreset(5.0);
+      renderSplitterStages();
+      calculateLinkBudget();
+      showToast('Parameter berhasil dikembalikan ke pengaturan awal.');
+    }
+
+    function copySummary() {
+      const tx = document.getElementById('txPower').value;
+      const km = document.getElementById('cableLength').value;
+      const totalLoss = document.getElementById('breakdown-total-loss').textContent;
+      const rx = document.getElementById('result-rx-power').innerText.trim();
+      const status = document.getElementById('result-status-badge').innerText.trim();
+
+      const stageText = splitterStages.map(function (s, i) {
+        const opt = SPLITTER_OPTIONS.find(function (o) { return o.id === s.splitterId; });
+        return '  - Stage ' + (i + 1) + ': ' + (opt ? opt.label : '-') + ' (-' + (opt ? opt.loss.toFixed(1) : '0') + ' dB)';
+      }).join('\n');
+
+      const textToCopy =
+        '*LAPORAN PERHITUNGAN RASIO OLT - KALIWARU.NET*\n' +
+        '----------------------------------------\n' +
+        '* Daya Tx OLT  : +' + tx + ' dBm\n' +
+        '* Panjang Kabel: ' + km + ' km\n' +
+        '* Konfigurasi Splitter:\n' + stageText + '\n' +
+        '* Total Redaman: ' + totalLoss + '\n' +
+        '* Estimasi Rx  : ' + rx + '\n' +
+        '* Status       : ' + status + '\n' +
+        '----------------------------------------';
+
+      copyText(textToCopy, function (ok) {
+        showToast(ok ? 'Laporan perhitungan berhasil disalin!' : 'Gagal menyalin. Silakan pilih teks secara manual.');
+      });
+    }
+
+    /* =========================================================================
+       4. TAB 2 — ESTAFET ODP
+       ========================================================================= */
+    function calculateCascade() {
+      const txPower = parseFloat(document.getElementById('cascade-tx').value) || 5.0;
+      const initDist = Math.max(0, parseFloat(document.getElementById('cascade-init-dist').value) || 0);
+      const lossPerKm = Math.max(0, parseFloat(document.getElementById('cascade-cable-loss').value) || 0.25);
+
+      const tbody = document.getElementById('cascade-table-body');
+      tbody.innerHTML = '';
+
+      let trunkPower = txPower - (initDist * lossPerKm) - 0.35;
+
+      cascadeNodes.forEach(function (node, index) {
+        if (index > 0) trunkPower -= node.distKm * lossPerKm;
+
+        const inputAtOdp = trunkPower;
+        const ratioObj = CASCADE_RATIOS.find(function (r) { return r.id === node.ratioId; }) || CASCADE_RATIOS[0];
+        const odpObj = CASCADE_ODP_SPLITTERS.find(function (s) { return s.id === node.odpSplitterId; }) || CASCADE_ODP_SPLITTERS[2];
+
+        const customerRx = inputAtOdp - ratioObj.tapLoss - odpObj.loss - 0.35;
+        trunkPower = inputAtOdp - ratioObj.passLoss - 0.20;
+
+        let statusClass = 'ok', statusText = 'Optimal';
+        if (customerRx > -8) { statusClass = 'high'; statusText = 'Overload'; }
+        else if (customerRx < -27) { statusClass = 'bad'; statusText = 'LOS / Kritis'; }
+        else if (customerRx < -24) { statusClass = 'warn'; statusText = 'Warning'; }
+
+        const ratioOptions = CASCADE_RATIOS.map(function (r) {
+          return '<option value="' + r.id + '"' + (r.id === node.ratioId ? ' selected' : '') + '>' +
+            esc(r.label) + ' (Tap -' + r.tapLoss + ' / Pass -' + r.passLoss + ')</option>';
+        }).join('');
+
+        const odpOptions = CASCADE_ODP_SPLITTERS.map(function (s) {
+          return '<option value="' + s.id + '"' + (s.id === node.odpSplitterId ? ' selected' : '') + '>' + esc(s.label) + '</option>';
+        }).join('');
+
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td><input type="text" class="table-input name" value="' + esc(node.name) + '" aria-label="Nama ' + esc(node.name) + '" onchange="updateCascadeNode(' + index + ', \'name\', this.value)" /></td>' +
+          '<td>' + (index === 0
+            ? '<span class="subtle">Dari OLT</span>'
+            : '<div style="display:flex;align-items:center;gap:5px"><input type="number" class="table-input dist" value="' + node.distKm + '" step="0.1" min="0" aria-label="Jarak ' + esc(node.name) + '" oninput="updateCascadeNode(' + index + ', \'distKm\', parseFloat(this.value) || 0)" /><span class="subtle">km</span></div>') + '</td>' +
+          '<td><select class="table-select" aria-label="Rasio ' + esc(node.name) + '" onchange="updateCascadeNode(' + index + ', \'ratioId\', this.value)">' + ratioOptions + '</select></td>' +
+          '<td><select class="table-select" aria-label="Splitter ' + esc(node.name) + '" onchange="updateCascadeNode(' + index + ', \'odpSplitterId\', this.value)">' + odpOptions + '</select></td>' +
+          '<td><b>' + (inputAtOdp >= 0 ? '+' : '') + inputAtOdp.toFixed(2) + ' dBm</b></td>' +
+          '<td><b style="color:' + (customerRx < -24 ? 'var(--danger)' : 'var(--primary)') + '">' + customerRx.toFixed(2) + ' dBm</b></td>' +
+          '<td><span class="badge ' + statusClass + '">' + statusText + '</span></td>' +
+          '<td style="text-align:center">' + (cascadeNodes.length > 1
+            ? '<button type="button" class="btn btn-danger" onclick="removeCascadeNode(' + index + ')" title="Hapus ' + esc(node.name) + '">🗑</button>'
+            : '-') + '</td>';
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addCascadeNode() {
+      const nextIdx = cascadeNodes.length + 1;
+      const num = nextIdx < 10 ? '0' + nextIdx : String(nextIdx);
+      cascadeNodes.push({ id: Date.now(), name: 'ODP-' + num, distKm: 0.4, ratioId: '20_80', odpSplitterId: '1_8' });
+      calculateCascade();
+    }
+
+    function removeCascadeNode(index) {
+      cascadeNodes.splice(index, 1);
+      calculateCascade();
+    }
+
+    function updateCascadeNode(index, field, value) {
+      cascadeNodes[index][field] = value;
+      calculateCascade();
+    }
+
+    /* =========================================================================
+       5. INISIALISASI
+       ========================================================================= */
+    window.addEventListener('DOMContentLoaded', function () {
+      /* Tema — sinkron dengan index.html & bayar.html via kw-theme */
+      const root = document.documentElement;
+      const themeBtn = document.getElementById('themeToggle');
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      let savedTheme = null;
+      try { savedTheme = localStorage.getItem('kw-theme'); } catch (e) {}
+
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        root.dataset.theme = savedTheme;
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.dataset.theme = 'dark';
+      }
+
+      function syncThemeButton() {
+        if (!themeBtn) return;
+        const isDark = root.dataset.theme === 'dark';
+        themeBtn.textContent = isDark ? '☀️' : '🌙';
+        themeBtn.setAttribute('aria-pressed', String(isDark));
+        themeBtn.setAttribute('aria-label', isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap');
+        themeBtn.setAttribute('title', isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap');
+        if (themeMeta) themeMeta.setAttribute('content', isDark ? '#0b1220' : '#093154');
+      }
+      syncThemeButton();
+
+      if (themeBtn) {
+        themeBtn.addEventListener('click', function () {
+          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          try { localStorage.setItem('kw-theme', next); } catch (e) {}
+          syncThemeButton();
+          showToast(next === 'dark' ? 'Mode gelap aktif' : 'Mode terang aktif');
+        });
+      }
+
+      renderSplitterStages();
+      highlightSfpPreset(5.0);
+      calculateLinkBudget();
+      calculateCascade();
+      applyLockState(sessionStorage.getItem(OLT_UNLOCK_KEY) === 'true');
+
+      const tabs = [
+        document.getElementById('btn-tab-calculator'),
+        document.getElementById('btn-tab-cascade'),
+        document.getElementById('btn-tab-reference')
+      ];
+      switchTab('calculator');
+
+      tabs.forEach(function (tab, index) {
+        tab.addEventListener('keydown', function (e) {
+          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+          e.preventDefault();
+          const next = tabs[(index + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+          next.focus();
+          next.click();
+        });
+      });
+
+      document.querySelectorAll('a[href="' + HOME_URL + '"]').forEach(function (link) {
+        link.setAttribute('title', 'Kembali ke beranda kaliwarunet.my.id');
+      });
+    });
+  </script>
 </body>
 </html>
