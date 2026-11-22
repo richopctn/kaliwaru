@@ -3,94 +3,399 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaliwaru.net — Layanan Internet Fiber & WiFi Kaliwaru, Pacitan</title>
+  <meta name="theme-color" content="#093154">
+  <meta name="description" content="Portal layanan pelanggan kaliwaru.net — Internet fiber optik & WiFi rumah di Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, dan Karanganyar, Pacitan. Bayar tagihan, cek jalur ODP, uji kecepatan, dan panggil teknisi via WhatsApp.">
+  <meta name="keywords" content="kaliwaru.net, WiFi Kaliwaru, internet fiber Pacitan, ODP Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, Karanganyar, bayar tagihan WiFi, speedtest">
+  <meta name="author" content="PT. Multi Teknologi Telematika">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="kaliwaru.net">
+  <meta property="og:title" content="kaliwaru.net — Internet Fiber & WiFi Kaliwaru, Pacitan">
+  <meta property="og:description" content="Bayar tagihan, cek slot ODP, uji kecepatan, dan hubungi admin WiFi area Kaliwaru & sekitarnya dalam satu portal.">
+  <meta property="og:url" content="https://kaliwaru.net">
+  <link rel="canonical" href="https://kaliwaru.net">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23093154'/%3E%3Cpath d='M12 26a30 30 0 0 1 40 0M20 35a19 19 0 0 1 24 0M28 44a8 8 0 0 1 8 0' fill='none' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='53' r='4' fill='%234ade80'/%3E%3C/svg%3E">
+  <title>kaliwaru.net — Layanan Internet Fiber &amp; WiFi Kaliwaru, Pacitan</title>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "kaliwaru.net",
+      "alternateName": "PT. Multi Teknologi Telematika",
+      "url": "https://kaliwaru.net",
+      "telephone": "+6283873333027",
+      "description": "Layanan internet fiber optik dan WiFi rumah untuk wilayah Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, dan Karanganyar, Pacitan.",
+      "areaServed": ["Kaliwaru", "Wora-wari", "Nglaran", "Mantren", "Klesem", "Karanganyar"],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Pacitan",
+        "addressRegion": "Jawa Timur",
+        "addressCountry": "ID"
+      }
+    }
+  </script>
+
   <style>
-    /* Variabel Warna Utama */
+    /* ============================================================
+       1. VARIABEL & TEMA
+       ============================================================ */
     :root {
+      color-scheme: light;
+
       --primary: #0f4c81;
       --primary-dark: #093154;
+      --primary-soft: #e0f2fe;
       --accent: #0ea5e9;
+      --accent-2: #38bdf8;
       --success: #16a34a;
+      --success-text: #166534;
+      --success-solid: #166534;
+      --success-soft: #dcfce7;
+      --warning: #d97706;
+
+      --hero-start: #093154;
+      --hero-end: #0f4c81;
+
       --bg: #f1f5f9;
+      --bg-glow-1: rgba(14, 165, 233, 0.12);
+      --bg-glow-2: rgba(34, 197, 94, 0.09);
       --card: #ffffff;
+      --card-2: #f8fafc;
       --text: #1e293b;
       --muted: #64748b;
+      --faint: #94a3b8;
       --border: #e2e8f0;
+
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      --shadow-hover: 0 18px 38px rgba(15, 76, 129, 0.13);
+      --shadow-hero: 0 16px 36px rgba(9, 49, 84, 0.22);
+
+      --radius: 20px;
+      --radius-sm: 13px;
+      --ring: 0 0 0 3px rgba(56, 189, 248, 0.35);
     }
 
-    /* Reset & Tipografi Dasar */
-    * {
+    [data-theme="dark"] {
+      color-scheme: dark;
+
+      --primary: #38bdf8;
+      --primary-dark: #7dd3fc;
+      --primary-soft: rgba(56, 189, 248, 0.14);
+      --accent: #22d3ee;
+      --accent-2: #7dd3fc;
+      --success: #4ade80;
+      --success-text: #86efac;
+      --success-solid: #15803d;
+      --success-soft: rgba(74, 222, 128, 0.14);
+      --warning: #fbbf24;
+
+      --hero-start: #061426;
+      --hero-end: #0b2b47;
+
+      --bg: #0b1220;
+      --bg-glow-1: rgba(56, 189, 248, 0.10);
+      --bg-glow-2: rgba(74, 222, 128, 0.07);
+      --card: #131f33;
+      --card-2: #17253c;
+      --text: #e2e8f0;
+      --muted: #9aabc2;
+      --faint: #6b7f99;
+      --border: #24344d;
+
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+      --shadow-hover: 0 18px 38px rgba(0, 0, 0, 0.42);
+      --shadow-hero: 0 18px 40px rgba(0, 0, 0, 0.5);
+      --ring: 0 0 0 3px rgba(56, 189, 248, 0.45);
+    }
+
+    /* ============================================================
+       2. RESET & TIPOGRAFI
+       ============================================================ */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 78px;
     }
 
     body {
-      background: var(--bg);
+      min-height: 100vh;
+      padding-bottom: 92px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
       color: var(--text);
-      line-height: 1.5;
-      padding: 16px;
+      background:
+        radial-gradient(900px 430px at 8% -8%, var(--bg-glow-1), transparent 62%),
+        radial-gradient(760px 400px at 96% 2%, var(--bg-glow-2), transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    svg { display: block; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent-2);
+      outline-offset: 3px;
+    }
+
+    ::selection {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
     }
 
     .container {
-      max-width: 520px;
-      margin: 0 auto;
+      width: min(100% - 28px, 680px);
+      margin-inline: auto;
     }
 
-    /* Header & Identitas Brand */
-    .hero {
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-      color: #fff;
-      border-radius: 18px;
-      padding: 28px 22px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(15, 76, 129, 0.18);
-      margin-bottom: 16px;
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
+
+    /* ============================================================
+       3. TOPBAR
+       ============================================================ */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: color-mix(in srgb, var(--card) 86%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      width: min(100% - 28px, 680px);
+      margin-inline: auto;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mini-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      font-size: 0.98rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .mini-logo {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--primary-dark), var(--accent));
+      color: #fff;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+    }
+
+    .mini-brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: auto;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .topnav::-webkit-scrollbar { display: none; }
+
+    .topnav a {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 7px 9px;
+      border-radius: 9px;
+      white-space: nowrap;
+      transition: color 0.18s ease, background 0.18s ease;
+    }
+    .topnav a:hover,
+    .topnav a.active {
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .icon-btn {
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--card-2);
+      color: var(--text);
+      font-size: 1rem;
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+    .icon-btn:hover { transform: translateY(-1px); border-color: var(--accent-2); }
+    .icon-btn:active { transform: scale(0.94); }
+
+    /* ============================================================
+       4. HERO
+       ============================================================ */
+    main {
+      padding-top: 18px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+      border-radius: 24px;
+      padding: 30px 22px 24px;
+      text-align: center;
+      background: linear-gradient(140deg, var(--hero-start), var(--hero-end));
+      box-shadow: var(--shadow-hero);
+      margin-bottom: 14px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 260px;
+      height: 260px;
+      top: -150px;
+      left: -90px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.38), transparent 68%);
+    }
+    .hero::after {
+      width: 230px;
+      height: 230px;
+      right: -110px;
+      bottom: -140px;
+      background: radial-gradient(circle, rgba(74, 222, 128, 0.28), transparent 68%);
+    }
+
+    .hero > * { position: relative; z-index: 1; }
 
     .brand-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.11);
       border: 1px solid rgba(255, 255, 255, 0.22);
       padding: 6px 16px;
       border-radius: 999px;
-      font-size: 1.15rem;
+      font-size: 1.18rem;
       font-weight: 800;
-      letter-spacing: -0.3px;
-      margin-bottom: 8px;
+      letter-spacing: -0.4px;
+      margin-bottom: 9px;
     }
-
-    .brand-badge span {
-      color: #38bdf8;
-    }
+    .brand-badge span { color: #7dd3fc; }
 
     .sub-corp {
-      font-size: 0.78rem;
-      color: #cbd5e1;
-      letter-spacing: 0.4px;
-      margin-bottom: 14px;
+      font-size: 0.74rem;
+      color: #bae6fd;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 16px;
     }
 
     .hero h1 {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 6px;
+      font-size: clamp(1.28rem, 5vw, 1.65rem);
+      font-weight: 750;
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+      margin-bottom: 8px;
     }
 
     .hero p {
-      font-size: 0.88rem;
-      color: #e2e8f0;
+      font-size: 0.86rem;
+      color: #dbeafe;
+      max-width: 52ch;
+      margin-inline: auto;
     }
 
-    /* Tombol Aksi Cepat (Bayar & Admin WA) */
+    .hero-chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 18px;
+    }
+
+    .hero-chip {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #e0f2fe;
+    }
+
+    /* Statistik ringkas */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 6px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .stat b {
+      display: block;
+      font-size: 1.12rem;
+      line-height: 1.1;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .stat small {
+      font-size: 0.66rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       5. TOMBOL & NAVIGASI CEPAT
+       ============================================================ */
     .action-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .btn-nav {
@@ -99,131 +404,163 @@
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      padding: 14px 12px;
-      border-radius: 14px;
+      padding: 15px 12px;
+      border-radius: 16px;
       font-weight: 700;
       font-size: 0.9rem;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
       text-align: center;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
     }
-
-    .btn-nav:active {
-      transform: scale(0.98);
-    }
+    .btn-nav:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .btn-nav:active { transform: scale(0.98); }
 
     .btn-pay {
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: #fff;
-      box-shadow: 0 6px 16px rgba(15, 76, 129, 0.2);
+      box-shadow: 0 8px 18px rgba(15, 76, 129, 0.24);
     }
-
     .btn-wa {
-      background: #ffffff;
-      color: var(--success);
-      border: 1.5px solid #bbf7d0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      background: var(--card);
+      color: var(--success-text);
+      border: 1.5px solid color-mix(in srgb, var(--success) 35%, var(--border));
+      box-shadow: var(--shadow);
     }
-
     .btn-nav small {
-      font-weight: 400;
-      font-size: 0.74rem;
+      font-weight: 500;
+      font-size: 0.72rem;
       opacity: 0.88;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
-    /* Struktur Card Umum */
+    .quick-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .quick-link {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 8px;
+      border-radius: 11px;
+      border: 1px dashed var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.16s ease, border-color 0.16s ease;
+    }
+    .quick-link:hover { color: var(--primary); border-color: var(--accent-2); }
+
+    /* ============================================================
+       6. CARD & BAGIAN UMUM
+       ============================================================ */
+    .section { margin-bottom: 16px; scroll-margin-top: 76px; }
+
     .card {
       background: var(--card);
-      border-radius: 18px;
+      border-radius: var(--radius);
       padding: 20px;
-      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+      box-shadow: var(--shadow);
       border: 1px solid var(--border);
-      margin-bottom: 16px;
+      transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
     }
+    .card:hover { box-shadow: var(--shadow-hover); }
 
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       margin-bottom: 14px;
     }
 
     .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 1.02rem;
-      font-weight: 700;
-      color: var(--text);
+      font-weight: 750;
+      letter-spacing: -0.2px;
+    }
+    .card-title .emoji { font-size: 1.12rem; }
+
+    .section-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
     }
 
     .status-pill {
-      font-size: 0.74rem;
-      font-weight: 600;
-      padding: 4px 10px;
+      flex: 0 0 auto;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 10px;
       border-radius: 999px;
-      background: #e0f2fe;
-      color: #0369a1;
+      background: var(--primary-soft);
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .status-pill.green {
+      background: var(--success-soft);
+      color: var(--success-text);
+    }
+    .status-pill.muted {
+      background: var(--card-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
     }
 
-    /* Bagian Area Terjangkau */
+    .section-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 4px 10px;
+    }
+    .section-heading h2 {
+      font-size: 1.08rem;
+      letter-spacing: -0.3px;
+    }
+    .section-heading p {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    /* ============================================================
+       7. TOPOLOGI ODP
+       ============================================================ */
     .coverage-desc {
       font-size: 0.82rem;
       color: var(--muted);
       margin-bottom: 12px;
     }
 
-    .area-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .area-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f0f9ff;
-      color: #0f4c81;
-      border: 1px solid #bae6fd;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 600;
-    }
-
-    .area-badge::before {
-      content: "●";
-      color: #16a34a;
-      font-size: 0.65rem;
-    }
-
-    /* Visualisasi Topologi Jalur ODP Interaktif */
     .odp-topology-wrap {
-      background: linear-gradient(180deg, #09243f 0%, #0f3a63 100%);
-      border-radius: 16px;
-      padding: 14px 10px 10px;
-      margin-bottom: 12px;
-      border: 1px solid #1e4976;
-      box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.25);
       position: relative;
       overflow: hidden;
+      background: linear-gradient(180deg, #061c31 0%, #0d3a61 100%);
+      border-radius: 16px;
+      padding: 13px 10px 10px;
+      margin-bottom: 11px;
+      border: 1px solid #1e4976;
+      box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.3);
     }
 
     .odp-legend {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.7rem;
+      gap: 6px;
+      font-size: 0.69rem;
       color: #bae6fd;
       padding: 0 6px 8px;
       border-bottom: 1px solid rgba(186, 230, 253, 0.14);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
-
-    .odp-legend span {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
+    .odp-legend span { display: inline-flex; align-items: center; gap: 5px; }
 
     .pulse-dot-inline {
       width: 7px;
@@ -232,23 +569,22 @@
       background: #38bdf8;
       box-shadow: 0 0 8px #38bdf8;
       display: inline-block;
+      animation: blink 1.6s ease-in-out infinite;
     }
 
     .odp-svg {
       width: 100%;
       height: auto;
-      display: block;
       user-select: none;
     }
 
     .fiber-base {
       fill: none;
-      stroke: rgba(56, 189, 248, 0.24);
+      stroke: rgba(56, 189, 248, 0.22);
       stroke-width: 2.2;
       stroke-linecap: round;
       transition: stroke 0.25s ease, stroke-width 0.25s ease;
     }
-
     .fiber-pulse {
       fill: none;
       stroke: #38bdf8;
@@ -259,12 +595,10 @@
       filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.85));
       transition: stroke 0.25s ease, stroke-width 0.25s ease;
     }
-
     .fiber-route.active .fiber-base {
-      stroke: rgba(74, 222, 128, 0.45);
+      stroke: rgba(74, 222, 128, 0.42);
       stroke-width: 3.4;
     }
-
     .fiber-route.active .fiber-pulse {
       stroke: #4ade80;
       stroke-width: 3.6;
@@ -273,188 +607,340 @@
     }
 
     @keyframes opticalFlow {
-      from {
-        stroke-dashoffset: 112;
-      }
-      to {
-        stroke-dashoffset: 0;
-      }
+      from { stroke-dashoffset: 112; }
+      to { stroke-dashoffset: 0; }
     }
-
     @keyframes nodeRadar {
-      0% {
-        transform: scale(0.95);
-        opacity: 0.75;
-      }
-      70% {
-        transform: scale(1.75);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1.75);
-        opacity: 0;
-      }
+      0% { transform: scale(0.95); opacity: 0.75; }
+      70% { transform: scale(1.75); opacity: 0; }
+      100% { transform: scale(1.75); opacity: 0; }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
     }
 
     .odp-node {
       cursor: pointer;
+      color: #38bdf8;
+      outline: none;
     }
-
+    .odp-node.active { color: #4ade80; }
+    .odp-node-box {
+      fill: #0c4a6e;
+      stroke: var(--odp-stroke, #38bdf8);
+      stroke-width: 1.3;
+      transition: fill 0.2s ease, stroke 0.2s ease;
+    }
+    .odp-node.active .odp-node-box { fill: #15803d; stroke: #86efac; stroke-width: 1.8; }
+    .odp-node:hover .odp-node-box,
+    .odp-node:focus-visible .odp-node-box { fill: #0369a1; stroke: #7dd3fc; }
+    .odp-node.active:hover .odp-node-box,
+    .odp-node.active:focus-visible .odp-node-box { fill: #166534; stroke: #bbf7d0; }
+    .odp-node:focus-visible .odp-node-box { stroke-width: 2.4; }
     .odp-node-ring {
       transform-box: fill-box;
       transform-origin: center;
       animation: nodeRadar 2.2s ease-out infinite;
+      stroke: currentColor;
     }
-
-    .odp-node.active .odp-node-box {
-      fill: #15803d;
-      stroke: #86efac;
-      stroke-width: 1.8;
-    }
-
-    .odp-node-box {
-      fill: #0c4a6e;
-      stroke: #38bdf8;
-      stroke-width: 1.3;
-      transition: fill 0.2s ease, stroke 0.2s ease;
-    }
-
-    .odp-node:hover .odp-node-box {
-      fill: #0369a1;
-      stroke: #7dd3fc;
-    }
+    .odp-core { fill: currentColor; }
+    .odp-node-label { fill: #f8fafc; font-size: 9.5px; font-weight: 700; }
+    .odp-node-meta { fill: #7dd3fc; font-size: 7.8px; }
+    .odp-node.active .odp-node-meta { fill: #bbf7d0; }
 
     .odp-detail-panel {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--success);
       border-radius: 12px;
       padding: 11px 12px;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
     }
-
-    .odp-detail-info {
-      font-size: 0.79rem;
-    }
-
+    .odp-detail-icon { font-size: 1.1rem; }
     .odp-detail-title {
-      font-weight: 700;
+      font-weight: 750;
+      font-size: 0.81rem;
       color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
-
+    [data-theme="dark"] .odp-detail-title { color: var(--primary-dark); }
     .odp-detail-meta {
       color: var(--muted);
-      font-size: 0.74rem;
+      font-size: 0.73rem;
       margin-top: 2px;
     }
 
+    .area-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
     .area-badge {
-      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: 1px solid color-mix(in srgb, var(--accent-2) 45%, var(--border));
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 0.79rem;
+      font-weight: 650;
       transition: all 0.18s ease;
     }
-
+    .area-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+    .area-badge:hover { transform: translateY(-1px); }
     .area-badge.active {
       background: var(--primary);
-      color: #ffffff;
+      color: #fff;
       border-color: var(--primary-dark);
-      box-shadow: 0 3px 10px rgba(15, 76, 129, 0.22);
+      box-shadow: 0 4px 12px rgba(15, 76, 129, 0.22);
     }
-
-    .area-badge.active::before {
-      color: #4ade80;
-    }
+    [data-theme="dark"] .area-badge.active { color: #062033; }
+    .area-badge.active::before { background: #4ade80; }
 
     .coverage-note {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      background: #f8fafc;
+      background: var(--card-2);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 10px 12px;
-      font-size: 0.78rem;
+      font-size: 0.77rem;
       color: var(--muted);
     }
-
     .coverage-note a {
       color: var(--primary);
-      font-weight: 700;
+      font-weight: 750;
       text-decoration: none;
       white-space: nowrap;
     }
+    .coverage-note a:hover { text-decoration: underline; }
 
-    /* Widget Speedtest */
+    /* ============================================================
+       8. PAKET LAYANAN
+       ============================================================ */
+    .plans {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .plan-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 17px 16px;
+      border-radius: 17px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .plan-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .plan-card.selected {
+      border-color: var(--success);
+      box-shadow: 0 0 0 3px var(--success-soft), var(--shadow-hover);
+    }
+    .plan-card.featured {
+      background: linear-gradient(150deg, var(--primary-soft), var(--card) 70%);
+    }
+    .plan-tag {
+      position: absolute;
+      top: -10px;
+      right: 14px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--success));
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .plan-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .plan-name { font-weight: 750; font-size: 0.95rem; }
+    .plan-speed {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+    .plan-price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      letter-spacing: -0.6px;
+      line-height: 1.1;
+    }
+    [data-theme="dark"] .plan-price { color: var(--text); }
+    .plan-price small {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0;
+    }
+    .plan-features {
+      list-style: none;
+      display: grid;
+      gap: 5px;
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+    .plan-features li { display: flex; align-items: center; gap: 7px; }
+    .plan-features li::before {
+      content: "✓";
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .plan-btn {
+      margin-top: auto;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 11px;
+      background: var(--card-2);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      font-weight: 750;
+      font-size: 0.82rem;
+      transition: background 0.18s ease, color 0.18s ease, transform 0.16s ease;
+    }
+    .plan-btn:hover { background: var(--primary); color: #fff; transform: translateY(-1px); }
+    .plan-card.selected .plan-btn { background: var(--success-solid); border-color: var(--success-solid); color: #fff; }
+
+    @media (min-width: 560px) {
+      .plans { grid-template-columns: repeat(3, 1fr); }
+      .plan-card { padding: 17px 13px; }
+      .plan-price { font-size: 1.3rem; }
+      .plan-features { font-size: 0.72rem; }
+    }
+
+    /* ============================================================
+       9. ALUR PEMASANGAN
+       ============================================================ */
+    .steps { list-style: none; display: grid; gap: 0; }
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      padding-bottom: 16px;
+    }
+    .step:last-child { padding-bottom: 0; }
+    .step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 17px;
+      top: 36px;
+      bottom: 2px;
+      width: 2px;
+      background: repeating-linear-gradient(to bottom, var(--border) 0 4px, transparent 4px 8px);
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.9rem;
+      border: 1px solid color-mix(in srgb, var(--accent-2) 35%, var(--border));
+      z-index: 1;
+    }
+    .step-body h3 { font-size: 0.86rem; font-weight: 750; margin-bottom: 2px; }
+    .step-body p { font-size: 0.77rem; color: var(--muted); }
+
+    /* ============================================================
+       10. SPEEDTEST
+       ============================================================ */
     .speed-display {
       text-align: center;
-      padding: 14px 10px;
-      background: #f8fafc;
-      border-radius: 14px;
+      padding: 18px 12px 14px;
+      background:
+        radial-gradient(circle at 50% 0%, var(--primary-soft), transparent 70%),
+        var(--card-2);
+      border-radius: 15px;
       border: 1px solid var(--border);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
-
     .speed-value {
-      font-size: 2.8rem;
-      font-weight: 800;
+      font-size: clamp(2.4rem, 11vw, 3.1rem);
+      font-weight: 850;
       color: var(--primary);
-      line-height: 1.05;
+      line-height: 1.02;
+      letter-spacing: -2px;
       font-variant-numeric: tabular-nums;
     }
-
     .speed-unit {
-      font-size: 0.88rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: var(--muted);
-      margin-top: 2px;
+      margin-top: 3px;
     }
-
     .progress-wrap {
       width: 100%;
       height: 8px;
-      background: #e2e8f0;
+      background: var(--border);
       border-radius: 999px;
       overflow: hidden;
-      margin-top: 12px;
+      margin-top: 14px;
     }
-
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--primary));
-      transition: width 0.2s ease;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      transition: width 0.25s ease;
     }
 
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
-
     .metric-box {
-      background: #f8fafc;
+      background: var(--card-2);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 10px 8px;
       text-align: center;
     }
-
     .metric-label {
-      font-size: 0.72rem;
+      font-size: 0.66rem;
       color: var(--muted);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
-
     .metric-val {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 800;
       color: var(--text);
       margin-top: 2px;
@@ -468,82 +954,177 @@
       border-radius: 12px;
       background: linear-gradient(135deg, var(--accent), var(--primary));
       color: #fff;
-      font-size: 0.96rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.25);
-      transition: opacity 0.2s;
+      font-size: 0.94rem;
+      font-weight: 750;
+      box-shadow: 0 8px 18px rgba(14, 165, 233, 0.25);
+      transition: opacity 0.2s ease, transform 0.16s ease;
     }
-
-    .btn-test:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
+    .btn-test:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn-test:disabled { opacity: 0.65; cursor: not-allowed; }
 
     .result-note {
-      margin-top: 12px;
-      font-size: 0.8rem;
+      margin-top: 11px;
+      font-size: 0.78rem;
       color: var(--muted);
       text-align: center;
       min-height: 20px;
     }
-
     .ext-links {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 14px;
+      gap: 8px 16px;
       margin-top: 12px;
       padding-top: 12px;
       border-top: 1px dashed var(--border);
-      font-size: 0.78rem;
+      font-size: 0.77rem;
     }
+    .ext-links a { color: var(--primary); text-decoration: none; font-weight: 650; }
+    .ext-links a:hover { text-decoration: underline; }
 
-    .ext-links a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* Informasi Layanan */
-    .info-list {
-      list-style: none;
-      font-size: 0.86rem;
-      color: var(--text);
-    }
-
+    /* ============================================================
+       11. INFO, STATUS & KEUNGGULAN
+       ============================================================ */
+    .info-list { list-style: none; font-size: 0.84rem; }
     .info-list li {
-      padding: 8px 0;
-      border-bottom: 1px solid #f1f5f9;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
     }
+    .info-list li:last-child { border-bottom: none; }
+    .info-list span:first-child { color: var(--muted); }
+    .info-list span:last-child { font-weight: 650; text-align: right; }
 
-    .info-list li:last-child {
-      border-bottom: none;
+    .inline-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-
-    .info-list span:first-child {
+    .copy-btn {
+      border: 1px solid var(--border);
+      background: var(--card-2);
       color: var(--muted);
+      border-radius: 7px;
+      padding: 2px 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+    .copy-btn:hover { color: var(--primary); border-color: var(--accent-2); }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+      padding-top: 13px;
+      border-top: 1px dashed var(--border);
+    }
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--success-text);
+      background: var(--success-soft);
+      padding: 5px 9px;
+      border-radius: 999px;
+    }
+    .status-chip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 20%, transparent);
     }
 
-    .info-list span:last-child {
-      font-weight: 600;
-      text-align: right;
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
     }
+    .feature {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px;
+      border-radius: 13px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+    }
+    .feature-icon {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--primary-soft);
+      font-size: 0.95rem;
+    }
+    .feature b { display: block; font-size: 0.78rem; margin-bottom: 1px; }
+    .feature small { font-size: 0.7rem; color: var(--muted); line-height: 1.4; }
 
-    /* Area Teknisi Lapangan */
+    /* ============================================================
+       12. FAQ
+       ============================================================ */
+    .faq { display: grid; gap: 8px; }
+    details.faq-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    details.faq-item[open] { border-color: color-mix(in srgb, var(--accent-2) 55%, var(--border)); }
+    summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 15px;
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "+";
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: var(--card-2);
+      color: var(--primary);
+      font-size: 1rem;
+      line-height: 1;
+      transition: transform 0.2s ease;
+    }
+    details[open] summary::after { transform: rotate(45deg); }
+    .faq-answer {
+      padding: 0 15px 14px;
+      font-size: 0.79rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .faq-answer a { color: var(--primary); font-weight: 700; text-decoration: none; }
+
+    /* ============================================================
+       13. TEKNISI & CTA
+       ============================================================ */
     .tech-card {
-      background: #f8fafc;
-      border: 1.5px dashed #cbd5e1;
+      background: var(--card-2);
+      border: 1.5px dashed color-mix(in srgb, var(--accent-2) 55%, var(--border));
     }
-
-    .tech-desc {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
+    .tech-desc { font-size: 0.79rem; color: var(--muted); margin-bottom: 12px; }
     .btn-tech {
       display: block;
       width: 100%;
@@ -551,448 +1132,908 @@
       padding: 12px;
       border-radius: 12px;
       background: #1e293b;
-      color: #ffffff;
+      color: #fff;
       text-decoration: none;
+      font-weight: 750;
+      font-size: 0.86rem;
+      transition: background 0.16s ease, transform 0.16s ease;
+    }
+    [data-theme="dark"] .btn-tech { background: #0f172a; }
+    .btn-tech:hover { background: #0f172a; transform: translateY(-1px); }
+    [data-theme="dark"] .btn-tech:hover { background: #020617; }
+
+    .cta {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      padding: 24px 20px;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(135deg, #0b7a54, #0f4c81);
+      box-shadow: 0 14px 30px rgba(15, 76, 129, 0.2);
+    }
+    .cta::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -100px;
+      top: -120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 68%);
+    }
+    .cta h2 { font-size: 1.12rem; margin-bottom: 5px; letter-spacing: -0.3px; }
+    .cta p { font-size: 0.8rem; color: #d1fae5; margin-bottom: 6px; }
+    .cta-plan {
+      display: inline-block;
+      font-size: 0.73rem;
       font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      margin-bottom: 15px;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 300px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #fff;
+      color: #0f5132;
+      font-weight: 800;
       font-size: 0.88rem;
-      transition: background 0.15s ease;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      transition: transform 0.16s ease;
     }
+    .btn-cta:hover { transform: translateY(-2px); }
 
-    .btn-tech:hover {
+    /* ============================================================
+       14. FLOATING ACTIONS & TOAST
+       ============================================================ */
+    .fab-group {
+      position: fixed;
+      right: 16px;
+      bottom: 18px;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    .fab {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: none;
+      text-decoration: none;
+      font-size: 1.25rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+    .fab:hover { transform: translateY(-3px) scale(1.04); }
+    .fab-wa { background: #25d366; color: #fff; }
+    .fab-top {
+      background: var(--card);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+    }
+    .fab-top.visible { opacity: 1; pointer-events: auto; transform: none; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 60;
+      transform: translate(-50%, 20px);
       background: #0f172a;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      max-width: calc(100vw - 32px);
+      text-align: center;
     }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+    /* ============================================================
+       15. FOOTER & REVEAL
+       ============================================================ */
     footer {
       text-align: center;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--muted);
-      padding: 8px 0 18px;
+      padding: 10px 0 4px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-bottom: 8px;
+    }
+    .footer-links a { color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--primary); }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .js .reveal.show { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+      .js .reveal { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 380px) {
+      .topnav a:nth-child(2), .topnav a:nth-child(3) { display: none; }
+      .stat b { font-size: 1rem; }
+      .feature-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header Portal -->
-    <div class="hero">
-      <div class="brand-badge">📶 kaliwaru<span>.net</span></div>
-      <div class="sub-corp">PT. Multi Teknologi Telematika</div>
-      <h1>Portal Layanan Pelanggan</h1>
-      <p>Koneksi Internet Fiber Optic &amp; WiFi Rumah Area Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, Karanganyar &amp; Sekitarnya</p>
-    </div>
+  <script>document.documentElement.classList.add('js');</script>
 
-    <!-- Navigasi Utama -->
-    <div class="action-grid">
-      <a href="bayar.html" class="btn-nav btn-pay">
-        💳 Bayar Tagihan
-        <small>QRIS, SeaBank, BRI, DANA</small>
+  <!-- ===================== TOPBAR ===================== -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="mini-brand" href="#top" aria-label="kaliwaru.net, kembali ke atas">
+        <span class="mini-logo" aria-hidden="true">📶</span>
+        kaliwaru<span>.net</span>
       </a>
-      <a href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20ingin%20konfirmasi%20/%20bantuan%20layanan%20WiFi." target="_blank" rel="noopener" class="btn-nav btn-wa">
-        💬 Hubungi Admin
-        <small>Konfirmasi &amp; Gangguan</small>
-      </a>
+
+      <nav class="topnav" aria-label="Navigasi utama">
+        <a href="#cakupan">Cakupan</a>
+        <a href="#paket">Paket</a>
+        <a href="#pasang">Cara Pasang</a>
+        <a href="#speedtest">Speedtest</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Aktifkan mode gelap" aria-pressed="false" title="Ganti tema">🌙</button>
     </div>
+  </header>
 
-    <!-- Card Area Terjangkau -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">📍 Jalur ODP &amp; Area Terjangkau</div>
-        <div class="status-pill" style="background: #dcfce7; color: #15803d;">6 Jalur ODP Aktif</div>
+  <main id="top">
+    <div class="container">
+
+      <!-- ===================== HERO ===================== -->
+      <section class="hero reveal" aria-labelledby="heroTitle">
+        <div class="brand-badge">📶 kaliwaru<span>.net</span></div>
+        <div class="sub-corp">PT. Multi Teknologi Telematika</div>
+        <h1 id="heroTitle">Portal Layanan Pelanggan</h1>
+        <p>Koneksi Internet Fiber Optic &amp; WiFi Rumah Area Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, Karanganyar &amp; sekitarnya.</p>
+        <div class="hero-chips" aria-label="Keunggulan layanan">
+          <span class="hero-chip">⚡ Fiber Optic PON</span>
+          <span class="hero-chip">🛠️ Teknisi Lokal</span>
+          <span class="hero-chip">💬 Support WhatsApp</span>
+          <span class="hero-chip">🔒 Akses HTTPS</span>
+        </div>
+      </section>
+
+      <!-- ===================== STATS ===================== -->
+      <div class="stat-strip reveal" aria-label="Ringkasan jaringan">
+        <div class="stat"><b>6</b><small>Jalur ODP</small></div>
+        <div class="stat"><b>72</b><small>Total Port</small></div>
+        <div class="stat"><b>3</b><small>Cabang PON</small></div>
+        <div class="stat"><b>24/7</b><small>Support</small></div>
       </div>
-      <p class="coverage-desc">
-        Visualisasi distribusi kabel Fiber Optic dari pusat OLT ke titik ODP wilayah. Ketuk salah satu titik ODP untuk melihat status port:
-      </p>
 
-      <!-- Animasi Topologi Jalur Serat Optik OLT -> 6 ODP -->
-      <div class="odp-topology-wrap">
-        <div class="odp-legend">
-          <span><i class="pulse-dot-inline"></i> Sinyal Optik Aktif (PON)</span>
-          <span>Redaman Rata-rata: -17.5 dBm</span>
+      <!-- ===================== AKSI CEPAT ===================== -->
+      <div class="action-grid reveal">
+        <a href="bayar.html" class="btn-nav btn-pay">
+          💳 Bayar Tagihan
+          <small>QRIS, SeaBank, BRI, DANA</small>
+        </a>
+        <a href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20ingin%20konfirmasi%20/%20bantuan%20layanan%20WiFi." target="_blank" rel="noopener" class="btn-nav btn-wa">
+          💬 Hubungi Admin
+          <small>Konfirmasi &amp; Gangguan</small>
+        </a>
+      </div>
+
+      <div class="quick-row reveal">
+        <a class="quick-link" href="#cakupan">📍 Cek Slot ODP</a>
+        <a class="quick-link" href="#speedtest">⚡ Uji Kecepatan</a>
+        <a class="quick-link" href="#faq">❓ Bantuan</a>
+      </div>
+
+      <!-- ===================== CAKUPAN & ODP ===================== -->
+      <section class="section reveal" id="cakupan" aria-labelledby="cakupanTitle">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji" aria-hidden="true">📍</span><span id="cakupanTitle">Jalur ODP &amp; Area Terjangkau</span></div>
+            <div class="status-pill green">6 ODP Aktif</div>
+          </div>
+          <p class="coverage-desc">Visualisasi distribusi kabel fiber optik dari OLT pusat ke titik ODP wilayah. Ketuk titik ODP atau nama area untuk melihat detail port dan jalur sinyalnya.</p>
+
+          <div class="odp-topology-wrap">
+            <div class="odp-legend">
+              <span><i class="pulse-dot-inline" aria-hidden="true"></i> Sinyal Optik Aktif (PON)</span>
+              <span>Redaman rata-rata: −17.5 dBm</span>
+            </div>
+
+            <svg class="odp-svg" viewBox="0 0 460 235" role="img" aria-label="Diagram jalur OLT ke enam titik ODP: Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, dan Karanganyar">
+              <defs>
+                <radialGradient id="oltGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.65" />
+                  <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <g class="fiber-route" id="route-kaliwaru">
+                <path class="fiber-base" d="M 230 34 C 155 34, 82 52, 74 96" />
+                <path class="fiber-pulse" style="animation-delay:0s" d="M 230 34 C 155 34, 82 52, 74 96" />
+              </g>
+              <g class="fiber-route" id="route-worawari">
+                <path class="fiber-base" d="M 230 34 C 230 62, 230 72, 230 96" />
+                <path class="fiber-pulse" style="animation-delay:-0.35s" d="M 230 34 C 230 62, 230 72, 230 96" />
+              </g>
+              <g class="fiber-route" id="route-nglaran">
+                <path class="fiber-base" d="M 230 34 C 305 34, 378 52, 386 96" />
+                <path class="fiber-pulse" style="animation-delay:-0.7s" d="M 230 34 C 305 34, 378 52, 386 96" />
+              </g>
+              <g class="fiber-route" id="route-mantren">
+                <path class="fiber-base" d="M 230 34 C 180 95, 92 128, 74 182" />
+                <path class="fiber-pulse" style="animation-delay:-1.05s" d="M 230 34 C 180 95, 92 128, 74 182" />
+              </g>
+              <g class="fiber-route" id="route-klesem">
+                <path class="fiber-base" d="M 230 34 C 215 105, 245 135, 230 182" />
+                <path class="fiber-pulse" style="animation-delay:-1.4s" d="M 230 34 C 215 105, 245 135, 230 182" />
+              </g>
+              <g class="fiber-route" id="route-karanganyar">
+                <path class="fiber-base" d="M 230 34 C 280 95, 368 128, 386 182" />
+                <path class="fiber-pulse" style="animation-delay:-1.75s" d="M 230 34 C 280 95, 368 128, 386 182" />
+              </g>
+
+              <g aria-label="Server OLT pusat kaliwaru.net">
+                <circle cx="230" cy="30" r="26" fill="url(#oltGlow)" />
+                <rect x="164" y="12" width="132" height="32" rx="16" fill="#0ea5e9" stroke="#e0f2fe" stroke-width="1.5" />
+                <text x="230" y="26" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="800">SERVER OLT PUSAT</text>
+                <text x="230" y="38" text-anchor="middle" fill="#e0f2fe" font-size="8" font-weight="600">kaliwaru.net NOC</text>
+              </g>
+
+              <g class="odp-node" id="node-kaliwaru" data-odp="kaliwaru">
+                <circle class="odp-node-ring" style="animation-delay:0s" cx="74" cy="96" r="10" fill="none" stroke-width="1.5" />
+                <circle class="odp-core" cx="74" cy="96" r="5.5" stroke="#ffffff" stroke-width="1.5" />
+                <rect class="odp-node-box" x="18" y="106" width="112" height="30" rx="8" />
+                <text class="odp-node-label" x="74" y="119" text-anchor="middle">ODP Kaliwaru</text>
+                <text class="odp-node-meta" x="74" y="130" text-anchor="middle">Online • 16 Port</text>
+              </g>
+              <g class="odp-node" id="node-worawari" data-odp="worawari">
+                <circle class="odp-node-ring" style="animation-delay:0.4s" cx="230" cy="96" r="10" fill="none" stroke-width="1.5" />
+                <circle class="odp-core" cx="230" cy="96" r="5.5" stroke="#ffffff" stroke-width="1.5" />
+                <rect class="odp-node-box" x="174" y="106" width="112" height="30" rx="8" />
+                <text class="odp-node-label" x="230" y="119" text-anchor="middle">ODP Wora-wari</text>
+                <text class="odp-node-meta" x="230" y="130" text-anchor="middle">Online • 16 Port</text>
+              </g>
+              <g class="odp-node" id="node-nglaran" data-odp="nglaran">
+                <circle class="odp-node-ring" style="animation-delay:0.8s" cx="386" cy="96" r="10" fill="none" stroke-width="1.5" />
+                <circle class="odp-core" cx="386" cy="96" r="5.5" stroke="#ffffff" stroke-width="1.5" />
+                <rect class="odp-node-box" x="330" y="106" width="112" height="30" rx="8" />
+                <text class="odp-node-label" x="386" y="119" text-anchor="middle">ODP Nglaran</text>
+                <text class="odp-node-meta" x="386" y="130" text-anchor="middle">Online • 8 Port</text>
+              </g>
+              <g class="odp-node" id="node-mantren" data-odp="mantren">
+                <circle class="odp-node-ring" style="animation-delay:1.1s" cx="74" cy="182" r="10" fill="none" stroke-width="1.5" />
+                <circle class="odp-core" cx="74" cy="182" r="5.5" stroke="#ffffff" stroke-width="1.5" />
+                <rect class="odp-node-box" x="18" y="192" width="112" height="30" rx="8" />
+                <text class="odp-node-label" x="74" y="205" text-anchor="middle">ODP Mantren</text>
+                <text class="odp-node-meta" x="74" y="216" text-anchor="middle">Online • 16 Port</text>
+              </g>
+              <g class="odp-node" id="node-klesem" data-odp="klesem">
+                <circle class="odp-node-ring" style="animation-delay:1.5s" cx="230" cy="182" r="10" fill="none" stroke-width="1.5" />
+                <circle class="odp-core" cx="230" cy="182" r="5.5" stroke="#ffffff" stroke-width="1.5" />
+                <rect class="odp-node-box" x="174" y="192" width="112" height="30" rx="8" />
+                <text class="odp-node-label" x="230" y="205" text-anchor="middle">ODP Klesem</text>
+                <text class="odp-node-meta" x="230" y="216" text-anchor="middle">Online • 8 Port</text>
+              </g>
+              <g class="odp-node" id="node-karanganyar" data-odp="karanganyar">
+                <circle class="odp-node-ring" style="animation-delay:1.8s" cx="386" cy="182" r="10" fill="none" stroke-width="1.5" />
+                <circle class="odp-core" cx="386" cy="182" r="5.5" stroke="#ffffff" stroke-width="1.5" />
+                <rect class="odp-node-box" x="330" y="192" width="112" height="30" rx="8" />
+                <text class="odp-node-label" x="386" y="205" text-anchor="middle">ODP Karanganyar</text>
+                <text class="odp-node-meta" x="386" y="216" text-anchor="middle">Online • 16 Port</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="odp-detail-panel" role="status" aria-live="polite">
+            <span class="odp-detail-icon" aria-hidden="true">🟢</span>
+            <div>
+              <div class="odp-detail-title" id="odpDetailTitle">Jalur ODP-KLW-01 (PON-01)</div>
+              <div class="odp-detail-meta" id="odpDetailMeta">Status: Aktif Normal • Sinyal −16.8 dBm • Port Tersedia</div>
+            </div>
+          </div>
+
+          <div class="area-grid" role="group" aria-label="Pilih area ODP">
+            <button type="button" class="area-badge" data-odp="kaliwaru" aria-pressed="true">Kaliwaru</button>
+            <button type="button" class="area-badge" data-odp="worawari" aria-pressed="false">Wora-wari</button>
+            <button type="button" class="area-badge" data-odp="nglaran" aria-pressed="false">Nglaran</button>
+            <button type="button" class="area-badge" data-odp="mantren" aria-pressed="false">Mantren</button>
+            <button type="button" class="area-badge" data-odp="klesem" aria-pressed="false">Klesem</button>
+            <button type="button" class="area-badge" data-odp="karanganyar" aria-pressed="false">Karanganyar</button>
+          </div>
+
+          <div class="coverage-note">
+            <span>Mau pasang baru di titik ODP terpilih?</span>
+            <a id="odpWaLink" href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20mau%20cek%20slot%20ODP%20untuk%20pasang%20WiFi%20di%20area%20Kaliwaru." target="_blank" rel="noopener">Tanya Slot Kaliwaru ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== PAKET ===================== -->
+      <section class="section reveal" id="paket" aria-labelledby="paketTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="paketTitle">Pilih Paket Internet</h2>
+            <p>Bulan pertama prorata • tanpa biaya instalasi</p>
+          </div>
+          <span class="status-pill">Promo Area</span>
         </div>
 
-        <svg class="odp-svg" viewBox="0 0 460 235" role="img" aria-label="Diagram Animasi Jalur ODP Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, dan Karanganyar">
-          <defs>
-            <radialGradient id="oltGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.65" />
-              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
-            </radialGradient>
-          </defs>
+        <div class="plans" role="group" aria-label="Daftar paket layanan">
+          <article class="plan-card">
+            <div class="plan-head">
+              <span class="plan-name">Rumah Basics</span>
+              <span class="plan-speed">11 Mbps</span>
+            </div>
+            <div class="plan-price">Rp 100rb <small>/ bulan</small></div>
+            <ul class="plan-features">
+              <li>1 unit ONT WiFi</li>
+              <li>Kuota tanpa batas</li>
+              <li>Support via WhatsApp</li>
+            </ul>
+            <button type="button" class="plan-btn" data-plan="Rumah Basics" data-speed="11 Mbps" data-price="Rp 100.000/bulan">Pilih Paket</button>
+          </article>
 
-          <!-- Jalur Serat Optik (6 Cabang dari Pusat OLT x=230, y=34) -->
-          <!-- 1. Kaliwaru (Kiri Atas) -->
-          <g class="fiber-route active" id="route-kaliwaru">
-            <path class="fiber-base" d="M 230 34 C 155 34, 82 52, 74 96" />
-            <path class="fiber-pulse" style="animation-delay: 0s;" d="M 230 34 C 155 34, 82 52, 74 96" />
-          </g>
+          <article class="plan-card featured">
+            <span class="plan-tag">Paling Laku</span>
+            <div class="plan-head">
+              <span class="plan-name">Rumah Plus</span>
+              <span class="plan-speed">30 Mbps</span>
+            </div>
+            <div class="plan-price">Rp 150rb <small>/ bulan</small></div>
+            <ul class="plan-features">
+              <li>ONT WiFi dual-band</li>
+              <li>Streaming HD lancar</li>
+              <li>Prioritas gangguan</li>
+            </ul>
+            <button type="button" class="plan-btn" data-plan="Rumah Plus" data-speed="30 Mbps" data-price="Rp 150.000/bulan">Pilih Paket</button>
+          </article>
 
-          <!-- 2. Wora-wari (Tengah Atas) -->
-          <g class="fiber-route" id="route-worawari">
-            <path class="fiber-base" d="M 230 34 C 230 62, 230 72, 230 96" />
-            <path class="fiber-pulse" style="animation-delay: -0.35s;" d="M 230 34 C 230 62, 230 72, 230 96" />
-          </g>
-
-          <!-- 3. Nglaran (Kanan Atas) -->
-          <g class="fiber-route" id="route-nglaran">
-            <path class="fiber-base" d="M 230 34 C 305 34, 378 52, 386 96" />
-            <path class="fiber-pulse" style="animation-delay: -0.7s;" d="M 230 34 C 305 34, 378 52, 386 96" />
-          </g>
-
-          <!-- 4. Mantren (Kiri Bawah) -->
-          <g class="fiber-route" id="route-mantren">
-            <path class="fiber-base" d="M 230 34 C 180 95, 92 128, 74 182" />
-            <path class="fiber-pulse" style="animation-delay: -1.05s;" d="M 230 34 C 180 95, 92 128, 74 182" />
-          </g>
-
-          <!-- 5. Klesem (Tengah Bawah) -->
-          <g class="fiber-route" id="route-klesem">
-            <path class="fiber-base" d="M 230 34 C 215 105, 245 135, 230 182" />
-            <path class="fiber-pulse" style="animation-delay: -1.4s;" d="M 230 34 C 215 105, 245 135, 230 182" />
-          </g>
-
-          <!-- 6. Karanganyar (Kanan Bawah) -->
-          <g class="fiber-route" id="route-karanganyar">
-            <path class="fiber-base" d="M 230 34 C 280 95, 368 128, 386 182" />
-            <path class="fiber-pulse" style="animation-delay: -1.75s;" d="M 230 34 C 280 95, 368 128, 386 182" />
-          </g>
-
-          <!-- Pusat Server OLT kaliwaru.net -->
-          <g>
-            <circle cx="230" cy="30" r="26" fill="url(#oltGlow)" />
-            <rect x="164" y="12" width="132" height="32" rx="16" fill="#0ea5e9" stroke="#e0f2fe" stroke-width="1.5" />
-            <text x="230" y="26" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="800">SERVER OLT PUSAT</text>
-            <text x="230" y="38" text-anchor="middle" fill="#e0f2fe" font-size="8" font-weight="600">kaliwaru.net NOC</text>
-          </g>
-
-          <!-- Node ODP 1: Kaliwaru -->
-          <g class="odp-node active" id="node-kaliwaru" onclick="selectOdp('kaliwaru')">
-            <circle class="odp-node-ring" cx="74" cy="96" r="10" fill="none" stroke="#4ade80" stroke-width="1.5" />
-            <circle cx="74" cy="96" r="5.5" fill="#4ade80" stroke="#ffffff" stroke-width="1.5" />
-            <rect class="odp-node-box" x="18" y="106" width="112" height="30" rx="8" />
-            <text x="74" y="119" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Kaliwaru</text>
-            <text x="74" y="130" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
-          </g>
-
-          <!-- Node ODP 2: Wora-wari -->
-          <g class="odp-node" id="node-worawari" onclick="selectOdp('worawari')">
-            <circle class="odp-node-ring" style="animation-delay: 0.4s;" cx="230" cy="96" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
-            <circle cx="230" cy="96" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
-            <rect class="odp-node-box" x="174" y="106" width="112" height="30" rx="8" />
-            <text x="230" y="119" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Wora-wari</text>
-            <text x="230" y="130" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
-          </g>
-
-          <!-- Node ODP 3: Nglaran -->
-          <g class="odp-node" id="node-nglaran" onclick="selectOdp('nglaran')">
-            <circle class="odp-node-ring" style="animation-delay: 0.8s;" cx="386" cy="96" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
-            <circle cx="386" cy="96" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
-            <rect class="odp-node-box" x="330" y="106" width="112" height="30" rx="8" />
-            <text x="386" y="119" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Nglaran</text>
-            <text x="386" y="130" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 8 Port</text>
-          </g>
-
-          <!-- Node ODP 4: Mantren -->
-          <g class="odp-node" id="node-mantren" onclick="selectOdp('mantren')">
-            <circle class="odp-node-ring" style="animation-delay: 1.1s;" cx="74" cy="182" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
-            <circle cx="74" cy="182" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
-            <rect class="odp-node-box" x="18" y="192" width="112" height="30" rx="8" />
-            <text x="74" y="205" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Mantren</text>
-            <text x="74" y="216" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
-          </g>
-
-          <!-- Node ODP 5: Klesem -->
-          <g class="odp-node" id="node-klesem" onclick="selectOdp('klesem')">
-            <circle class="odp-node-ring" style="animation-delay: 1.5s;" cx="230" cy="182" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
-            <circle cx="230" cy="182" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
-            <rect class="odp-node-box" x="174" y="192" width="112" height="30" rx="8" />
-            <text x="230" y="205" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Klesem</text>
-            <text x="230" y="216" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 8 Port</text>
-          </g>
-
-          <!-- Node ODP 6: Karanganyar -->
-          <g class="odp-node" id="node-karanganyar" onclick="selectOdp('karanganyar')">
-            <circle class="odp-node-ring" style="animation-delay: 1.8s;" cx="386" cy="182" r="10" fill="none" stroke="#38bdf8" stroke-width="1.5" />
-            <circle cx="386" cy="182" r="5.5" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5" />
-            <rect class="odp-node-box" x="330" y="192" width="112" height="30" rx="8" />
-            <text x="386" y="205" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700">ODP Karanganyar</text>
-            <text x="386" y="216" text-anchor="middle" fill="#7dd3fc" font-size="7.8">Online • 16 Port</text>
-          </g>
-        </svg>
-      </div>
-
-      <!-- Panel Info Titik ODP Terpilih -->
-      <div class="odp-detail-panel" id="odpDetailPanel">
-        <div class="odp-detail-info">
-          <div class="odp-detail-title" id="odpDetailTitle">🟢 Jalur ODP Kaliwaru (PON-01)</div>
-          <div class="odp-detail-meta" id="odpDetailMeta">Status: Aktif Normal &bull; Kapasitas Port Tersedia</div>
+          <article class="plan-card">
+            <div class="plan-head">
+              <span class="plan-name">Gaming Max</span>
+              <span class="plan-speed">50 Mbps</span>
+            </div>
+            <div class="plan-price">Rp 200rb <small>/ bulan</small></div>
+            <ul class="plan-features">
+              <li>Latensi rendah</li>
+              <li>Multi-perangkat stabil</li>
+              <li>Bantuan setup router</li>
+            </ul>
+            <button type="button" class="plan-btn" data-plan="Gaming Max" data-speed="50 Mbps" data-price="Rp 200.000/bulan">Pilih Paket</button>
+          </article>
         </div>
-      </div>
+        <p class="section-sub" style="text-align:center;margin-top:10px">Harga dapat berubah; konfirmasi ketersediaan &amp; promo terbaru ke admin.</p>
+      </section>
 
-      <div class="area-grid">
-        <span class="area-badge active" id="badge-kaliwaru" onclick="selectOdp('kaliwaru')">Kaliwaru</span>
-        <span class="area-badge" id="badge-worawari" onclick="selectOdp('worawari')">Wora-wari</span>
-        <span class="area-badge" id="badge-nglaran" onclick="selectOdp('nglaran')">Nglaran</span>
-        <span class="area-badge" id="badge-mantren" onclick="selectOdp('mantren')">Mantren</span>
-        <span class="area-badge" id="badge-klesem" onclick="selectOdp('klesem')">Klesem</span>
-        <span class="area-badge" id="badge-karanganyar" onclick="selectOdp('karanganyar')">Karanganyar</span>
-      </div>
-      <div class="coverage-note">
-        <span>Mau pasang baru di titik ODP terpilih?</span>
-        <a id="odpWaLink" href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20mau%20cek%20slot%20ODP%20untuk%20pasang%20WiFi%20di%20area%20Kaliwaru." target="_blank" rel="noopener">Tanya Slot Kaliwaru ↗</a>
-      </div>
+      <!-- ===================== CARA PASANG ===================== -->
+      <section class="section reveal" id="pasang" aria-labelledby="pasangTitle">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji" aria-hidden="true">🧰</span><span id="pasangTitle">Cara Pasang WiFi</span></div>
+            <div class="status-pill muted">± 1–2 Hari</div>
+          </div>
+          <ol class="steps">
+            <li class="step">
+              <span class="step-num">1</span>
+              <div class="step-body"><h3>Cek coverage &amp; slot ODP</h3><p>Pilih wilayah Anda pada diagram di atas, lalu tanyakan slot port ke admin via WhatsApp.</p></div>
+            </li>
+            <li class="step">
+              <span class="step-num">2</span>
+              <div class="step-body"><h3>Pilih paket &amp; data diri</h3><p>Kirim nama, alamat lengkap, dan nomor WhatsApp untuk pendaftaran pelanggan.</p></div>
+            </li>
+            <li class="step">
+              <span class="step-num">3</span>
+              <div class="step-body"><h3>Survey &amp; penarikan kabel</h3><p>Teknisi lapangan menentukan jalur drop kabel terbaik dari ODP terdekat ke rumah.</p></div>
+            </li>
+            <li class="step">
+              <span class="step-num">4</span>
+              <div class="step-body"><h3>Instalasi &amp; aktivasi</h3><p>Pemasangan ONT, konfigurasi WiFi, pengujian sinyal, lalu akun siap digunakan.</p></div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ===================== SPEEDTEST ===================== -->
+      <section class="section reveal" id="speedtest" aria-labelledby="speedTitle">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji" aria-hidden="true">⚡</span><span id="speedTitle">Uji Kecepatan</span></div>
+            <div class="status-pill" id="testStatus">Siap Uji</div>
+          </div>
+
+          <div class="speed-display">
+            <div class="speed-value" id="liveSpeed" aria-live="polite">0.0</div>
+            <div class="speed-unit">Mbps • Download</div>
+            <div class="progress-wrap" role="progressbar" aria-label="Progres pengujian" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressWrap">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-box"><div class="metric-label">Ping</div><div class="metric-val" id="pingVal">— ms</div></div>
+            <div class="metric-box"><div class="metric-label">Jitter</div><div class="metric-val" id="jitterVal">— ms</div></div>
+            <div class="metric-box"><div class="metric-label">Download</div><div class="metric-val" id="dlVal">— Mbps</div></div>
+          </div>
+
+          <button class="btn-test" id="startBtn" type="button">Mulai Speedtest Sekarang</button>
+          <div class="result-note" id="resultNote" role="status">Pastikan tidak sedang mengunduh file besar saat pengujian.</div>
+
+          <div class="ext-links">
+            <a href="https://www.speedtest.net" target="_blank" rel="noopener">Speedtest.net ↗</a>
+            <a href="https://fast.com" target="_blank" rel="noopener">Fast.com ↗</a>
+            <a href="https://speed.cloudflare.com" target="_blank" rel="noopener">Cloudflare ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== INFO & STATUS ===================== -->
+      <section class="section reveal" aria-labelledby="infoTitle">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji" aria-hidden="true">ℹ️</span><span id="infoTitle">Informasi Layanan</span></div>
+          </div>
+          <ul class="info-list">
+            <li><span>Wilayah cakupan</span><span>Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, Karanganyar</span></li>
+            <li><span>Jatuh tempo</span><span>Tanggal 20 setiap bulan</span></li>
+            <li><span>Metode pembayaran</span><span>QRIS, SeaBank, BRI, DANA, Tunai</span></li>
+            <li><span>Layanan gangguan</span><span class="inline-copy">0838-7333-3027 <button type="button" class="copy-btn" id="copyPhone" aria-label="Salin nomor WhatsApp">Salin</button></span></li>
+            <li><span>Jam operasional</span><span>Senin–Sabtu, 08.00–20.00 WIB</span></li>
+            <li><span>Status halaman</span><span style="color:var(--success-text)">● Online (HTTPS)</span></li>
+          </ul>
+          <div class="status-row" aria-label="Status cabang PON">
+            <span class="status-chip">PON-01 Normal</span>
+            <span class="status-chip">PON-02 Normal</span>
+            <span class="status-chip">PON-03 Normal</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== KEUNGGULAN ===================== -->
+      <section class="section reveal" aria-labelledby="unggulTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="unggulTitle">Kenapa kaliwaru.net?</h2>
+            <p>Layanan internet yang dekat dengan lingkungan Anda</p>
+          </div>
+        </div>
+        <div class="feature-grid">
+          <div class="feature"><span class="feature-icon" aria-hidden="true">📍</span><div><b>Teknisi Lokal</b><small>Tim lapangan yang mengenal jalur &amp; wilayah setempat.</small></div></div>
+          <div class="feature"><span class="feature-icon" aria-hidden="true">💳</span><div><b>Bayar Mudah</b><small>QRIS, e-wallet, dan transfer bank tanpa antre.</small></div></div>
+          <div class="feature"><span class="feature-icon" aria-hidden="true">🛠️</span><div><b>Respons Cepat</b><small>Lapor gangguan langsung via WhatsApp, dibantu teknisi.</small></div></div>
+          <div class="feature"><span class="feature-icon" aria-hidden="true">📈</span><div><b>Jalur Terpantau</b><small>Status ODP dan kualitas sinyal bisa dicek kapan saja.</small></div></div>
+        </div>
+      </section>
+
+      <!-- ===================== FAQ ===================== -->
+      <section class="section reveal" id="faq" aria-labelledby="faqTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="faqTitle">Pertanyaan Umum</h2>
+            <p>Klik pertanyaan untuk melihat jawaban</p>
+          </div>
+        </div>
+        <div class="faq">
+          <details class="faq-item">
+            <summary>Apakah wilayah saya sudah terjangkau?</summary>
+            <div class="faq-answer">Cek daftar area pada <a href="#cakupan">peta jalur ODP</a>. Jika nama wilayah Anda belum ada, silakan tanya ke admin melalui WhatsApp—biasanya area sekitar tetap bisa dicek ketersediaan kabelnya.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Kapan tagihan harus dibayar?</summary>
+            <div class="faq-answer">Tagihan bulanan jatuh tempo setiap tanggal 20. Pembayaran dapat dilakukan lewat halaman <a href="bayar.html">bayar tagihan</a> menggunakan QRIS, SeaBank, BRI, atau DANA.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Berapa lama proses pemasangan?</summary>
+            <div class="faq-answer">Umumnya 1–2 hari kerja sejak survey dan ketersediaan slot ODP dikonfirmasi. Jarak rumah dari titik ODP dan kondisi jalur kabel dapat memengaruhi waktu pemasangan.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Internet lemot, apa yang harus saya lakukan?</summary>
+            <div class="faq-answer">Jalankan <a href="#speedtest">uji kecepatan</a> di halaman ini terlebih dahulu. Jika hasil jauh di bawah paket yang Anda ambil, hubungi admin dengan menyertakan hasil speedtest agar bisa ditindaklanjuti teknisi.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Bisa pindah paket atau berhenti langganan?</summary>
+            <div class="faq-answer">Bisa. Perubahan paket dan pengajuan berhenti langganan dilakukan dengan menghubungi admin lewat WhatsApp, mengikuti ketentuan yang berlaku di sistem pendaftaran pelanggan.</div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===================== TEKNISI ===================== -->
+      <section class="section reveal" aria-labelledby="teknisiTitle">
+        <div class="card tech-card">
+          <div class="card-header" style="margin-bottom:8px">
+            <div class="card-title" style="font-size:0.94rem"><span class="emoji" aria-hidden="true">🛠️</span><span id="teknisiTitle">Tools Teknisi Lapangan</span></div>
+            <span class="status-pill muted">Internal</span>
+          </div>
+          <p class="tech-desc">Kalkulator redaman splitter rasio &amp; perhitungan jalur distribusi PON OLT.</p>
+          <a href="olt.html" class="btn-tech">📐 Buka Kalkulator Rasio OLT</a>
+        </div>
+      </section>
+
+      <!-- ===================== CTA ===================== -->
+      <section class="section reveal" id="cta" aria-labelledby="ctaTitle">
+        <div class="cta">
+          <h2 id="ctaTitle">Siap pasang WiFi di rumah?</h2>
+          <p>Cek slot terdekat dan dapatkan jadwal pemasangan hari ini.</p>
+          <div class="cta-plan" id="ctaPlan">Belum ada paket dipilih • pilih paket di atas</div>
+          <a class="btn-cta" id="ctaWa" href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20ingin%20cek%20slot%20dan%20jadwal%20pemasangan%20WiFi." target="_blank" rel="noopener">💬 Chat Admin Sekarang</a>
+        </div>
+      </section>
+
+      <footer>
+        <div class="footer-links">
+          <a href="#cakupan">Cakupan</a>
+          <a href="#paket">Paket</a>
+          <a href="#speedtest">Speedtest</a>
+          <a href="#faq">FAQ</a>
+          <a href="bayar.html">Bayar</a>
+        </div>
+        <div>&copy; <span id="year">2026</span> kaliwaru.net &bull; PT. Multi Teknologi Telematika</div>
+        <div style="margin-top:3px;font-size:0.7rem">Dibuat untuk pelanggan Kaliwaru &amp; sekitarnya, Pacitan.</div>
+      </footer>
     </div>
+  </main>
 
-    <!-- Widget Speedtest -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">⚡ Uji Kecepatan (Speedtest)</div>
-        <div class="status-pill" id="testStatus">Siap Uji</div>
-      </div>
-
-      <div class="speed-display">
-        <div class="speed-value" id="liveSpeed">0.0</div>
-        <div class="speed-unit">Mbps (Download)</div>
-        <div class="progress-wrap">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-      </div>
-
-      <div class="metrics-grid">
-        <div class="metric-box">
-          <div class="metric-label">Ping</div>
-          <div class="metric-val" id="pingVal">- ms</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-label">Jitter</div>
-          <div class="metric-val" id="jitterVal">- ms</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-label">Download</div>
-          <div class="metric-val" id="dlVal">- Mbps</div>
-        </div>
-      </div>
-
-      <button class="btn-test" id="startBtn" onclick="runSpeedtest()">Mulai Speedtest Sekarang</button>
-      <div class="result-note" id="resultNote">Pastikan tidak sedang mengunduh file besar saat pengujian.</div>
-
-      <div class="ext-links">
-        <a href="https://www.speedtest.net" target="_blank" rel="noopener">Uji Lengkap di Speedtest.net ↗</a>
-        <a href="https://fast.com" target="_blank" rel="noopener">Cek di Fast.com ↗</a>
-      </div>
-    </div>
-
-    <!-- Informasi Layanan -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">ℹ️ Informasi Layanan</div>
-      </div>
-      <ul class="info-list">
-        <li>
-          <span>Wilayah Cakupan</span>
-          <span>Kaliwaru, Wora-wari, Nglaran, Mantren, Klesem, Karanganyar</span>
-        </li>
-        <li>
-          <span>Jatuh Tempo Bulanan</span>
-          <span>Tanggal 20 Setiap Bulan</span>
-        </li>
-        <li>
-          <span>Metode Pembayaran</span>
-          <span>QRIS, Transfer Bank, Tunai</span>
-        </li>
-        <li>
-          <span>Layanan Gangguan</span>
-          <span>0838-7333-3027 (WhatsApp)</span>
-        </li>
-        <li>
-          <span>Status Halaman</span>
-          <span style="color: #16a34a;">● Online (HTTPS)</span>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Menu Khusus Teknisi -->
-    <div class="card tech-card">
-      <div class="card-header" style="margin-bottom: 8px;">
-        <div class="card-title" style="font-size: 0.94rem;">🛠️ Tools Teknisi Lapangan</div>
-        <span class="status-pill" style="background: #e2e8f0; color: #475569;">Internal</span>
-      </div>
-      <p class="tech-desc">
-        Kalkulator redaman splitter rasio &amp; perhitungan jalur distribusi PON OLT.
-      </p>
-      <a href="olt.html" class="btn-tech">📐 Buka Kalkulator Rasio OLT</a>
-    </div>
-
-    <footer>
-      &copy; 2026 kaliwaru.net &bull; PT. Multi Teknologi Telematika
-    </footer>
+  <!-- ===================== FLOATING ===================== -->
+  <div class="fab-group">
+    <button class="fab fab-top" id="backTop" type="button" aria-label="Kembali ke atas">↑</button>
+    <a class="fab fab-wa" href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20butuh%20bantuan%20layanan%20WiFi." target="_blank" rel="noopener" aria-label="Hubungi admin via WhatsApp">💬</a>
   </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // Data masing-masing jalur ODP
-    const odpData = {
-      kaliwaru: {
-        name: "Kaliwaru",
-        code: "ODP-KLW-01 (PON-01)",
-        status: "Status: Aktif Normal • Sinyal -16.8 dBm • Port Tersedia"
-      },
-      worawari: {
-        name: "Wora-wari",
-        code: "ODP-WRW-02 (PON-01)",
-        status: "Status: Aktif Normal • Sinyal -17.4 dBm • Port Tersedia"
-      },
-      nglaran: {
-        name: "Nglaran",
-        code: "ODP-NGL-03 (PON-02)",
-        status: "Status: Aktif Normal • Sinyal -18.1 dBm • Port Tersedia"
-      },
-      mantren: {
-        name: "Mantren",
-        code: "ODP-MTR-04 (PON-02)",
-        status: "Status: Aktif Normal • Sinyal -17.9 dBm • Port Tersedia"
-      },
-      klesem: {
-        name: "Klesem",
-        code: "ODP-KLS-05 (PON-03)",
-        status: "Status: Aktif Normal • Sinyal -18.5 dBm • Port Tersedia"
-      },
-      karanganyar: {
-        name: "Karanganyar",
-        code: "ODP-KRA-06 (PON-03)",
-        status: "Status: Aktif Normal • Sinyal -18.2 dBm • Port Tersedia"
+    (function () {
+      'use strict';
+
+      /* ---------- Toast ---------- */
+      var toastEl = document.getElementById('toast');
+      var toastTimer;
+      function showToast(message) {
+        if (!toastEl) return;
+        toastEl.textContent = message;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2600);
       }
-    };
 
-    // Memilih & menyorot jalur animasi ODP pada diagram SVG dan badge wilayah
-    function selectOdp(key) {
-      const keys = Object.keys(odpData);
-      keys.forEach((k) => {
-        const routeEl = document.getElementById("route-" + k);
-        const nodeEl = document.getElementById("node-" + k);
-        const badgeEl = document.getElementById("badge-" + k);
-        const isSelected = k === key;
+      /* ---------- Tema ---------- */
+      var root = document.documentElement;
+      var themeBtn = document.getElementById('themeToggle');
+      var savedTheme = null;
+      try { savedTheme = localStorage.getItem('kw-theme'); } catch (e) {}
 
-        if (routeEl) routeEl.classList.toggle("active", isSelected);
-        if (nodeEl) nodeEl.classList.toggle("active", isSelected);
-        if (badgeEl) badgeEl.classList.toggle("active", isSelected);
+      if (savedTheme === 'dark' || savedTheme === 'light') {
+        root.dataset.theme = savedTheme;
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.dataset.theme = 'dark';
+      }
+
+      function syncThemeButton() {
+        if (!themeBtn) return;
+        var isDark = root.dataset.theme === 'dark';
+        themeBtn.textContent = isDark ? '☀️' : '🌙';
+        themeBtn.setAttribute('aria-pressed', String(isDark));
+        themeBtn.setAttribute('aria-label', isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap');
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', isDark ? '#0b1220' : '#093154');
+      }
+      syncThemeButton();
+
+      if (themeBtn) {
+        themeBtn.addEventListener('click', function () {
+          var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          try { localStorage.setItem('kw-theme', next); } catch (e) {}
+          syncThemeButton();
+          showToast(next === 'dark' ? 'Mode gelap aktif' : 'Mode terang aktif');
+        });
+      }
+
+      /* ---------- Data & interaksi ODP ---------- */
+      var WA_NUMBER = '6283873333027';
+      var odpData = {
+        kaliwaru:    { name: 'Kaliwaru',    code: 'ODP-KLW-01 (PON-01)', status: 'Status: Aktif Normal • Sinyal −16.8 dBm • Port Tersedia' },
+        worawari:    { name: 'Wora-wari',    code: 'ODP-WRW-02 (PON-01)', status: 'Status: Aktif Normal • Sinyal −17.4 dBm • Port Tersedia' },
+        nglaran:     { name: 'Nglaran',     code: 'ODP-NGL-03 (PON-02)', status: 'Status: Aktif Normal • Sinyal −18.1 dBm • Port Tersedia' },
+        mantren:     { name: 'Mantren',     code: 'ODP-MTR-04 (PON-02)', status: 'Status: Aktif Normal • Sinyal −17.9 dBm • Port Tersedia' },
+        klesem:      { name: 'Klesem',      code: 'ODP-KLS-05 (PON-03)', status: 'Status: Aktif Normal • Sinyal −18.5 dBm • Port Tersedia' },
+        karanganyar: { name: 'Karanganyar', code: 'ODP-KRA-06 (PON-03)', status: 'Status: Aktif Normal • Sinyal −18.2 dBm • Port Tersedia' }
+      };
+
+      var detailTitle = document.getElementById('odpDetailTitle');
+      var detailMeta = document.getElementById('odpDetailMeta');
+      var waLink = document.getElementById('odpWaLink');
+
+      function selectOdp(key) {
+        var info = odpData[key];
+        if (!info) return;
+
+        Object.keys(odpData).forEach(function (k) {
+          var active = k === key;
+          ['route-' + k, 'node-' + k].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.toggle('active', active);
+          });
+          var node = document.getElementById('node-' + k);
+          if (node) node.setAttribute('aria-pressed', String(active));
+          document.querySelectorAll('.area-badge[data-odp="' + k + '"]').forEach(function (badge) {
+            badge.classList.toggle('active', active);
+            badge.setAttribute('aria-pressed', String(active));
+          });
+        });
+
+        if (detailTitle) detailTitle.textContent = 'Jalur ' + info.code;
+        if (detailMeta) detailMeta.textContent = info.status;
+        if (waLink) {
+          var message = 'Halo Admin kaliwaru.net, saya mau cek slot ODP untuk pasang WiFi di area ' + info.name + '.';
+          waLink.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
+          waLink.textContent = 'Tanya Slot ' + info.name + ' ↗';
+        }
+      }
+
+      document.querySelectorAll('[data-odp]').forEach(function (el) {
+        var key = el.getAttribute('data-odp');
+        el.addEventListener('click', function () { selectOdp(key); });
+        if (el.tagName.toLowerCase() === 'g') {
+          el.setAttribute('tabindex', '0');
+          el.setAttribute('role', 'button');
+          el.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectOdp(key);
+            }
+          });
+        }
+      });
+      selectOdp('kaliwaru');
+
+      /* ---------- Pilih paket ---------- */
+      var ctaPlan = document.getElementById('ctaPlan');
+      var ctaWa = document.getElementById('ctaWa');
+      document.querySelectorAll('.plan-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var card = btn.closest('.plan-card');
+          document.querySelectorAll('.plan-card').forEach(function (c) { c.classList.remove('selected'); });
+          if (card) card.classList.add('selected');
+
+          var plan = btn.dataset.plan;
+          var speed = btn.dataset.speed;
+          var price = btn.dataset.price;
+
+          if (ctaPlan) ctaPlan.textContent = plan + ' • ' + speed + ' • ' + price;
+          if (ctaWa) {
+            var message = 'Halo Admin kaliwaru.net, saya mau pasang paket ' + plan + ' (' + speed + ') di area Kaliwaru. Mohon info slot ODP & jadwal pemasangan.';
+            ctaWa.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
+          }
+          showToast('Paket ' + plan + ' dipilih');
+        });
       });
 
-      const info = odpData[key];
-      if (info) {
-        document.getElementById("odpDetailTitle").textContent = "🟢 Jalur " + info.code;
-        document.getElementById("odpDetailMeta").textContent = info.status;
-
-        const waLink = document.getElementById("odpWaLink");
-        const msg = encodeURIComponent(
-          "Halo Admin kaliwaru.net, saya mau cek slot ODP untuk pasang WiFi di area " + info.name + "."
-        );
-        waLink.href = "https://wa.me/6283873333027?text=" + msg;
-        waLink.textContent = "Tanya Slot " + info.name + " ↗";
+      /* ---------- Salin nomor ---------- */
+      var copyBtn = document.getElementById('copyPhone');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+          var number = '0838-7333-3027';
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(number)
+              .then(function () { showToast('Nomor WhatsApp disalin'); })
+              .catch(function () { showToast('Nomor: ' + number); });
+          } else {
+            showToast('Nomor: ' + number);
+          }
+        });
       }
-    }
 
-    // Mengukur latensi (Ping) dan kestabilan (Jitter) ke endpoint Cloudflare
-    async function measurePing() {
-      const pings = [];
-      const pingUrl = "https://speed.cloudflare.com/__down?bytes=0";
-      for (let i = 0; i < 6; i++) {
-        const t0 = performance.now();
-        try {
-          await fetch(pingUrl + "&r=" + Math.random(), { cache: "no-store" });
-          const dt = performance.now() - t0;
-          if (i > 0) pings.push(dt);
-        } catch (e) {}
-      }
-      if (pings.length === 0) return { ping: 0, jitter: 0 };
-      const avg = pings.reduce((a, b) => a + b, 0) / pings.length;
-      let jitterSum = 0;
-      for (let i = 1; i < pings.length; i++) {
-        jitterSum += Math.abs(pings[i] - pings[i - 1]);
-      }
-      const jitter = pings.length > 1 ? jitterSum / (pings.length - 1) : 0;
-      return { ping: Math.round(avg), jitter: Math.round(jitter) };
-    }
-
-    // Menjalankan pengujian kecepatan unduh bertahap
-    async function runSpeedtest() {
-      const btn = document.getElementById("startBtn");
-      const status = document.getElementById("testStatus");
-      const liveSpeed = document.getElementById("liveSpeed");
-      const progressBar = document.getElementById("progressBar");
-      const pingVal = document.getElementById("pingVal");
-      const jitterVal = document.getElementById("jitterVal");
-      const dlVal = document.getElementById("dlVal");
-      const resultNote = document.getElementById("resultNote");
-
-      btn.disabled = true;
-      btn.textContent = "Sedang Menguji Jaringan...";
-      liveSpeed.textContent = "0.0";
-      pingVal.textContent = "...";
-      jitterVal.textContent = "...";
-      dlVal.textContent = "...";
-      progressBar.style.width = "10%";
-      status.textContent = "Uji Ping...";
-      resultNote.textContent = "Mengukur latensi respon server...";
-
-      const { ping, jitter } = await measurePing();
-      pingVal.textContent = ping > 0 ? ping + " ms" : "N/A";
-      jitterVal.textContent = ping > 0 ? jitter + " ms" : "N/A";
-      progressBar.style.width = "30%";
-
-      status.textContent = "Uji Download...";
-      resultNote.textContent = "Mengukur kecepatan unduh aktual...";
-
-      const testSizes = [5000000, 15000000];
-      let finalMbps = 0;
-
-      try {
-        for (let s = 0; s < testSizes.length; s++) {
-          const bytes = testSizes[s];
-          const startTime = performance.now();
-          const response = await fetch("https://speed.cloudflare.com/__down?bytes=" + bytes + "&r=" + Math.random(), {
-            cache: "no-store"
-          });
-
-          const reader = response.body.getReader();
-          let receivedBytes = 0;
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            receivedBytes += value.length;
-
-            const elapsedSec = (performance.now() - startTime) / 1000;
-            if (elapsedSec > 0.15) {
-              const currentMbps = (receivedBytes * 8) / (elapsedSec * 1000000);
-              liveSpeed.textContent = currentMbps.toFixed(1);
-              const basePct = s === 0 ? 30 : 65;
-              const stepPct = Math.min(35, (receivedBytes / bytes) * 35);
-              progressBar.style.width = (basePct + stepPct) + "%";
+      /* ---------- Reveal saat scroll ---------- */
+      var revealItems = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('show');
+              observer.unobserve(entry.target);
             }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+        revealItems.forEach(function (el) { revealObserver.observe(el); });
+      } else {
+        revealItems.forEach(function (el) { el.classList.add('show'); });
+      }
+
+      /* ---------- Nav aktif & tombol ke atas ---------- */
+      var navLinks = document.querySelectorAll('.topnav a');
+      var backTop = document.getElementById('backTop');
+      var sections = ['cakupan', 'paket', 'pasang', 'speedtest', 'faq']
+        .map(function (id) { return document.getElementById(id); })
+        .filter(Boolean);
+
+      if ('IntersectionObserver' in window && sections.length) {
+        var navObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach(function (link) {
+              link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+            });
+          });
+        }, { rootMargin: '-25% 0px -65% 0px' });
+        sections.forEach(function (section) { navObserver.observe(section); });
+      }
+
+      function onScroll() {
+        if (backTop) backTop.classList.toggle('visible', window.scrollY > 320);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      if (backTop) {
+        backTop.addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      /* ---------- Speedtest ---------- */
+      var testing = false;
+      var startBtn = document.getElementById('startBtn');
+      var testStatus = document.getElementById('testStatus');
+      var liveSpeed = document.getElementById('liveSpeed');
+      var progressBar = document.getElementById('progressBar');
+      var progressWrap = document.getElementById('progressWrap');
+      var pingVal = document.getElementById('pingVal');
+      var jitterVal = document.getElementById('jitterVal');
+      var dlVal = document.getElementById('dlVal');
+      var resultNote = document.getElementById('resultNote');
+
+      function setProgress(pct) {
+        if (progressBar) progressBar.style.width = pct + '%';
+        if (progressWrap) progressWrap.setAttribute('aria-valuenow', String(Math.round(pct)));
+      }
+
+      function fetchWithTimeout(url, ms) {
+        var controller = new AbortController();
+        var timer = setTimeout(function () { controller.abort(); }, ms);
+        return fetch(url, { cache: 'no-store', signal: controller.signal })
+          .finally(function () { clearTimeout(timer); });
+      }
+
+      async function measurePing() {
+        var samples = [];
+        var url = 'https://speed.cloudflare.com/__down?bytes=0';
+        for (var i = 0; i < 6; i++) {
+          var t0 = performance.now();
+          try {
+            await fetchWithTimeout(url + '&r=' + Math.random(), 4000);
+            var dt = performance.now() - t0;
+            if (i > 0) samples.push(dt);
+          } catch (e) {}
+        }
+        if (!samples.length) return { ping: 0, jitter: 0 };
+        var avg = samples.reduce(function (a, b) { return a + b; }, 0) / samples.length;
+        var jitterSum = 0;
+        for (var j = 1; j < samples.length; j++) jitterSum += Math.abs(samples[j] - samples[j - 1]);
+        return {
+          ping: Math.round(avg),
+          jitter: samples.length > 1 ? Math.round(jitterSum / (samples.length - 1)) : 0
+        };
+      }
+
+      async function runSpeedtest() {
+        if (testing) return;
+        testing = true;
+
+        startBtn.disabled = true;
+        startBtn.textContent = 'Sedang Menguji Jaringan…';
+        if (testStatus) testStatus.textContent = 'Uji Ping…';
+        if (liveSpeed) liveSpeed.textContent = '0.0';
+        if (pingVal) pingVal.textContent = '…';
+        if (jitterVal) jitterVal.textContent = '…';
+        if (dlVal) dlVal.textContent = '…';
+        if (resultNote) resultNote.textContent = 'Mengukur latensi respon server…';
+        setProgress(8);
+
+        var latency = await measurePing();
+        if (pingVal) pingVal.textContent = latency.ping > 0 ? latency.ping + ' ms' : 'N/A';
+        if (jitterVal) jitterVal.textContent = latency.ping > 0 ? latency.jitter + ' ms' : 'N/A';
+        setProgress(28);
+
+        if (testStatus) testStatus.textContent = 'Uji Download…';
+        if (resultNote) resultNote.textContent = 'Mengukur kecepatan unduh aktual…';
+
+        var sizes = [5000000, 15000000];
+        var finalMbps = 0;
+        try {
+          for (var s = 0; s < sizes.length; s++) {
+            var bytes = sizes[s];
+            var started = performance.now();
+            var response = await fetchWithTimeout(
+              'https://speed.cloudflare.com/__down?bytes=' + bytes + '&r=' + Math.random(), 15000
+            );
+            if (!response.ok || !response.body) throw new Error('Server tidak merespons');
+
+            var reader = response.body.getReader();
+            var received = 0;
+            while (true) {
+              var chunk = await reader.read();
+              if (chunk.done) break;
+              received += chunk.value.length;
+
+              var elapsed = (performance.now() - started) / 1000;
+              if (elapsed > 0.15) {
+                var current = (received * 8) / (elapsed * 1000000);
+                if (liveSpeed) liveSpeed.textContent = current.toFixed(1);
+                var base = s === 0 ? 28 : 62;
+                setProgress(base + Math.min(36, (received / bytes) * 36));
+              }
+            }
+            var total = (performance.now() - started) / 1000;
+            finalMbps = (received * 8) / (total * 1000000);
+            if (liveSpeed) liveSpeed.textContent = finalMbps.toFixed(1);
           }
 
-          const totalSec = (performance.now() - startTime) / 1000;
-          finalMbps = (receivedBytes * 8) / (totalSec * 1000000);
-          liveSpeed.textContent = finalMbps.toFixed(1);
+          setProgress(100);
+          if (dlVal) dlVal.textContent = finalMbps.toFixed(1) + ' Mbps';
+          if (testStatus) testStatus.textContent = 'Selesai';
+          if (resultNote) {
+            if (finalMbps >= 20) {
+              resultNote.textContent = '✅ Koneksi sangat lancar untuk streaming 4K, gaming, dan video call.';
+            } else if (finalMbps >= 5) {
+              resultNote.textContent = '✅ Koneksi stabil untuk streaming HD, browsing, dan media sosial.';
+            } else {
+              resultNote.textContent = '⚠️ Kecepatan rendah. Coba dekatkan perangkat ke router atau hubungi admin.';
+            }
+          }
+          showToast('Speedtest selesai: ' + finalMbps.toFixed(1) + ' Mbps');
+        } catch (err) {
+          setProgress(0);
+          if (testStatus) testStatus.textContent = 'Gagal';
+          if (resultNote) resultNote.textContent = 'Gagal terhubung ke server uji. Periksa koneksi internet Anda.';
+          showToast('Speedtest gagal, coba lagi');
+        } finally {
+          testing = false;
+          startBtn.disabled = false;
+          startBtn.textContent = 'Uji Ulang Speedtest';
         }
-
-        progressBar.style.width = "100%";
-        dlVal.textContent = finalMbps.toFixed(1) + " Mbps";
-        status.textContent = "Selesai";
-
-        if (finalMbps >= 20) {
-          resultNote.textContent = "✅ Koneksi sangat lancar untuk streaming 4K, gaming, & video call.";
-        } else if (finalMbps >= 5) {
-          resultNote.textContent = "✅ Koneksi stabil untuk streaming HD, browsing, & media sosial.";
-        } else {
-          resultNote.textContent = "⚠️ Kecepatan terdeteksi rendah. Coba dekatkan perangkat ke router WiFi.";
-        }
-      } catch (err) {
-        status.textContent = "Gagal";
-        resultNote.textContent = "Gagal terhubung ke server uji. Periksa koneksi internet Anda.";
-        progressBar.style.width = "0%";
       }
 
-      btn.disabled = false;
-      btn.textContent = "Uji Ulang Speedtest";
-    }
+      if (startBtn) startBtn.addEventListener('click', runSpeedtest);
+
+      /* ---------- Tahun footer ---------- */
+      var yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+    })();
   </script>
 </body>
 </html>
