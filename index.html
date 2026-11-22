@@ -1506,7 +1506,7 @@
               <li>Kuota tanpa batas</li>
               <li>Support via WhatsApp</li>
             </ul>
-            <button type="button" class="plan-btn" data-plan="Rumah Basics" data-speed="11 Mbps" data-price="Rp 100.000/bulan">Pilih Paket</button>
+            <button type="button" class="plan-btn" data-plan="Rumah Basics" data-speed="11 Mbps" data-price="Rp 100.000/bulan">Pilih &amp; Chat WA</button>
           </article>
 
           <article class="plan-card featured">
@@ -1521,7 +1521,7 @@
               <li>Streaming HD lancar</li>
               <li>Prioritas gangguan</li>
             </ul>
-            <button type="button" class="plan-btn" data-plan="Rumah Plus" data-speed="30 Mbps" data-price="Rp 150.000/bulan">Pilih Paket</button>
+            <button type="button" class="plan-btn" data-plan="Rumah Plus" data-speed="30 Mbps" data-price="Rp 150.000/bulan">Pilih &amp; Chat WA</button>
           </article>
 
           <article class="plan-card">
@@ -1535,7 +1535,7 @@
               <li>Multi-perangkat stabil</li>
               <li>Bantuan setup router</li>
             </ul>
-            <button type="button" class="plan-btn" data-plan="Gaming Max" data-speed="50 Mbps" data-price="Rp 200.000/bulan">Pilih Paket</button>
+            <button type="button" class="plan-btn" data-plan="Gaming Max" data-speed="50 Mbps" data-price="Rp 200.000/bulan">Pilih &amp; Chat WA</button>
           </article>
         </div>
         <p class="section-sub" style="text-align:center;margin-top:10px">Harga dapat berubah; konfirmasi ketersediaan &amp; promo terbaru ke admin.</p>
@@ -1689,7 +1689,7 @@
         <div class="cta">
           <h2 id="ctaTitle">Siap pasang WiFi di rumah?</h2>
           <p>Cek slot terdekat dan dapatkan jadwal pemasangan hari ini.</p>
-          <div class="cta-plan" id="ctaPlan">Belum ada paket dipilih • pilih paket di atas</div>
+          <div class="cta-plan" id="ctaPlan">Belum ada paket dipilih • klik paket untuk chat WhatsApp</div>
           <a class="btn-cta" id="ctaWa" href="https://wa.me/6283873333027?text=Halo%20Admin%20kaliwaru.net,%20saya%20ingin%20cek%20slot%20dan%20jadwal%20pemasangan%20WiFi." target="_blank" rel="noopener">💬 Chat Admin Sekarang</a>
         </div>
       </section>
@@ -1777,10 +1777,12 @@
       var detailTitle = document.getElementById('odpDetailTitle');
       var detailMeta = document.getElementById('odpDetailMeta');
       var waLink = document.getElementById('odpWaLink');
+      var currentOdpKey = 'kaliwaru';
 
       function selectOdp(key) {
         var info = odpData[key];
         if (!info) return;
+        currentOdpKey = key;
 
         Object.keys(odpData).forEach(function (k) {
           var active = k === key;
@@ -1821,9 +1823,20 @@
       });
       selectOdp('kaliwaru');
 
-      /* ---------- Pilih paket ---------- */
+      /* ---------- Pilih paket → langsung buka WhatsApp ---------- */
       var ctaPlan = document.getElementById('ctaPlan');
       var ctaWa = document.getElementById('ctaWa');
+
+      function openExternal(url) {
+        var link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
       document.querySelectorAll('.plan-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var card = btn.closest('.plan-card');
@@ -1833,13 +1846,18 @@
           var plan = btn.dataset.plan;
           var speed = btn.dataset.speed;
           var price = btn.dataset.price;
+          var area = (odpData[currentOdpKey] || odpData.kaliwaru).name;
+
+          var message = 'Halo Admin kaliwaru.net, saya mau pasang paket ' + plan +
+            ' (' + speed + ', ' + price + ') di area ' + area +
+            '. Mohon info slot ODP & jadwal pemasangan.';
+          var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
 
           if (ctaPlan) ctaPlan.textContent = plan + ' • ' + speed + ' • ' + price;
-          if (ctaWa) {
-            var message = 'Halo Admin kaliwaru.net, saya mau pasang paket ' + plan + ' (' + speed + ') di area Kaliwaru. Mohon info slot ODP & jadwal pemasangan.';
-            ctaWa.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
-          }
-          showToast('Paket ' + plan + ' dipilih');
+          if (ctaWa) ctaWa.href = waUrl;
+
+          showToast('Membuka WhatsApp untuk paket ' + plan);
+          openExternal(waUrl);
         });
       });
 
