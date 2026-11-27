@@ -543,7 +543,18 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
         b.addEventListener('click', () => playSource(Number(b.dataset.src), true));
       });
     }
+    function openDirect(url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      try { window.open(url, '_blank', 'noopener,noreferrer'); } catch (_) {}
+    }
     function showFail(message, url) {
+      const isHlsFail = /HLS|manifest/i.test(message);
       let extra = ' Coba sumber lain atau buka tautan langsung di browser / pemutar eksternal.';
       if (isMkv(url)) {
         extra = ' Format MKV/AVI tidak didukung browser. Buka dengan VLC / pemutar eksternal lewat tombol di bawah.';
@@ -552,11 +563,24 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
       }
       $('status').textContent = 'Gagal memuat';
       $('placeholder').hidden = false;
-      $('placeholderTitle').textContent = 'Stream tidak bisa diputar';
-      $('placeholderText').textContent = message + extra;
       $('retryBtn').hidden = false;
       $('openExtBtn').hidden = false;
-      $('openExtBtn').onclick = () => window.open(url, '_blank', 'noopener');
+      $('openExtBtn').textContent = '↗ Buka langsung (disarankan)';
+      $('openExtBtn').classList.add('btn-primary');
+      $('openExtBtn').parentNode.insertBefore($('openExtBtn'), $('retryBtn'));
+      $('openExtBtn').onclick = () => openDirect(url);
+
+      // Buka tautan asli otomatis. Popup blocker bisa menolak, jadi siapkan fallback.
+      let opened = false;
+      try { opened = !!window.open(url, '_blank', 'noopener,noreferrer'); } catch (_) {}
+      if (opened) {
+        $('placeholderTitle').textContent = 'Tautan langsung dibuka';
+        $('placeholderText').textContent = message + ' Tab baru sudah dibuka. Jika video tidak muncul, tekan tombol di bawah.';
+      } else {
+        $('placeholderTitle').textContent = isHlsFail ? 'HLS gagal · segera buka langsung' : 'Stream tidak bisa diputar';
+        $('placeholderText').textContent = message + extra + ' Tombol Buka langsung sudah dipilih — tekan Enter.';
+        $('openExtBtn').focus();
+      }
     }
     function handleFailure(message, url) {
       const m = state.list[state.current];
@@ -587,6 +611,8 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
         (isHls(directUrl) ? (viaProxy ? 'HLS via proxy' : 'HLS') : 'video langsung');
       $('retryBtn').hidden = true;
       $('openExtBtn').hidden = true;
+      $('openExtBtn').textContent = '↗ Buka langsung';
+      $('openExtBtn').classList.remove('btn-primary');
       $('status').textContent = 'Memuat...';
 
       if (isHls(directUrl)) {
@@ -769,6 +795,11 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
           else if (e.key === 'ArrowRight') step(1);
           else if (e.key === 'ArrowLeft') step(-1);
           else if (e.key.toLowerCase() === 'f') $('fullBtn').click();
+          else if (e.key === 'Enter' && !$('openExtBtn').hidden &&
+                   (document.activeElement === document.body || document.activeElement === $('video'))) {
+            e.preventDefault();
+            $('openExtBtn').click();
+          }
         } else if (e.key === '/') {
           e.preventDefault();
           $('search').focus();
