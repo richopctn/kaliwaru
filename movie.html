@@ -271,7 +271,7 @@
         <p>Pemutar VOD berbasis browser untuk playlist <b>s.id/vod27</b>. Mendukung MP4/WebM langsung dan HLS (.m3u8) lewat hls.js.</p>
         <p>Konten berasal dari playlist pihak ketiga. Pastikan Anda memiliki izin untuk memutarnya. Jika stream tidak bisa dibuka karena pembatasan CORS atau host sedang down, gunakan sumber alternatif atau tombol <b>Buka langsung</b>.</p>
         <p>Favorit disimpan lokal di browser Anda.</p>
-        <p style="border-top:1px solid var(--line);padding-top:12px"><b>Proxy HLS (opsional)</b><br>Di GitHub Pages / hosting statis, film berformat HLS perlu proxy. Deploy <code>proxy-worker.js</code> ke Cloudflare Workers gratis, lalu tempel URL-nya di bawah:</p>
+        <p style="border-top:1px solid var(--line);padding-top:12px"><b>Proxy HLS</b><br>Di GitHub Pages / hosting statis, film berformat HLS perlu proxy. Deploy <code>proxy-worker.js</code> ke Cloudflare Workers gratis, lalu tempel URL-nya di bawah. Jika <code>DEFAULT_HLS_PROXY</code> sudah diisi di kode, proxy langsung aktif untuk semua pengunjung tanpa perlu disimpan manual.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <input id="proxyUrl" type="url" placeholder="https://nama.workers.dev" style="flex:1;min-width:210px;background:#0f1726;color:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 11px;outline:none">
           <button class="btn" id="proxySave">Simpan</button>
@@ -311,12 +311,17 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
     };
 
     const PROXY_KEY = 'kaliwaru.net.movie.proxy';
+    // Isi dengan URL Worker hasil deploy proxy-worker.js, misalnya:
+    // const DEFAULT_HLS_PROXY = 'https://kaliwaru-proxy.<akun>.workers.dev';
+    // Biarkan '' jika belum punya Worker; film HLS perlu proxy aktif.
+    const DEFAULT_HLS_PROXY = 'https://kaliwaru-proxy.richokaliwaru.workers.dev';
     function customProxy() {
       try { return (localStorage.getItem(PROXY_KEY) || '').trim().replace(/\/+$/, ''); } catch (_) { return ''; }
     }
+    function effectiveProxy() { return customProxy() || DEFAULT_HLS_PROXY; }
     function proxied(url) {
       if (state.proxy) return location.origin + '/proxy?url=' + encodeURIComponent(url);
-      const custom = customProxy();
+      const custom = effectiveProxy();
       if (custom) return custom + '?url=' + encodeURIComponent(url);
       return url;
     }
@@ -606,7 +611,7 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
       state.tried.add(index);
       $('sources').querySelectorAll('.src').forEach((b, i) => b.classList.toggle('active', i === index));
       const directUrl = m.urls[index];
-      const viaProxy = state.proxy || !!customProxy();
+      const viaProxy = state.proxy || !!effectiveProxy();
       const url = isHls(directUrl) ? proxied(directUrl) : directUrl;
       const v = $('video');
       stopPlayback();
@@ -621,7 +626,16 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
       $('status').textContent = 'Memuat...';
 
       if (isHls(directUrl)) {
-        if (window.Hls && Hls.isSupported()) {
+        const nativeHls = v.canPlayType('application/vnd.apple.mpegurl');
+        if (nativeHls) {
+          // Safari/iOS/Android TV biasanya bisa memutar HLS lewat <video> langsung.
+          // Tidak pakai XHR hls.js, jadi tidak terkena blokir CORS.
+          v.src = url;
+          v.addEventListener('error', () => handleFailure('HLS tidak dapat dimuat oleh browser.', directUrl), { once: true });
+          v.play().catch(() => {});
+          $('placeholder').hidden = true;
+          $('status').textContent = viaProxy ? 'HLS native via proxy' : 'HLS native';
+        } else if (window.Hls && Hls.isSupported()) {
           const hls = new Hls({ enableWorker: false, capLevelToPlayerSize: true, lowLatencyMode: false });
           state.hls = hls;
           hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
@@ -636,16 +650,11 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
             if (!viaProxy && location.protocol === 'file:') {
               hint = ' Buka lewat jalankan.bat lalu http://localhost:8100 agar HLS lewat proxy lokal.';
             } else if (!viaProxy) {
-              hint = ' Tambahkan proxy HLS di menu ⓘ (Cloudflare Workers gratis).';
+              hint = ' Tambahkan proxy HLS di menu ⓘ atau isi DEFAULT_HLS_PROXY di kode.';
             }
             handleFailure('HLS error: ' + (d.details || 'tidak diketahui') + '.' + hint, directUrl);
           });
           hls.attachMedia(v);
-        } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
-          v.src = url;
-          v.addEventListener('error', () => handleFailure('HLS tidak dapat dimuat oleh browser.', directUrl), { once: true });
-          v.play().catch(() => {});
-          $('placeholder').hidden = true;
         } else {
           handleFailure('Browser ini tidak mendukung HLS.', directUrl);
         }
@@ -725,7 +734,19 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
         $('heroPoster').src = featured.logo;
         $('heroPosterBox').hidden = false;
       }
-      $('heroPlay').onclick = () => openPlayer(state.all.indexOf(featured));
+      $('heroPlay').onclick = () => {
+        let i = state.list.findIndex(m => m.id === featured.id);
+        if (i < 0) {
+          state.chip = 'all';
+          state.query = '';
+          $('search').value = '';
+          $('searchClear').hidden = true;
+          state.limit = PAGE;
+          applyFilters();
+          i = state.list.findIndex(m => m.id === featured.id);
+        }
+        openPlayer(i >= 0 ? i : 0);
+      };
     }
 
     function bind() {
@@ -765,8 +786,8 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
         else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
       });
       $('proxyUrl').value = customProxy();
-      $('proxyState').textContent = customProxy()
-        ? 'Proxy tersimpan: ' + customProxy()
+      $('proxyState').textContent = effectiveProxy()
+        ? 'Proxy aktif: ' + effectiveProxy() + (customProxy() ? '' : ' (default)')
         : 'Belum ada proxy. Film MP4 tetap bisa diputar tanpa proxy.';
       $('proxySave').addEventListener('click', () => {
         let v = $('proxyUrl').value.trim().replace(/\/+$/, '');
@@ -774,13 +795,17 @@ window.KALIWARU_VOD_PLAYLIST = "#EXTM3U url=\"\"\n\n\n##########################
         try {
           if (v) localStorage.setItem(PROXY_KEY, v); else localStorage.removeItem(PROXY_KEY);
           toast(v ? 'Proxy HLS disimpan' : 'Proxy HLS dihapus');
-          $('proxyState').textContent = v ? 'Proxy tersimpan: ' + v : 'Belum ada proxy.';
+          $('proxyState').textContent = effectiveProxy()
+            ? 'Proxy aktif: ' + effectiveProxy() + (customProxy() ? '' : ' (default)')
+            : 'Belum ada proxy. Film MP4 tetap bisa diputar tanpa proxy.';
         } catch (_) { toast('Gagal menyimpan pengaturan'); }
       });
       $('proxyClear').addEventListener('click', () => {
         $('proxyUrl').value = '';
         localStorage.removeItem(PROXY_KEY);
-        $('proxyState').textContent = 'Belum ada proxy.';
+        $('proxyState').textContent = effectiveProxy()
+          ? 'Proxy aktif: ' + effectiveProxy() + ' (default)'
+          : 'Belum ada proxy. Film MP4 tetap bisa diputar tanpa proxy.';
         toast('Proxy HLS dihapus');
       });
       $('aboutBtn').addEventListener('click', () => { $('aboutOverlay').hidden = false; });
